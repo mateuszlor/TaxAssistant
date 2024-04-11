@@ -23,6 +23,14 @@ else if(@imports == null)
 }
 else 
 {
+    <h2>T1</h2>
+    <Table DataSource=@imports>
+        <Column TRow="Import" Title="Import date">@context.CreationDate</Column>
+        <Column TRow="Import" Title="KPiR">@context.KpirId</Column>
+        <Column TRow="Import" Title="Deleted">@context.Kpir?.IsDeleted</Column>
+    </Table>
+    
+    <h2>T2</h2>
     <table class="table">
         <thead>
             <tr>
@@ -56,8 +64,8 @@ else
 
             var stringContent = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(stringContent);
             imports = JsonConvert.DeserializeObject<IList<Import>>(stringContent);
+            Console.WriteLine("Loaded data");
         }
         finally
         {

@@ -3,20 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Server", "TaxAssistant.JPK\Server\TaxAssistant.JPK.Server.csproj", "{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Server", "TaxAssistant.JPK\Server\TaxAssistant.JPK.Server.csproj", "{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Client", "TaxAssistant.JPK\Client\TaxAssistant.JPK.Client.csproj", "{047762EF-92F6-465E-9441-EB8D6AF34617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Client", "TaxAssistant.JPK\Client\TaxAssistant.JPK.Client.csproj", "{047762EF-92F6-465E-9441-EB8D6AF34617}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Shared", "TaxAssistant.JPK\Shared\TaxAssistant.JPK.Shared.csproj", "{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Shared", "TaxAssistant.JPK\Shared\TaxAssistant.JPK.Shared.csproj", "{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Database", "TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj", "{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Database", "TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj", "{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D34194D5-D61D-4199-96AB-9CC8A4501B9C}"
 	ProjectSection(SolutionItems) = preProject
 		README.MD = README.MD
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasAssistant.JPK.ApplicationLogic", "TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj", "{3B1943A2-A523-432B-8AEB-C159672D440F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasAssistant.JPK.ApplicationLogic", "TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj", "{3B1943A2-A523-432B-8AEB-C159672D440F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

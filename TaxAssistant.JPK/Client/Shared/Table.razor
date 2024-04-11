@@ -1,0 +1,65 @@
+﻿@typeparam TRow
+
+<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
+
+<h3>Table</h3>
+
+
+<table class="table" @attributes="@Attributes">
+    <thead>
+        <tr>
+            @foreach (var c in @columns)
+            {
+                c.RenderHeader(__builder);
+            }
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in @DataSource)
+    {
+        <tr>
+        @foreach (var c in @columns)
+        {
+            c.RenderCell(__builder, row);
+        }
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    [Parameter(CaptureUnmatchedValues = true)] 
+    public Dictionary<string, object> Attributes { get; set; }
+
+    [Parameter] 
+    public ICollection<TRow> DataSource { get; set; }
+
+    [Parameter] 
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter] 
+    public Func<TRow, string> RowClass { get; set; }
+
+    private List<Column<TRow>> columns = new List<Column<TRow>>();
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // On the first render, we collect the list of columns, then we have to render them.
+            StateHasChanged();
+        }
+    }
+
+    public void AddColumn(Column<TRow> column) 
+    {
+        Console.WriteLine("Adding column {0}", column.Title);
+        columns.Add(column);
+    }
+    
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Initializing table");
+    }
+}

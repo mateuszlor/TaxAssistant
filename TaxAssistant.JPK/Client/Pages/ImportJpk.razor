@@ -48,7 +48,6 @@ else if (importResult != null)
             var response = await Http.PostAsJsonAsync<string>("Import", fileContent);
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            //importResult = JsonSerializer.Deserialize<ImportResult>(stringResponse);
             importResult = JsonConvert.DeserializeObject<ImportResult>(stringResponse);
         }
         finally
