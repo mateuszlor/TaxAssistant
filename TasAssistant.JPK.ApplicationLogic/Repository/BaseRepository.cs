@@ -5,7 +5,7 @@ using TaxAssistant.JPK.Shared.Model.Database;
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
     public abstract class BaseRepository<T>
-        where T: BaseModel
+        where T : BaseModel
     {
         protected readonly DatabaseContext _databaseContext;
 
@@ -48,7 +48,10 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
 
         public virtual async Task<IList<T>> GetAllAsync()
         {
-            return await _databaseContext.Set<T>().ToListAsync();
+            return await _databaseContext
+                .Set<T>()
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
         }
 
         public virtual async Task<T?> GetAsync(Guid id)
@@ -69,10 +72,12 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
         {
             var item = await GetAsync(id);
 
-            if(item != null)
+            if (item != null)
             {
                 item.IsDeleted = true;
             }
+
+            await UpdateAsync(item);
         }
     }
 }
