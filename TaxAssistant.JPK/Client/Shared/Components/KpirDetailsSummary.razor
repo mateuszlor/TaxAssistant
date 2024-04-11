@@ -1,0 +1,49 @@
+﻿@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+
+@if (@Kpir == null)
+{
+    <Loading />
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Rows</th>
+                <th>Revenue</th>
+                <th>Cost</th>
+                <th>Income</th>
+                <th>From date</th>
+                <th>To date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Declared</td>
+                <td>@Kpir.ControlData?.RowCount</td>
+                <td>@Kpir.ControlData?.TotalIncome</td>
+                <td>@Kpir.Summary?.TotalCost</td>
+                <td>@Kpir.Summary?.TotalIncome</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Kpir.Header?.DateFrom)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Kpir.Header?.DateTo)</td>
+            </tr>
+            <tr>
+                <td>Actual</td>
+                <td>@Kpir.Rows.Count</td>
+                <td>@Kpir.Rows.Sum(x => x.RevenueTotal)</td>
+                <td>@Kpir.Rows.Sum(x => x.CostTotal)</td>
+                <td>@(@Kpir.Rows.Sum(x => x.RevenueTotal) - @Kpir.Rows.Sum(x => x.CostTotal))</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Kpir.Rows.Min(x => x.Date))</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Kpir.Rows.Max(x => x.Date))</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Kpir Kpir { get; set; }
+}

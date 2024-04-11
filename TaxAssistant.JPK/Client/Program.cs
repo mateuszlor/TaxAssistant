@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TaxAssistant.JPK.Client;
 using TaxAssistant.JPK.Client.Clients;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

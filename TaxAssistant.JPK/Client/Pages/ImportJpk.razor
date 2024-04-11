@@ -21,14 +21,25 @@
 else if (importResult != null)
 {
     <span><b>Is import successful:</b> @importResult.IsSuccessful</span>
-    
-    if(@importResult.Data?.Kpir == null)
+
+    if(!importResult.IsSuccessful)
+    {
+        if (importResult.Error == null)
+        {
+            <div>Unknown error</div>
+        }
+        else
+        {
+            <div>@importResult.Error.Type: @importResult.Error.Message</div>
+        }
+    }
+    else if(@importResult.Data?.Kpir == null)
     {
         <span>KPIR is null</span>
     }
     else 
     {
-        <span>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir/@importResult.Data.KpirId">>> preview</a></span>
+        <span>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir-list/@importResult.Data.KpirId">>> preview</a></span>
     }
 }
 

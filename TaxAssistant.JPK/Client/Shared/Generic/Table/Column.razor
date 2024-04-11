@@ -15,6 +15,9 @@
     [Parameter] 
     public RenderFragment<TRow> ChildContent { get; set; }
 
+    [Parameter]
+    public Action<MouseEventArgs>? SelectAllCallback { get; set; }
+
     protected override void OnInitialized()
     {
         OwnerGrid.AddColumn(this);
@@ -22,7 +25,14 @@
 
     internal void RenderHeader(RenderTreeBuilder __builder)
     {
-        <th>@Title</th>
+        @if (SelectAllCallback == null)
+        {
+            <th>@Title</th>
+        }
+        else 
+        {
+            <th><input type="checkbox" @onclick="@SelectAllCallback" /></th>
+        }
     }
 
     internal void RenderCell(RenderTreeBuilder __builder, TRow rowData)

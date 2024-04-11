@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj" />
+    <ProjectReference Include="..\..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj" />
     <ProjectReference Include="..\Client\TaxAssistant.JPK.Client.csproj" />
     <ProjectReference Include="..\Shared\TaxAssistant.JPK.Shared.csproj" />

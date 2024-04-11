@@ -1,0 +1,48 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+
+@inject IApiClient<Kpir> Client
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@kpir == null)
+{
+    <p class="error">Invalid data</p>
+}
+else
+{
+    <h3>Summary:</h3>
+    <KpirDetailsSummary Kpir=@kpir />
+
+    <h3>Details:</h3>
+    <KpirDetailsRows Kpir=@kpir />
+}
+
+@code {
+    [Parameter]
+    public Guid KpirId { get; set; }
+
+    private Kpir? kpir;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            kpir = await Client.GetAsync(KpirId);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

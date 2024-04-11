@@ -1,0 +1,32 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+
+@if (@Kpir == null)
+{
+    <Loading />
+}
+else 
+{
+    <Table TRow="KpirRow" DataSource=@Kpir.Rows.OrderBy(x => x.Number).ToList() >
+        <Column TRow="KpirRow" Title="(1) Lp">@context.Number</Column>
+        <Column TRow="KpirRow" Title="(2) Date">@string.Format("{0:yyyy-MM-dd}", @context.Date)</Column>
+        <Column TRow="KpirRow" Title="(3) Document number">@context.DocumentNumber</Column>
+        <Column TRow="KpirRow" Title="(4) Company">@context.CompanyData</Column>
+        <Column TRow="KpirRow" Title="(5) Company address">@context.CompanyAddress</Column>
+        <Column TRow="KpirRow" Title="(6) Description">@context.Description</Column>
+        <Column TRow="KpirRow" Title="(9) Revenue">@context.RevenueTotal</Column>
+        <Column TRow="KpirRow" Title="(14) Spending">@context.CostTotal</Column>
+        <Column TRow="KpirRow" Title="(17) Info">@context.AdditionalDescription</Column>
+    </Table>
+}
+
+@code {
+    [Parameter]
+    public Kpir Kpir { get; set; }
+}

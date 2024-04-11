@@ -8,8 +8,9 @@
 @using TaxAssistant.JPK.Shared.Model.Database.Kpir
 @using TaxAssistant.JPK.Shared.Model.View
 @using Microsoft.AspNetCore.WebUtilities
+@using TaxAssistant.JPK.Client.Clients.Abstraction
 
-@inject HttpClient Http
+@inject IApiClient<Kpir> Client
 @inject NavigationManager NavigationManager
 
 <PageTitle>KPIR</PageTitle>
@@ -18,55 +19,31 @@
 
 @if (isLoading)
 {
-    <p><em>Loading...</em></p>
+    <Loading />
 }
 else
 {
     <span>Selected @model.Count(x => x.IsSelected) items</span>
 
     <div>
+        <button class="button" disabled=@(@model.Count(x => x.IsSelected) != 1) @onclick="@OnPreview">Preview</button>
         <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnAggregate">Aggregate</button>
         <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnDelete">Delete</button>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox" @onclick="@OnSelectAll" />  
-                </th>
-                <th>ID</th>
-                <th>Import date</th>
-                <th>KPIR generation date</th>
-                <th>Month (?)</th>
-                <th>From date</th>
-                <th>To date</th>
-                <th>Total Revenue</th>
-                <th>Total Cost</th>
-                <th>Total Income</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in model)
-            {
-            <tr>
-                <td>
-                    <input type="checkbox" @bind="@item.IsSelected" />  
-                </td>
-                <td>@item.Value.Id</td>
-                <td>@item.Value.CreationDate</td>
-                <td>@item.Value.Header.CreationDate</td>
-                <td>@string.Format("{0:yyyy-MM}", @item.Value.Header.DateFrom)</td>
-                <td>@string.Format("{0:yyyy-MM-dd}", @item.Value.Header.DateFrom)</td>
-                <td>@string.Format("{0:yyyy-MM-dd}", @item.Value.Header.DateTo)</td>
-                <td>@item.Value.Rows.Count</td>
-                <td>@item.Value.Rows.Sum(x => x.RevenueTotal)</td>
-                <td>@item.Value.Rows.Sum(x => x.CostTotal)</td>
-                <td>@(@item.Value.Rows.Sum(x => x.RevenueTotal) - @item.Value.Rows.Sum(x => x.CostTotal))</td>
-            </tr>
-            }
-        </tbody>
-    </table>    
+    <Table DataSource=@model>
+        <Column TRow="Selectable<Kpir>" SelectAllCallback=@OnSelectAll><input type="checkbox" @bind=@context.IsSelected /></Column>
+        <Column TRow="Selectable<Kpir>" Title="ID">@context.Value.Id</Column>
+        <Column TRow="Selectable<Kpir>" Title="Import date">@context.Value.CreationDate</Column>
+        <Column TRow="Selectable<Kpir>" Title="KPIR generation date">@context.Value.Header.CreationDate</Column>
+        <Column TRow="Selectable<Kpir>" Title="Month (?)">@string.Format("{0:yyyy-MM}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Kpir>" Title="From date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Kpir>" Title="To date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateTo)</Column>
+        <Column TRow="Selectable<Kpir>" Title="Rows">@context.Value.Rows.Count</Column>
+        <Column TRow="Selectable<Kpir>" Title="Total Revenue">@context.Value.Rows.Sum(x => x.RevenueTotal)</Column>
+        <Column TRow="Selectable<Kpir>" Title="Total Cost">@context.Value.Rows.Sum(x => x.CostTotal)</Column>
+        <Column TRow="Selectable<Kpir>" Title="Total Income">@(@context.Value.Rows.Sum(x => x.RevenueTotal) - @context.Value.Rows.Sum(x => x.CostTotal))</Column>
+    </Table>
 }
 
 @code {
@@ -79,13 +56,7 @@ else
 
         try
         {
-            var response = await Http.GetAsync("Kpir");
-
-            var stringContent = await response.Content.ReadAsStringAsync();
-
-            var content = JsonConvert.DeserializeObject<IList<TaxAssistant.JPK.Shared.Model.Database.Kpir.Kpir>>(stringContent);
-
-            model = content.Select(x => new Selectable<Kpir>(x)).ToList();
+            model = await Client.GetSelectableAsync();
         }
         finally
         {
@@ -96,7 +67,7 @@ else
     protected void OnAggregate(MouseEventArgs mouseEventArgs)
     {
         var selectedIds = model
-            .Where(x=>x.IsSelected)
+            .Where(x => x.IsSelected)
             .Select(x => x.Value.Id)
             .ToList();
 
@@ -110,6 +81,16 @@ else
         NavigationManager.NavigateTo(url);
     }
 
+    protected void OnPreview(MouseEventArgs mouseEventArgs)
+    {
+        var selectedId = model
+            .Where(x => x.IsSelected)
+            .Select(x => x.Value.Id)
+            .Single();
+
+        NavigationManager.NavigateTo($"kpir-list/{selectedId}");
+    }
+
     protected async Task OnDelete(MouseEventArgs mouseEventArgs)
     {
         var selectedIds = model
@@ -119,7 +100,7 @@ else
 
         foreach (var id in selectedIds)
         {
-            var response = await Http.DeleteAsync($"Kpir/{id}");
+            await Client.DeleteAsync(id);
         }
     }
 

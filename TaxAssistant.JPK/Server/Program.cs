@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Proxies;
+using TaxAssistant.CQRS;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Server;
@@ -21,7 +21,10 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<KpirAdapter>();
 builder.Services.AddScoped<KpirRepository>();
-builder.Services.AddScoped<ImportRepository>(); 
+builder.Services.AddScoped<ImportRepository>();
+
+builder.Services.AddCqrs();
+builder.Services.AddCommandHandlers();
 
 var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddDbContext<DatabaseContext>(x => x

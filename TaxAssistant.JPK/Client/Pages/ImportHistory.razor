@@ -6,8 +6,9 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using TaxAssistant.JPK.Shared.Model.Database
+@using TaxAssistant.JPK.Client.Clients.Abstraction
 
-@inject HttpClient Http
+@inject IApiClient<Import> Client
 
 <PageTitle>Import history</PageTitle>
 
@@ -15,7 +16,7 @@
 
 @if (isLoading)
 {
-    <p><em>Loading...</em></p>
+    <Loading />
 }
 else if(@imports == null)
 {
@@ -23,31 +24,11 @@ else if(@imports == null)
 }
 else 
 {
-    <h2>T1</h2>
     <Table DataSource=@imports>
         <Column TRow="Import" Title="Import date">@context.CreationDate</Column>
         <Column TRow="Import" Title="KPiR">@context.KpirId</Column>
         <Column TRow="Import" Title="Deleted">@context.Kpir?.IsDeleted</Column>
     </Table>
-    
-    <h2>T2</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Import data</th>
-                <th>KPiR</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in @imports)
-        {
-            <tr>
-                <td>@item.CreationDate</td>
-                <td><a href="/kpir-list/@item.KpirId">Preview @item.KpirId</a></td>
-            </tr>
-        }
-        </tbody>
-    </table>
 }
 
 @code {
@@ -60,11 +41,7 @@ else
 
         try
         {
-            var response = await Http.GetAsync("ImportHistory");
-
-            var stringContent = await response.Content.ReadAsStringAsync();
-
-            imports = JsonConvert.DeserializeObject<IList<Import>>(stringContent);
+            imports = await Client.GetAsync();
             Console.WriteLine("Loaded data");
         }
         finally

@@ -1,57 +1,53 @@
 ﻿@page "/kpir-aggregate"
 
 @using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Commands
 @using TaxAssistant.JPK.Shared.Model.Database.Kpir
 @using Microsoft.AspNetCore.Components.Forms
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @using Microsoft.AspNetCore.WebUtilities
 
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
 
 <PageTitle>KPIR</PageTitle>
 
 <h1>Aggregated KPIR</h1>
 
-@if (isParsing)
+@if (isLoading)
 {
-    <p><em>Parsing...</em></p>
+    <Loading />
 }
 else
 {
-    <h2>KPIR to aggregate:</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var row in ids)
-            {
-                <tr>
-                    <td>@row</td>
-                </tr>
-            }
-        </tbody>
-    </table>    
+    <button class="button" @onclick="@OnAggregate">Save agregated KPiR</button>
 
-    @foreach(var id in ids)
+    @foreach (var id in ids)
     {
-        <h3>KPIR @id</h3>
-       <KpirDetails KpirId=id />
+        <CollapsableSection Title="@string.Format("KPiR {0}", id)" Collapsed="true">
+            <KpirDetails KpirId=id />
+        </CollapsableSection>
+    }
+
+    @if (aggregatedKpir != null)
+    {
+        <KpirDetailsSummary Kpir=@aggregatedKpir />
+
+        <KpirDetailsRows Kpir=@aggregatedKpir />
     }
 }
 
 @code {
     private IList<Guid> ids { get; set; }
 
-    private bool isParsing;
+    private bool isLoading;
+
+    private Kpir? aggregatedKpir;
 
     protected override async Task OnInitializedAsync()
     {
-        isParsing = true;
+        isLoading = true;
 
         try
         {
@@ -64,7 +60,30 @@ else
         }
         finally
         {
-            isParsing = false;
+            isLoading = false;
+        }
+    }
+
+    protected async Task OnAggregate(MouseEventArgs args)
+    {
+        isLoading = true;
+
+        try
+        {
+            var body = new AggregateKpirCommand
+            {
+                Ids = ids
+            };
+
+            var response = await Http.PostAsJsonAsync("Aggregate", body);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<AggregateKpirCommandResult>(stringResponse);
+            aggregatedKpir = result.AggregatedKpir;
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 }
