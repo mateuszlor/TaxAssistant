@@ -24,14 +24,17 @@ else
 {
     <span>Selected @model.Count(x => x.IsSelected) items</span>
 
-    <div>        
-        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnAggregate">Aggregate selected</button>
+    <div>
+        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnAggregate">Aggregate</button>
+        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnDelete">Delete</button>
     </div>
 
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
+                <th>
+                    <input type="checkbox" @onclick="@OnSelectAll" />  
+                </th>
                 <th>ID</th>
                 <th>Import date</th>
                 <th>KPIR generation date</th>
@@ -63,8 +66,7 @@ else
             </tr>
             }
         </tbody>
-    </table>
-    
+    </table>    
 }
 
 @code {
@@ -106,5 +108,28 @@ else
         }
 
         NavigationManager.NavigateTo(url);
+    }
+
+    protected async Task OnDelete(MouseEventArgs mouseEventArgs)
+    {
+        var selectedIds = model
+            .Where(x=>x.IsSelected)
+            .Select(x => x.Value.Id)
+            .ToList();
+
+        foreach (var id in selectedIds)
+        {
+            var response = await Http.DeleteAsync($"Kpir/{id}");
+        }
+    }
+
+    protected void OnSelectAll(MouseEventArgs mouseEventArgs)
+    {
+        var isAllSelected = model.All(x => x.IsSelected);
+
+        foreach (var item in model)
+        {
+            item.IsSelected = !isAllSelected;
+        }
     }
 }
