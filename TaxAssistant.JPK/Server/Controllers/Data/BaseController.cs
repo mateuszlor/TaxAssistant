@@ -57,6 +57,37 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _repository.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (Exception ex) when (ex.InnerException is Exception innerException)
+            {
+                var error = new Error
+                {
+                    Message = innerException.Message,
+                    Type = innerException.GetType().Name
+                };
+
+                return BadRequest(error);
+            }
+            catch (Exception ex)
+            {
+                var error = new Error
+                {
+                    Message = ex.Message,
+                    Type = ex.GetType().Name
+                };
+
+                return BadRequest(error);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
