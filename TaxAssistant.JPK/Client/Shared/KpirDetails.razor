@@ -1,0 +1,114 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+
+@inject HttpClient Http
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if(@kpir == null)
+{
+    <p class="error">Invalid data</p>
+}
+else
+{
+    <h2>Summary:</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Rows</th>
+                <th>Revenue</th>
+                <th>Cost</th>
+                <th>Income</th>
+                <th>From date</th>
+                <th>To date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Declared</td>
+                <td>@kpir.ControlData?.RowCount</td>
+                <td>@kpir.ControlData?.TotalIncome</td>
+                <td>@kpir.Summary?.TotalCost</td>
+                <td>@kpir.Summary?.TotalIncome</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @kpir.Header?.DateFrom)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @kpir.Header?.DateTo)</td>
+            </tr>
+            <tr>
+                <td>Actual</td>
+                <td>@kpir.Rows.Count</td>
+                <td>@kpir.Rows.Sum(x => x.RevenueTotal)</td>
+                <td>@kpir.Rows.Sum(x => x.CostTotal)</td>
+                <td>@(@kpir.Rows.Sum(x => x.RevenueTotal) - @kpir.Rows.Sum(x => x.CostTotal))</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @kpir.Rows.Min(x => x.Date))</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @kpir.Rows.Max(x => x.Date))</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Details:</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>(1) Lp</th>
+                <th>(2) Date</th>
+                <th>(3) Document number</th>
+                <th>(4) Company</th>
+                <th>(5) Company address</th>
+                <th>(6) Description</th>
+                <th>(9) Revenue</th>
+                <th>(14) Spending</th>
+                <th>(17) Additional description</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var row in @kpir.Rows.OrderBy(x => x.Number))
+        {
+            <tr>
+                <td>@row.Number</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @row.Date)</td>
+                <td>@row.CompanyData</td>
+                <td>@row.CompanyAddress</td>
+                <td>@row.Description</td>
+                <td>@row.DocumentNumber</td>
+                <td>@row.RevenueTotal</td>
+                <td>@row.CostTotal</td>
+                <td>@row.AdditionalDescription</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Guid KpirId { get; set; }
+
+    private Kpir? kpir;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            var response = await Http.GetAsync($"Kpir/{KpirId}");
+
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(stringContent);
+            kpir = JsonConvert.DeserializeObject<TaxAssistant.JPK.Shared.Model.Database.Kpir.Kpir>(stringContent);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

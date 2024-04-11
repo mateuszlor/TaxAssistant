@@ -1,0 +1,70 @@
+﻿@page "/kpir-aggregate"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>KPIR</PageTitle>
+
+<h1>Aggregated KPIR</h1>
+
+@if (isParsing)
+{
+    <p><em>Parsing...</em></p>
+}
+else
+{
+    <h2>KPIR to aggregate:</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in ids)
+            {
+                <tr>
+                    <td>@row</td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+
+    @foreach(var id in ids)
+    {
+        <h3>KPIR @id</h3>
+       <KpirDetails KpirId=id />
+    }
+}
+
+@code {
+    private IList<Guid> ids { get; set; }
+
+    private bool isParsing;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isParsing = true;
+
+        try
+        {
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("id", out var param))
+            {
+                ids = param.Select(Guid.Parse).ToList();
+            }
+        }
+        finally
+        {
+            isParsing = false;
+        }
+    }
+}

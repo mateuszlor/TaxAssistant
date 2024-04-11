@@ -1,0 +1,110 @@
+﻿@page "/kpir-list"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Kpir
+@using TaxAssistant.JPK.Shared.Model.View
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>KPIR</PageTitle>
+
+<h1>KPIR</h1>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <span>Selected @model.Count(x => x.IsSelected) items</span>
+
+    <div>        
+        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnAggregate">Aggregate selected</button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Import date</th>
+                <th>KPIR generation date</th>
+                <th>Month (?)</th>
+                <th>From date</th>
+                <th>To date</th>
+                <th>Total Revenue</th>
+                <th>Total Cost</th>
+                <th>Total Income</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in model)
+            {
+            <tr>
+                <td>
+                    <input type="checkbox" @bind="@item.IsSelected" />  
+                </td>
+                <td>@item.Value.Id</td>
+                <td>@item.Value.CreationDate</td>
+                <td>@item.Value.Header.CreationDate</td>
+                <td>@string.Format("{0:yyyy-MM}", @item.Value.Header.DateFrom)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @item.Value.Header.DateFrom)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @item.Value.Header.DateTo)</td>
+                <td>@item.Value.Rows.Count</td>
+                <td>@item.Value.Rows.Sum(x => x.RevenueTotal)</td>
+                <td>@item.Value.Rows.Sum(x => x.CostTotal)</td>
+                <td>@(@item.Value.Rows.Sum(x => x.RevenueTotal) - @item.Value.Rows.Sum(x => x.CostTotal))</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+
+@code {
+    private IList<Selectable<Kpir>> model;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            var response = await Http.GetAsync("Kpir");
+
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            var content = JsonConvert.DeserializeObject<IList<TaxAssistant.JPK.Shared.Model.Database.Kpir.Kpir>>(stringContent);
+
+            model = content.Select(x => new Selectable<Kpir>(x)).ToList();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected void OnAggregate(MouseEventArgs mouseEventArgs)
+    {
+        var selectedIds = model
+            .Where(x=>x.IsSelected)
+            .Select(x => x.Value.Id)
+            .ToList();
+
+        var url = "kpir-aggregate";
+
+        foreach (var id in selectedIds)
+        {
+            url = QueryHelpers.AddQueryString(url, "id", id.ToString());
+        }
+
+        NavigationManager.NavigateTo(url);
+    }
+}

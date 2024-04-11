@@ -3,8 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Server", "TaxAssistant.JPK\Server\TaxAssistant.JPK.Server.csproj", "{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK", "TaxAssistant.JPK\TaxAssistant.JPK.csproj", "{0F72B9A4-4F70-4E33-8AEB-D444D4F8DBCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Client", "TaxAssistant.JPK\Client\TaxAssistant.JPK.Client.csproj", "{047762EF-92F6-465E-9441-EB8D6AF34617}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Shared", "TaxAssistant.JPK\Shared\TaxAssistant.JPK.Shared.csproj", "{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Database", "TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj", "{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D34194D5-D61D-4199-96AB-9CC8A4501B9C}"
+	ProjectSection(SolutionItems) = preProject
+		README.MD = README.MD
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TasAssistant.JPK.ApplicationLogic", "TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj", "{3B1943A2-A523-432B-8AEB-C159672D440F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,14 +24,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6B140D8E-171E-48BB-9C7D-8A0B428DEE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B140D8E-171E-48BB-9C7D-8A0B428DEE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B140D8E-171E-48BB-9C7D-8A0B428DEE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B140D8E-171E-48BB-9C7D-8A0B428DEE22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F72B9A4-4F70-4E33-8AEB-D444D4F8DBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F72B9A4-4F70-4E33-8AEB-D444D4F8DBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F72B9A4-4F70-4E33-8AEB-D444D4F8DBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F72B9A4-4F70-4E33-8AEB-D444D4F8DBCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E3BDA0-ADCD-409F-9FF2-87635EA542BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{047762EF-92F6-465E-9441-EB8D6AF34617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{047762EF-92F6-465E-9441-EB8D6AF34617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{047762EF-92F6-465E-9441-EB8D6AF34617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{047762EF-92F6-465E-9441-EB8D6AF34617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{602AF726-FA7A-4E02-B3D8-956EBD8CC2CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB9ACD3A-BEA8-4287-8B75-51D1F7A42C04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1943A2-A523-432B-8AEB-C159672D440F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1943A2-A523-432B-8AEB-C159672D440F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1943A2-A523-432B-8AEB-C159672D440F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1943A2-A523-432B-8AEB-C159672D440F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

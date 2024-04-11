@@ -1,0 +1,67 @@
+﻿@page "/import-history"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database
+
+@inject HttpClient Http
+
+<PageTitle>Import history</PageTitle>
+
+<h1>Import history</h1>
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if(@imports == null)
+{
+    <div class="alert alert-danger">No imports found</div>
+}
+else 
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Import data</th>
+                <th>KPiR</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in @imports)
+        {
+            <tr>
+                <td>@item.CreationDate</td>
+                <td><a href="/kpir-list/@item.KpirId">Preview @item.KpirId</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Import>? imports;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            var response = await Http.GetAsync("ImportHistory");
+
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine(stringContent);
+            imports = JsonConvert.DeserializeObject<IList<Import>>(stringContent);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

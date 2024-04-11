@@ -1,0 +1,51 @@
+﻿@page "/fetchdata"
+@using TaxAssistant.JPK.Shared.Model
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (importResult == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>
+        Import status: @importResult.IsSuccessful
+    </div>
+
+@*    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in importResult.Kpir)
+            {
+                <tr>
+                    <td>@importResult.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+}
+
+@code {
+    private ImportResult? importResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        importResult = await Http.GetFromJsonAsync<ImportResult>("WeatherForecast");
+    }
+}

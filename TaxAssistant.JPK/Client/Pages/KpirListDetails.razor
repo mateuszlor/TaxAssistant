@@ -1,0 +1,44 @@
+﻿@page "/kpir-list/{IdParameter}"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+@inject HttpClient Http
+
+<PageTitle>KPIR</PageTitle>
+
+<h1>KPIR</h1>
+
+@if (isLoading)
+{
+    <p><em>Parsing...</em></p>
+}
+else
+{
+    <KpirDetails KpirId=@kpirId />
+}
+
+@code {
+    [Parameter]
+    public string IdParameter { get; set; }
+    
+    private Guid kpirId;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            kpirId = Guid.Parse(IdParameter);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

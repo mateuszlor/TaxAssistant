@@ -1,0 +1,59 @@
+﻿@page "/import-jpk"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+@inject HttpClient Http
+
+<PageTitle>JPK import</PageTitle>
+
+<h1>JPK import</h1>
+
+<InputFile OnChange="@LoadFiles" />
+
+@if (isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (importResult != null)
+{
+    <span><b>Is import successful:</b> @importResult.IsSuccessful</span>
+    
+    if(@importResult.Data?.Kpir == null)
+    {
+        <span>KPIR is null</span>
+    }
+    else 
+    {
+        <span>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir/@importResult.Data.KpirId">>> preview</a></span>
+    }
+}
+
+@code {
+    private ImportResult? importResult;
+    private bool isLoading;
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+
+        try
+        {
+            var reader = new StreamReader(e.File.OpenReadStream());
+            var fileContent = await reader.ReadToEndAsync();
+
+            var response = await Http.PostAsJsonAsync<string>("Import", fileContent);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+
+            //importResult = JsonSerializer.Deserialize<ImportResult>(stringResponse);
+            importResult = JsonConvert.DeserializeObject<ImportResult>(stringResponse);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
