@@ -21,6 +21,8 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<KpirAdapter>();
 builder.Services.AddScoped<KpirRepository>();
+builder.Services.AddScoped<EwpAdapter>();
+builder.Services.AddScoped<EwpRepository>();
 builder.Services.AddScoped<ImportRepository>();
 
 builder.Services.AddCqrs();

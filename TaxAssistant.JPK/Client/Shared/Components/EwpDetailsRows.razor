@@ -1,0 +1,32 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Ewp
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+
+@if (@Ewp == null)
+{
+    <Loading />
+}
+else
+{
+    <Table TRow="EwpRow" DataSource=@Ewp.Rows.OrderBy(x => x.Number).ToList()>
+        <Column TRow="EwpRow" Title="(1) Lp">@context.Number</Column>
+        <Column TRow="EwpRow" Title="(2) Entry date">@string.Format("{0:yyyy-MM-dd}", @context.EntryDate)</Column>
+        <Column TRow="EwpRow" Title="(3) Revenue date">@string.Format("{0:yyyy-MM-dd}", @context.RevenueDate)</Column>
+        <Column TRow="EwpRow" Title="(4) Document number">@context.DocumentNumber</Column>
+        <Column TRow="EwpRow" Title="(8) Revenue taxed 12,5%">@context.RevenueTaxed12Point5Percent</Column>
+        <Column TRow="EwpRow" Title="(9) Revenue taxed 12%">@context.RevenueTaxed12Percent</Column>
+        <Column TRow="EwpRow" Title="(10) Revenue taxed 8,5%">@context.RevenueTaxed8Point5Percent</Column>
+        <Column TRow="EwpRow" Title="(14) Total revenue">@context.RevenueTotal</Column>
+        <Column TRow="EwpRow" Title="(15) Info">@context.AdditionalDescription</Column>
+    </Table>
+}
+
+@code {
+    [Parameter]
+    public Ewp Ewp { get; set; }
+}

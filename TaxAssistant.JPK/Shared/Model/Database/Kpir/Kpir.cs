@@ -11,6 +11,7 @@
         public virtual KpirHeader Header { get; set; }
 
         public virtual KpirControlData ControlData { get; set; }
-        internal KpirCompany Subject { get; set; }
+
+        public virtual KpirCompany Subject { get; set; }
     }
 }

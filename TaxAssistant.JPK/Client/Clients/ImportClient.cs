@@ -4,7 +4,7 @@ namespace TaxAssistant.JPK.Client.Clients
 {
     public class ImportClient : BaseApiClient<Import>
     {
-        public ImportClient(HttpClient httpClient) : base(httpClient, "import")
+        public ImportClient(HttpClient httpClient) : base(httpClient, "ImportHistory")
         {
         }
     }

@@ -1,0 +1,36 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Ewp
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+
+@if (@Ewp == null)
+{
+    <Loading />
+}
+else if(Ewp.FixedAssets == null)
+{
+    <div>No fixed assets data</div>
+}
+else
+{
+    <Table TRow="EwpFixedAsset" DataSource=@Ewp.FixedAssets.OrderBy(x => x.Number).ToList()>
+        <Column TRow="EwpFixedAsset" Title="(1) Lp">@context.Number</Column>
+        <Column TRow="EwpFixedAsset" Title="(2) Acceptance date">@string.Format("{0:yyyy-MM-dd}", @context.AcceptanceDate)</Column>
+        <Column TRow="EwpFixedAsset" Title="(3) Transfer date">@string.Format("{0:yyyy-MM-dd}", @context.TransferDate)</Column>
+        <Column TRow="EwpFixedAsset" Title="(4) Document number">@context.DocumentNumber</Column>
+        <Column TRow="EwpFixedAsset" Title="(5) Description">@context.Description</Column>
+        <Column TRow="EwpFixedAsset" Title="(6) Category code">@context.CategoryCode</Column>
+        <Column TRow="EwpFixedAsset" Title="(7) Initial value">@context.InitialValue</Column>
+        <Column TRow="EwpFixedAsset" Title="(8) Depreciation rate">@context.DepreciationRate %</Column>
+        <Column TRow="EwpFixedAsset" Title="(9) Updated initial value">@context.UpdatedInitialValue</Column>
+    </Table>
+}
+
+@code {
+    [Parameter]
+    public Ewp Ewp { get; set; }
+}

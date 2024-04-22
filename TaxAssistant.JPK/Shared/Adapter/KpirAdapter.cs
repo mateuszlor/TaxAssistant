@@ -1,12 +1,11 @@
 ﻿using TaxAssistant.JPK.Shared.Extensions;
-using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 
 namespace TaxAssistant.JPK.Shared.Adapter
 {
-    public class KpirAdapter
+    public class KpirAdapter : IJpkAdapter<JPK_PKPIR, Kpir>
     {
         public Kpir Adapt(JPK_PKPIR item) => new Kpir
         {
@@ -39,11 +38,11 @@ namespace TaxAssistant.JPK.Shared.Adapter
                 TotalCost = item.PKPIRInfo.P_3,
                 TotalIncome = item.PKPIRInfo.P_4
             },
-            PhysicalInventories = item.PKPIRSpis?.Select(Adapt)?.ToList(),
-            Rows = item.PKPIRWiersz?.Select(Adapt)?.ToList()
+            PhysicalInventories = item.PKPIRSpis.Select(Adapt).ToList(),
+            Rows = item.PKPIRWiersz.Select(Adapt).ToList()
         };
 
-        private KpirCompanyAddress Adapt(TAdresJPK x) => new KpirCompanyAddress
+        private static KpirCompanyAddress Adapt(TAdresJPK x) => new KpirCompanyAddress
         {
             CountryCode = x.KodKraju.ToString(),
             Voivodeship = x.Wojewodztwo,
@@ -55,13 +54,13 @@ namespace TaxAssistant.JPK.Shared.Adapter
             PostOffice = x.Poczta,
         };
 
-        private KpirPhysicalInventory Adapt(JPKPKPIRSpis x) => new KpirPhysicalInventory
+        private static KpirPhysicalInventory Adapt(JPKPKPIRSpis x) => new KpirPhysicalInventory
         {
             Date = x.P_5A,
             Value = x.P_5B
         };
 
-        private KpirRow Adapt(JPKPKPIRWiersz x) => new KpirRow
+        private static KpirRow Adapt(JPKPKPIRWiersz x) => new KpirRow
         {
             Number = int.Parse(x.K_1),
             Date = x.K_2,

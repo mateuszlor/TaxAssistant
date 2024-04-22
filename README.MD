@@ -10,3 +10,9 @@ Eg:
 cd .\TaxAssistant.JPK\Server\
 dotnet ef migrations add InitialDatabase --project ..\..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj --context DatabaseContext
 ```
+
+Or:
+
+```powershell
+dotnet ef migrations add JPK_EWP --project TaxAssistant.JPK.Database --startup-project TaxAssistant.JPK/Server
+```

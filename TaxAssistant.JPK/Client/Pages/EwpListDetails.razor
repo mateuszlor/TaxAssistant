@@ -1,0 +1,43 @@
+﻿@page "/ewp-list/{IdParameter}"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Client.Shared.Components;
+
+<PageTitle>EWP</PageTitle>
+
+<h1>EWP</h1>
+
+@if (isLoading)
+{
+    <p><em>Parsing...</em></p>
+}
+else
+{
+    <EwpDetails EwpId=@ewpId />
+}
+
+@code {
+    [Parameter]
+    public string IdParameter { get; set; }
+    
+    private Guid ewpId;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            ewpId = Guid.Parse(IdParameter);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

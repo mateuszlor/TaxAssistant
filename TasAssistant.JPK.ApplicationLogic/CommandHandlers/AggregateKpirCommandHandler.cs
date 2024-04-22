@@ -14,6 +14,16 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
             _repository = repository;
         }
 
+        public void DoSth(AggregateKpirCommand command)
+        {
+            DoSthAsync(command);
+        }
+
+        public async void DoSthAsync(AggregateKpirCommand command)
+        {
+            _ = await HandleAsync(command);
+        }
+
         public async Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand command)
         {
             var kpirs = command.Ids

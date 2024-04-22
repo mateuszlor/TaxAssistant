@@ -26,8 +26,9 @@ else
 {
     <Table DataSource=@imports>
         <Column TRow="Import" Title="Import date">@context.CreationDate</Column>
-        <Column TRow="Import" Title="KPiR">@context.KpirId</Column>
-        <Column TRow="Import" Title="Deleted">@context.Kpir?.IsDeleted</Column>
+        <Column TRow="Import" Title="KPiR"><a href="kpir-list/@context.KpirId">@context.KpirId</a></Column>
+        <Column TRow="Import" Title="EWP"><a href="ewp-list/@context.EwpId">@context.EwpId</a></Column>
+        <Column TRow="Import" Title="Deleted">@(context.Kpir?.IsDeleted ?? context.Ewp?.IsDeleted)</Column>
     </Table>
 }
 

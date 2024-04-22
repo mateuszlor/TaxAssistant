@@ -20,7 +20,7 @@
 }
 else if (importResult != null)
 {
-    <span><b>Is import successful:</b> @importResult.IsSuccessful</span>
+    <div><b>Is import successful:</b> @importResult.IsSuccessful</div>
 
     if(!importResult.IsSuccessful)
     {
@@ -33,13 +33,17 @@ else if (importResult != null)
             <div>@importResult.Error.Type: @importResult.Error.Message</div>
         }
     }
-    else if(@importResult.Data?.Kpir == null)
+    else if(@importResult.Data.Kpir != null)
     {
-        <span>KPIR is null</span>
+        <div>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir-list/@importResult.Data.KpirId">>> preview</a></div>
     }
-    else 
+    else if(importResult.Data.Ewp != null)
     {
-        <span>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir-list/@importResult.Data.KpirId">>> preview</a></span>
+        <div>Imported EWP with @importResult.Data.Ewp.Rows.Count rows and @(importResult.Data.Ewp.FixedAssets?.Count ?? 0) fixed assets<a href="ewp-list/@importResult.Data.EwpId">>> preview</a></div>
+    }
+    else
+    {
+        <div>Not handled import details</div>
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Net;
+using Newtonsoft.Json;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.View;
@@ -21,12 +22,17 @@ namespace TaxAssistant.JPK.Client.Clients
 
         public async Task DeleteAsync(Guid id)
         {
-            await _httpClient.DeleteAsync($"Kpir/{id}");
+            await _httpClient.DeleteAsync($"{_baseUrl}/{id}");
         }
 
-        public async Task<IList<T>> GetAsync()
+        public async Task<IList<T>?> GetAsync()
         {
-            var response = await _httpClient.GetAsync("Kpir");
+            var response = await _httpClient.GetAsync(_baseUrl);
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return null;
+            }
 
             var stringContent = await response.Content.ReadAsStringAsync();
 
@@ -35,9 +41,14 @@ namespace TaxAssistant.JPK.Client.Clients
             return content;
         }
 
-        public async Task<T> GetAsync(Guid id)
+        public async Task<T?> GetAsync(Guid id)
         {
-            var response = await _httpClient.GetAsync($"Kpir/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/{id}");
+
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return null;
+            }
 
             var stringContent = await response.Content.ReadAsStringAsync();
 
@@ -46,7 +57,7 @@ namespace TaxAssistant.JPK.Client.Clients
             return content;
         }
 
-        public async Task<IList<Selectable<T>>> GetSelectableAsync()
+        public async Task<IList<Selectable<T>>?> GetSelectableAsync()
         {
             var content = await GetAsync();
 

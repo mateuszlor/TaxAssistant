@@ -1,0 +1,52 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Ewp
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using TaxAssistant.JPK.Client.Shared.Components
+
+@inject IApiClient<Ewp> Client
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@ewp == null)
+{
+    <p class="error">Invalid data</p>
+}
+else
+{
+    <h3>Summary:</h3>
+    <EwpDetailsSummary Ewp=@ewp />
+
+    <h3>Details:</h3>
+    <EwpDetailsRows Ewp=@ewp />
+
+    <h3>Fixed assets:</h3>
+    <EwpFixedAssets Ewp=@ewp />
+}
+
+@code {
+    [Parameter]
+    public Guid ewpId { get; set; }
+
+    private Ewp? ewp;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            ewp = await Client.GetAsync(ewpId);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

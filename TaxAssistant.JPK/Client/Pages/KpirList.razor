@@ -21,6 +21,10 @@
 {
     <Loading />
 }
+else if (@model == null)
+{
+    <div>No items</div>
+}
 else
 {
     <span>Selected @model.Count(x => x.IsSelected) items</span>

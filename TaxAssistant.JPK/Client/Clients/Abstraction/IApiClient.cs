@@ -5,11 +5,11 @@ namespace TaxAssistant.JPK.Client.Clients.Abstraction
 {
     public interface IApiClient<T> where T : BaseModel
     {
-        Task<IList<T>> GetAsync();
+        Task<IList<T>?> GetAsync();
 
-        Task<IList<Selectable<T>>> GetSelectableAsync();
+        Task<IList<Selectable<T>>?> GetSelectableAsync();
 
-        Task<T> GetAsync(Guid id);
+        Task<T?> GetAsync(Guid id);
 
         Task DeleteAsync(Guid id);
     }

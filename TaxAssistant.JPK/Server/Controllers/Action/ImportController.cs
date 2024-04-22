@@ -6,6 +6,7 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_1;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_2;
@@ -17,20 +18,26 @@ namespace TaxAssistant.JPK.Server.Controllers
     public class ImportController : ControllerBase
     {
         private readonly ILogger<ImportController> _logger;
-        private readonly KpirAdapter _adapter;
+        private readonly KpirAdapter _kpirAdapter;
         private readonly KpirRepository _kpirRepository;
+        private readonly EwpAdapter _ewpAdapter;
+        private readonly EwpRepository _ewpRepository;
         private readonly ImportRepository _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
-            KpirAdapter adapter,
+            KpirAdapter kpirAdapter,
             KpirRepository kpirRepository,
+            EwpAdapter ewpAdapter,
+            EwpRepository ewpRepository,
             ImportRepository importRepository)
         {
-            _logger = logger;
-            _adapter = adapter;
-            _kpirRepository = kpirRepository;
-            _importRepository = importRepository;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _kpirAdapter = kpirAdapter ?? throw new ArgumentNullException(nameof(kpirAdapter));
+            _kpirRepository = kpirRepository ?? throw new ArgumentNullException(nameof(kpirRepository));
+            _ewpAdapter = ewpAdapter ?? throw new ArgumentNullException(nameof(ewpAdapter));
+            _ewpRepository = ewpRepository ?? throw new ArgumentNullException(nameof(ewpRepository));
+            _importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
         }
 
         [HttpPost]
@@ -54,24 +61,44 @@ namespace TaxAssistant.JPK.Server.Controllers
             {
                 var model = new ImportResult
                 {
-                    IsSuccessful = true
-                    //VatV1 = result as JPK_V7M_1,
-                    //VatV2 = result as JPK_V7M_2
+                    IsSuccessful = true,
                 };
 
-                if (result is JPK_PKPIR kpir)
+                switch (result)
                 {
-                    var items = _adapter.Adapt(kpir);
-                    var addedItems = await _kpirRepository.AddAsync(items);
-
-                    var importData = new Import
+                    case JPK_PKPIR kpir:
                     {
-                        KpirId = addedItems.Id
-                    };
+                        var items = _kpirAdapter.Adapt(kpir);
+                        var addedItems = await _kpirRepository.AddAsync(items);
 
-                    var addedImportData = await _importRepository.AddAsync(importData);
+                        var importData = new Import
+                        {
+                            KpirId = addedItems.Id
+                        };
 
-                    model.Data = addedImportData;
+                        var addedImportData = await _importRepository.AddAsync(importData);
+
+                        model.Data = addedImportData;
+
+                        break;
+                    }
+                    case JPK_EWP ewp:
+                    {
+                        var items = _ewpAdapter.Adapt(ewp);
+                        var addedItems = await _ewpRepository.AddAsync(items);
+
+                        var importData = new Import
+                        {
+                            EwpId = addedItems.Id
+                        };
+
+                        var addedImportData = await _importRepository.AddAsync(importData);
+
+                        model.Data = addedImportData;
+
+                        break;
+                    }
+
                 }
 
                 return Ok(model);
@@ -82,7 +109,8 @@ namespace TaxAssistant.JPK.Server.Controllers
         {
             { "http://jpk.mf.gov.pl/wzor/2016/10/26/10262/", typeof(JPK_PKPIR) },
             { "http://crd.gov.pl/wzor/2020/05/08/9393/", typeof(JPK_V7M_1) },
-            { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) }
+            { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) },
+            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) }
         };
 
         private object Deserialize(string content)

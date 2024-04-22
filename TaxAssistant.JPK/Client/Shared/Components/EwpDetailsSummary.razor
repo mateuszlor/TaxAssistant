@@ -1,0 +1,43 @@
+﻿@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using TaxAssistant.JPK.Shared.Model.Database.Ewp
+
+@if (@Ewp == null)
+{
+    <Loading />
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Rows</th>
+                <th>Revenue</th>
+                <th>From date</th>
+                <th>To date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Declared</td>
+                <td>@Ewp.RowsControlData?.RowCount</td>
+                <td>@Ewp.RowsControlData?.TotalValue</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Ewp.Header?.DateFrom)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Ewp.Header?.DateTo)</td>
+            </tr>
+            <tr>
+                <td>Actual</td>
+                <td>@Ewp.Rows.Count</td>
+                <td>@Ewp.Rows.Sum(x => x.RevenueTotal)</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Ewp.Rows.Min(x => x.EntryDate))</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", @Ewp.Rows.Max(x => x.EntryDate))</td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Ewp Ewp { get; set; }
+}

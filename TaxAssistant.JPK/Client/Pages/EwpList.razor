@@ -1,0 +1,100 @@
+﻿@page "/ewp-list"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Ewp
+@using TaxAssistant.JPK.Shared.Model.View
+@using Microsoft.AspNetCore.WebUtilities
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+
+@inject IApiClient<Ewp> Client
+@inject NavigationManager NavigationManager
+
+<PageTitle>EWP</PageTitle>
+
+<h1>EWP</h1>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@model == null)
+{
+    <div>No items</div>
+}
+else
+{
+    <span>Selected @model.Count(x => x.IsSelected) items</span>
+
+    <div>
+        <button class="button" disabled=@(@model.Count(x => x.IsSelected) != 1) @onclick="@OnPreview">Preview</button>
+        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnDelete">Delete</button>
+    </div>
+
+    <Table DataSource=@model>
+        <Column TRow="Selectable<Ewp>" SelectAllCallback=@OnSelectAll><input type="checkbox" @bind=@context.IsSelected /></Column>
+        <Column TRow="Selectable<Ewp>" Title="ID">@context.Value.Id</Column>
+        <Column TRow="Selectable<Ewp>" Title="Import date">@context.Value.CreationDate</Column>
+        <Column TRow="Selectable<Ewp>" Title="Ewp generation date">@context.Value.Header.CreationDate</Column>
+        <Column TRow="Selectable<Ewp>" Title="Month (?)">@string.Format("{0:yyyy-MM}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Ewp>" Title="From date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Ewp>" Title="To date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateTo)</Column>
+        <Column TRow="Selectable<Ewp>" Title="Rows">@context.Value.Rows.Count</Column>
+        <Column TRow="Selectable<Ewp>" Title="Total Revenue">@context.Value.Rows.Sum(x => x.RevenueTotal)</Column>
+    </Table>
+}
+
+@code {
+    private IList<Selectable<Ewp>> model;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            model = await Client.GetSelectableAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected void OnPreview(MouseEventArgs mouseEventArgs)
+    {
+        var selectedId = model
+            .Where(x => x.IsSelected)
+            .Select(x => x.Value.Id)
+            .Single();
+
+        NavigationManager.NavigateTo($"ewp-list/{selectedId}");
+    }
+
+    protected async Task OnDelete(MouseEventArgs mouseEventArgs)
+    {
+        var selectedIds = model
+            .Where(x=>x.IsSelected)
+            .Select(x => x.Value.Id)
+            .ToList();
+
+        foreach (var id in selectedIds)
+        {
+            await Client.DeleteAsync(id);
+        }
+    }
+
+    protected void OnSelectAll(MouseEventArgs mouseEventArgs)
+    {
+        var isAllSelected = model.All(x => x.IsSelected);
+
+        foreach (var item in model)
+        {
+            item.IsSelected = !isAllSelected;
+        }
+    }
+}

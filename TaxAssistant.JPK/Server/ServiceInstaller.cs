@@ -24,6 +24,8 @@ namespace TaxAssistant.JPK.Server
             catch (Exception ex)
             {
                 logger?.LogError(ex, "Problem with database migration");
+
+                throw;
             }
 
             return app;
