@@ -7,6 +7,7 @@ using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_1;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_2;
@@ -110,7 +111,8 @@ namespace TaxAssistant.JPK.Server.Controllers
             { "http://jpk.mf.gov.pl/wzor/2016/10/26/10262/", typeof(JPK_PKPIR) },
             { "http://crd.gov.pl/wzor/2020/05/08/9393/", typeof(JPK_V7M_1) },
             { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) },
-            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) }
+            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) },
+            { "http://jpk.mf.gov.pl/wzor/2022/02/17/02171/", typeof(JPK_FA) }
         };
 
         private object Deserialize(string content)

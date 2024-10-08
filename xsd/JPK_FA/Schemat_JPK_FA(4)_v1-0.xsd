@@ -1326,7 +1326,7 @@
 								</xsd:annotation>
 							</xsd:element>
 							<xsd:choice>
-								<xsd:element name="AdresPodmiotu" type="etd:TAdresPolski">
+								<xsd:element name="AdresPodmiotu" type="etd:TAdresPolski1">
 									<xsd:annotation>
 										<xsd:documentation>Adres podmiotu w Polsce</xsd:documentation>
 									</xsd:annotation>
