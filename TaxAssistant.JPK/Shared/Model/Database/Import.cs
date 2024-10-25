@@ -5,8 +5,13 @@
         public Guid? KpirId { get; set; }
 
         public virtual Kpir.Kpir? Kpir { get; set; }
-        public Guid? EwpId { get; set; }
 
-        public virtual Ewp.Ewp? Ewp { get; set; }
-    }
+		public Guid? EwpId { get; set; }
+
+		public virtual Ewp.Ewp? Ewp { get; set; }
+
+		public Guid? FaId { get; set; }
+
+		public virtual Fa.Fa? Fa { get; set; }
+	}
 }

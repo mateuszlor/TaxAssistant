@@ -1,0 +1,102 @@
+﻿@page "/fa-list"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Fa
+@using TaxAssistant.JPK.Shared.Model.View
+@using Microsoft.AspNetCore.WebUtilities
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+
+@inject IApiClient<Fa> Client
+@inject NavigationManager NavigationManager
+
+<PageTitle>FA</PageTitle>
+
+<h1>FA</h1>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@model == null)
+{
+    <div>No items</div>
+}
+else
+{
+    <span>Selected @model.Count(x => x.IsSelected) items</span>
+
+    <div>
+        <button class="button" disabled=@(@model.Count(x => x.IsSelected) != 1) @onclick="@OnPreview">Preview</button>
+        <button class="button" disabled=@(!@model.Any(x => x.IsSelected)) @onclick="@OnDelete">Delete</button>
+    </div>
+
+    <Table DataSource=@model>
+        <Column TRow="Selectable<Fa>" SelectAllCallback=@OnSelectAll><input type="checkbox" @bind=@context.IsSelected /></Column>
+        <Column TRow="Selectable<Fa>" Title="ID">@context.Value.Id</Column>
+        <Column TRow="Selectable<Fa>" Title="Import date">@context.Value.CreationDate</Column>
+        <Column TRow="Selectable<Fa>" Title="Fa generation date">@context.Value.Header.GenerationDate</Column>
+        <Column TRow="Selectable<Fa>" Title="Month (?)">@string.Format("{0:yyyy-MM}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Fa>" Title="From date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateFrom)</Column>
+        <Column TRow="Selectable<Fa>" Title="To date">@string.Format("{0:yyyy-MM-dd}", @context.Value.Header.DateTo)</Column>
+        <Column TRow="Selectable<Fa>" Title="Invoices">@context.Value.Invoices.Count</Column>
+        <Column TRow="Selectable<Fa>" Title="Invoices amount">@context.Value.ControlData.TotalIncomeFromInvoices</Column>
+        <Column TRow="Selectable<Fa>" Title="Orders">@context.Value.Orders?.Count ?? 0</Column>
+        <Column TRow="Selectable<Fa>" Title="Orders amount">@context.Value.ControlData.TotalIncomeFromOrders</Column>
+    </Table>
+}
+
+@code {
+    private IList<Selectable<Fa>> model;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            model = await Client.GetSelectableAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected void OnPreview(MouseEventArgs mouseEventArgs)
+    {
+        var selectedId = model
+            .Where(x => x.IsSelected)
+            .Select(x => x.Value.Id)
+            .Single();
+
+        NavigationManager.NavigateTo($"Fa-list/{selectedId}");
+    }
+
+    protected async Task OnDelete(MouseEventArgs mouseEventArgs)
+    {
+        var selectedIds = model
+            .Where(x=>x.IsSelected)
+            .Select(x => x.Value.Id)
+            .ToList();
+
+        foreach (var id in selectedIds)
+        {
+            await Client.DeleteAsync(id);
+        }
+    }
+
+    protected void OnSelectAll(MouseEventArgs mouseEventArgs)
+    {
+        var isAllSelected = model.All(x => x.IsSelected);
+
+        foreach (var item in model)
+        {
+            item.IsSelected = !isAllSelected;
+        }
+    }
+}

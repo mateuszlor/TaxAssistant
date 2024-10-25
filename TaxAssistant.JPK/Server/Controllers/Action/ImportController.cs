@@ -7,6 +7,7 @@ using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_1;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_2;
@@ -22,7 +23,9 @@ namespace TaxAssistant.JPK.Server.Controllers
         private readonly KpirRepository _kpirRepository;
         private readonly EwpAdapter _ewpAdapter;
         private readonly EwpRepository _ewpRepository;
-        private readonly ImportRepository _importRepository;
+		private readonly FaAdapter _faAdapter;
+		private readonly FaRepository _faRepository;
+		private readonly ImportRepository _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
@@ -30,14 +33,18 @@ namespace TaxAssistant.JPK.Server.Controllers
             KpirRepository kpirRepository,
             EwpAdapter ewpAdapter,
             EwpRepository ewpRepository,
-            ImportRepository importRepository)
+			FaAdapter faAdapter,
+			FaRepository faRepository,
+			ImportRepository importRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _kpirAdapter = kpirAdapter ?? throw new ArgumentNullException(nameof(kpirAdapter));
             _kpirRepository = kpirRepository ?? throw new ArgumentNullException(nameof(kpirRepository));
             _ewpAdapter = ewpAdapter ?? throw new ArgumentNullException(nameof(ewpAdapter));
             _ewpRepository = ewpRepository ?? throw new ArgumentNullException(nameof(ewpRepository));
-            _importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
+			_faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
+			_faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
+			_importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
         }
 
         [HttpPost]
@@ -98,7 +105,20 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                         break;
                     }
+                    case JPK_FA fa:
+                    {
+                        var item = _faAdapter.Adapt(fa);
+                        var added = await _faRepository.AddAsync(item);
+                        var importData = new Import
+                        {
+                            FaId = added.Id
+                        };
 
+                        var addedImportData = await _importRepository.AddAsync(importData);
+
+                        model.Data = addedImportData;
+                        break;
+                    }
                 }
 
                 return Ok(model);
@@ -110,7 +130,8 @@ namespace TaxAssistant.JPK.Server.Controllers
             { "http://jpk.mf.gov.pl/wzor/2016/10/26/10262/", typeof(JPK_PKPIR) },
             { "http://crd.gov.pl/wzor/2020/05/08/9393/", typeof(JPK_V7M_1) },
             { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) },
-            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) }
+            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) },
+            { "http://jpk.mf.gov.pl/wzor/2022/02/17/02171/", typeof(JPK_FA) }
         };
 
         private object Deserialize(string content)

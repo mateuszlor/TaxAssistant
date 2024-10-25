@@ -23,10 +23,14 @@ builder.Services.AddScoped<KpirAdapter>();
 builder.Services.AddScoped<KpirRepository>();
 builder.Services.AddScoped<EwpAdapter>();
 builder.Services.AddScoped<EwpRepository>();
+builder.Services.AddScoped<FaAdapter>();
+builder.Services.AddScoped<FaRepository>();
 builder.Services.AddScoped<ImportRepository>();
 
 builder.Services.AddCqrs();
 builder.Services.AddCommandHandlers();
+
+builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddDbContext<DatabaseContext>(x => x
@@ -48,6 +52,9 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
