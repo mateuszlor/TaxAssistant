@@ -1,0 +1,104 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Fa
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+
+@if (Invoice == null)
+{
+    <Loading />
+}
+else
+{
+    <h3 class="text-center">@Invoice.DocumentNumber</h3>
+
+    <div class="row">
+        <div class="col-6">
+            <div>
+                <b>Seller:</b>
+            </div>
+            <FaInvoiceCompanyDetails Company=@Invoice.Seller />
+            <div class="mt-2">
+                <b>Buyer:</b>
+            </div>
+            <FaInvoiceCompanyDetails Company=@Invoice.Buyer />
+        </div>
+        <div class="col-2"></div>
+        <div class="col-4">
+            <div>
+                <b>Issue date:</b> @Invoice.IssueDate.ToShortDateString()
+            </div>
+            <div>
+                <b>Delivery date:</b> @Invoice.DeliveryDate.ToShortDateString()
+            </div>
+        </div>
+    </div>
+
+    <Table class="table mt-2" TRow="FaInvoiceRow" DataSource=@Invoice.Rows>
+        <Column TRow="FaInvoiceRow" Title="Item">@context.Name</Column>
+        <Column TRow="FaInvoiceRow" Title="Metric unit">@context.MetricUnit</Column>
+        <Column TRow="FaInvoiceRow" Title="Count">@context.Count</Column>
+        <Column TRow="FaInvoiceRow" Title="Unit price net"><Amount Value=@context.UnitPriceNet /></Column>
+        <Column TRow="FaInvoiceRow" Title="Total price net"><Amount Value=@context.TotalPriceNet /></Column>
+        <Column TRow="FaInvoiceRow" Title="Total price gross"><Amount Value=@context.TotalPriceGross /></Column>
+        <Column TRow="FaInvoiceRow" Title="VAT rate"><VatRate Rate=@context.VatRate /></Column>
+    </Table>
+
+    <div class="row mt-2">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">Total net</th>
+                        <td><Amount Value=@totalNet /></td>
+                    </tr>
+                    @if (Invoice.TotalVatBaseRate != decimal.Zero)
+                    {
+                        <tr>
+                            <th scope="row">VAT 23%</th>
+                            <td><Amount Value=@Invoice.TotalVatBaseRate /></td>
+                        </tr>
+                    }
+                    @if (Invoice.TotalVatRate8 != decimal.Zero)
+                    {
+                        <tr>
+                            <th scope="row">VAT 8%</th>
+                            <td><Amount Value=@Invoice.TotalVatRate8 /></td>
+                        </tr>
+                    }
+                    @if (Invoice.TotalVatRate5 != decimal.Zero)
+                    {
+                        <tr>
+                            <th scope="row">VAT 5%</th>
+                            <td><Amount Value=@Invoice.TotalVatRate5 /></td>
+                        </tr>
+                    }
+                    <tr>
+                        <th scope="row">Total gross</th>
+                        <td><Amount Value=@totalGross /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required FaInvoice Invoice { get; set; }
+
+    private decimal totalNet;
+    private decimal totalVat;
+    private decimal totalGross;
+
+    protected override void OnParametersSet()
+    {
+        totalNet = Invoice.Rows.Sum(x => x.TotalPriceNet);
+        totalGross = Invoice.Rows.Sum(x => x.TotalPriceGross.GetValueOrDefault());
+        totalVat = totalGross - totalNet;
+    }
+}

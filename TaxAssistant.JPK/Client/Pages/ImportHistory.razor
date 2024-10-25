@@ -28,7 +28,8 @@ else
         <Column TRow="Import" Title="Import date">@context.CreationDate</Column>
         <Column TRow="Import" Title="KPiR"><a href="kpir-list/@context.KpirId">@context.KpirId</a></Column>
         <Column TRow="Import" Title="EWP"><a href="ewp-list/@context.EwpId">@context.EwpId</a></Column>
-        <Column TRow="Import" Title="Deleted">@(context.Kpir?.IsDeleted ?? context.Ewp?.IsDeleted)</Column>
+        <Column TRow="Import" Title="FA"><a href="fa-list/@context.FaId">@context.FaId</a></Column>
+        <Column TRow="Import" Title="Deleted">@(context.Kpir?.IsDeleted ?? context.Ewp?.IsDeleted ?? context.Fa?.IsDeleted)</Column>
     </Table>
 }
 

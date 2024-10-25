@@ -1,6 +1,6 @@
 ﻿namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
 {
-    public class KpirCompany : BaseModel
+	public class KpirCompany : BaseModel
     {
         public Guid KpirId { get; set; }
 
@@ -14,6 +14,6 @@
 
         public Guid AddressId { get; set; }
 
-        public virtual KpirCompanyAddress Address { get; set; }
+        public virtual KpirCompanyAddress? Address { get; set; }
     }
 }

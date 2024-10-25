@@ -1,0 +1,28 @@
+﻿@using TaxAssistant.JPK.Shared.Model.Database.Fa
+
+@displayValue
+
+@code {
+	[Parameter]
+	public VatRateEnum? Rate { get; set; }
+
+	private string? displayValue;
+
+	protected override void OnParametersSet()
+	{
+		displayValue = Rate switch
+		{
+			VatRateEnum.Item23 => "23%",
+			VatRateEnum.Item22 => "22%",
+			VatRateEnum.Item8 => "8%",
+			VatRateEnum.Item7 => "7%",
+			VatRateEnum.Item5 => "5%",
+			VatRateEnum.Item4 => "4%",
+			VatRateEnum.Item3 => "3%",
+			VatRateEnum.Item0 => "0%",
+			VatRateEnum.oo => "oo",
+			VatRateEnum.zw => "zw",
+			_ => null
+		};
+	}
+}

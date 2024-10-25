@@ -23,7 +23,9 @@ namespace TaxAssistant.JPK.Server.Controllers
         private readonly KpirRepository _kpirRepository;
         private readonly EwpAdapter _ewpAdapter;
         private readonly EwpRepository _ewpRepository;
-        private readonly ImportRepository _importRepository;
+		private readonly FaAdapter _faAdapter;
+		private readonly FaRepository _faRepository;
+		private readonly ImportRepository _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
@@ -31,14 +33,18 @@ namespace TaxAssistant.JPK.Server.Controllers
             KpirRepository kpirRepository,
             EwpAdapter ewpAdapter,
             EwpRepository ewpRepository,
-            ImportRepository importRepository)
+			FaAdapter faAdapter,
+			FaRepository faRepository,
+			ImportRepository importRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _kpirAdapter = kpirAdapter ?? throw new ArgumentNullException(nameof(kpirAdapter));
             _kpirRepository = kpirRepository ?? throw new ArgumentNullException(nameof(kpirRepository));
             _ewpAdapter = ewpAdapter ?? throw new ArgumentNullException(nameof(ewpAdapter));
             _ewpRepository = ewpRepository ?? throw new ArgumentNullException(nameof(ewpRepository));
-            _importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
+			_faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
+			_faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
+			_importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
         }
 
         [HttpPost]
@@ -99,7 +105,20 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                         break;
                     }
+                    case JPK_FA fa:
+                    {
+                        var item = _faAdapter.Adapt(fa);
+                        var added = await _faRepository.AddAsync(item);
+                        var importData = new Import
+                        {
+                            FaId = added.Id
+                        };
 
+                        var addedImportData = await _importRepository.AddAsync(importData);
+
+                        model.Data = addedImportData;
+                        break;
+                    }
                 }
 
                 return Ok(model);

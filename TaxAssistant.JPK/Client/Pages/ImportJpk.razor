@@ -41,6 +41,10 @@ else if (importResult != null)
     {
         <div>Imported EWP with @importResult.Data.Ewp.Rows.Count rows and @(importResult.Data.Ewp.FixedAssets?.Count ?? 0) fixed assets<a href="ewp-list/@importResult.Data.EwpId">>> preview</a></div>
     }
+    else if (importResult.Data.Fa != null)
+    {
+        <div>Imported FA with @importResult.Data.Fa.Invoices.Count invoices with total @importResult.Data.Fa.Invoices.Sum(x => x.Rows.Count) rows and @(importResult.Data.Fa.Orders?.Count ?? 0) orders with total @(importResult.Data.Fa.Orders?.Sum(x => x.Rows.Count) ?? 0) rows<a href="fa-list/@importResult.Data.FaId">>> preview</a></div>
+    }
     else
     {
         <div>Not handled import details</div>
@@ -61,6 +65,9 @@ else if (importResult != null)
             var fileContent = await reader.ReadToEndAsync();
 
             var response = await Http.PostAsJsonAsync<string>("Import", fileContent);
+
+            response.EnsureSuccessStatusCode();
+
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             importResult = JsonConvert.DeserializeObject<ImportResult>(stringResponse);

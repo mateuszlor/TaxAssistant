@@ -1,0 +1,60 @@
+﻿@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Fa
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+
+@if (Company != null)
+{
+	<div>
+		@Company.Name
+	</div>
+	@foreach(var part in addressParts)
+	{
+		<div>
+			@part
+		</div>
+	}
+	@if (Company.TaxIdentificationNumber?.Length == 10)
+	{
+		<div>
+			<span>NIP:</span>
+			@Company.TaxIdentificationNumber
+		</div>
+	}
+	@if (Company.TaxIdentificationNumber?.Length == 9)
+	{
+		<div>
+			<span>PESEL:</span>
+			@Company.TaxIdentificationNumber
+		</div>
+	}
+}
+
+@code {
+	[Parameter]
+	public FaInvoiceCompany? Company { get; set; }
+
+	[Parameter]
+	public bool IncludeDefaultCountry { get; set; } = false;
+
+	private IList<string> addressParts;
+
+	protected override void OnParametersSet()
+	{
+		addressParts = Company?.Address?.Split(",").Select(x => x.Trim()).ToList() ?? [];
+
+		if (!IncludeDefaultCountry)
+		{
+			var lastPart = addressParts.Last();
+
+			if (lastPart.Equals("POLSKA", StringComparison.InvariantCultureIgnoreCase))
+			{
+				addressParts.RemoveAt(addressParts.Count - 1);
+			}
+		}
+	}
+}
