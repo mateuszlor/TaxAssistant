@@ -22,13 +22,24 @@
 
         public override bool Equals(object? obj)
         {
-            if (obj is NewCompanyEvent e)
-            {
-				return TaxIdentificationNumber == e.TaxIdentificationNumber ||
-					(e.CompanyData == CompanyData && e.Address == Address);
-            }
+			if (obj is NewCompanyEvent e)
+			{
+				if (!string.IsNullOrEmpty(TaxIdentificationNumber) && !string.IsNullOrEmpty(e.TaxIdentificationNumber))
+				{
+					return TaxIdentificationNumber == e.TaxIdentificationNumber;
+				}
+				else if (string.IsNullOrEmpty(TaxIdentificationNumber) && string.IsNullOrEmpty(e.TaxIdentificationNumber))
+				{
+					return e.CompanyData == CompanyData && e.Address == Address;
+				}
+			}
 
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(CompanyData, TaxIdentificationNumber, Address);
         }
     }
 }
