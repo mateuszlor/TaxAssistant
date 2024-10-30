@@ -50,7 +50,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal --collect "Code Coverage"
+      run: dotnet test --no-build /p:CollectCoverage=true
     - name: End Sonar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
