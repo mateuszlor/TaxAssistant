@@ -6,6 +6,31 @@ namespace TaxAssistant.JPK.Tests
     public class NewCompanyEventTests
     {
         [Test]
+        public void Equals_ForDifferentObjectType_ReturnsFalse()
+        {
+            // Arrange
+            var company = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+
+            // Act
+            var result = company.Equals(new object());
+
+            // Assert
+            result.Should().BeFalse();
+        }
+        [Test]
+        public void Equals_ForNullObject_ReturnsFalse()
+        {
+            // Arrange
+            var company = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+
+            // Act
+            var result = company.Equals(null);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
         public void Equals_ForSameTaxIdentificationNumber_ReturnsTrue()
         {
             // Arrange
@@ -67,6 +92,34 @@ namespace TaxAssistant.JPK.Tests
             // Arrange
             var company1 = new NewCompanyEvent("some company", "00-000 City Street 1/2");
             var company2 = new NewCompanyEvent("some company", "01-000 OtherCity OtherStreet 3/4");
+
+            // Act
+            var result = company1.Equals(company2);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_ForNoTaxIdentificationNumberInSource_ReturnsFalse()
+        {
+            // Arrange
+            var company1 = new NewCompanyEvent("some company", "00-000 City Street 1/2");
+            var company2 = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+
+            // Act
+            var result = company1.Equals(company2);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Equals_ForNoTaxIdentificationNumberInDestination_ReturnsFalse()
+        {
+            // Arrange
+            var company1 = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+            var company2 = new NewCompanyEvent("some company", "00-000 City Street 1/2");
 
             // Act
             var result = company1.Equals(company2);
