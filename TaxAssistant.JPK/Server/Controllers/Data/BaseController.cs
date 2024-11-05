@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
@@ -134,7 +135,7 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
         {
             if (!ModelState.IsValid)
             {
-                throw new Exception($"Validation errors: {string.Join(";", ModelState.Values.SelectMany(v => v.Errors))}");
+                throw new ValidationException($"Validation errors: {string.Join(";", ModelState.Values.SelectMany(v => v.Errors))}");
             }
         }
     }
