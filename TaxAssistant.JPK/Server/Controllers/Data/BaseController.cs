@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
@@ -24,6 +25,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
         {
             try
             {
+                Validate();
+
                 var data = await _repository.GetAsync(id);
 
                 if (data == null)
@@ -62,6 +65,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
         {
             try
             {
+                Validate();
+
                 await _repository.DeleteAsync(id);
 
                 return Ok();
@@ -123,6 +128,14 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
                 };
 
                 return BadRequest(error);
+            }
+        }
+
+        private void Validate()
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new Exception($"Validation errors: {string.Join(";", ModelState.Values.SelectMany(v => v.Errors))}");
             }
         }
     }
