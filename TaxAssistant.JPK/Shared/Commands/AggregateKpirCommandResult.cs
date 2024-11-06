@@ -4,7 +4,7 @@ namespace TaxAssistant.JPK.Shared.Commands
 {
     public class AggregateKpirCommandResult
     {
-        public Kpir AggregatedKpir { get; set; }
+        public Kpir? AggregatedKpir { get; set; }
 
         public IList<Kpir> SourceKpirs { get; set; }
 

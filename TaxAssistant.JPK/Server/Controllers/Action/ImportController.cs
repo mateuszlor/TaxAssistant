@@ -2,10 +2,14 @@
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Database.Ewp;
+using TaxAssistant.JPK.Shared.Model.Database.Fa;
+using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
@@ -20,31 +24,31 @@ namespace TaxAssistant.JPK.Server.Controllers
     {
         private readonly ILogger<ImportController> _logger;
         private readonly KpirAdapter _kpirAdapter;
-        private readonly KpirRepository _kpirRepository;
+        private readonly IRepository<Kpir> _kpirRepository;
         private readonly EwpAdapter _ewpAdapter;
-        private readonly EwpRepository _ewpRepository;
-		private readonly FaAdapter _faAdapter;
-		private readonly FaRepository _faRepository;
-		private readonly ImportRepository _importRepository;
+        private readonly IRepository<Ewp> _ewpRepository;
+        private readonly FaAdapter _faAdapter;
+        private readonly IRepository<Fa> _faRepository;
+        private readonly IRepository<Import> _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
             KpirAdapter kpirAdapter,
-            KpirRepository kpirRepository,
+            IRepository<Kpir> kpirRepository,
             EwpAdapter ewpAdapter,
-            EwpRepository ewpRepository,
-			FaAdapter faAdapter,
-			FaRepository faRepository,
-			ImportRepository importRepository)
+            IRepository<Ewp> ewpRepository,
+            FaAdapter faAdapter,
+            IRepository<Fa> faRepository,
+            IRepository<Import> importRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _kpirAdapter = kpirAdapter ?? throw new ArgumentNullException(nameof(kpirAdapter));
             _kpirRepository = kpirRepository ?? throw new ArgumentNullException(nameof(kpirRepository));
             _ewpAdapter = ewpAdapter ?? throw new ArgumentNullException(nameof(ewpAdapter));
             _ewpRepository = ewpRepository ?? throw new ArgumentNullException(nameof(ewpRepository));
-			_faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
-			_faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
-			_importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
+            _faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
+            _faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
+            _importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
         }
 
         [HttpPost]
@@ -52,20 +56,10 @@ namespace TaxAssistant.JPK.Server.Controllers
         [ProducesResponseType(typeof(ImportResult), 400)]
         public async Task<IActionResult> Import([FromBody] string content)
         {
-            var result = Deserialize(content);
-
-            if (result is Error error)
+            try
             {
-                var model = new ImportResult
-                {
-                    IsSuccessful = false,
-                    Error = error
-                };
+                var result = Deserialize(content);
 
-                return BadRequest(model);
-            }
-            else
-            {
                 var model = new ImportResult
                 {
                     IsSuccessful = true,
@@ -123,6 +117,22 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                 return Ok(model);
             }
+            catch (Exception ex)
+            {
+                var error = new Error
+                {
+                    Message = ex.Message,
+                    Type = ex.GetType().Name
+                };
+
+                var response = new ImportResult
+                {
+                    IsSuccessful = false,
+                    Error = error
+                };
+
+                return BadRequest(response);
+            }
         }
 
         private IDictionary<string, Type> _namespaces = new Dictionary<string, Type>
@@ -136,32 +146,31 @@ namespace TaxAssistant.JPK.Server.Controllers
 
         private object Deserialize(string content)
         {
-            try
+            if (string.IsNullOrEmpty(content))
             {
-                var xmlString = HttpUtility.HtmlDecode(content);
-
-                var xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(xmlString);
-
-                if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
-                {
-                    throw new NotImplementedException();
-                }
-
-                var serializer = new XmlSerializer(type);
-                var reader = new StringReader(xmlString);
-                var model = serializer.Deserialize(reader);
-
-                return model;
+                throw new ArgumentException("Empty JPK file content");
             }
-            catch (Exception ex) when (ex.InnerException is Exception innerException)
+
+            var xmlString = HttpUtility.HtmlDecode(content);
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xmlString);
+
+            if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
-                return new Error { Message = innerException.Message, Type = innerException.GetType().Name };
+                throw new NotImplementedException($"XML has no namespace");
             }
-            catch (Exception ex)
+
+            if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
             {
-                return new Error { Message = ex.Message, Type = ex.GetType().Name };
+                throw new NotImplementedException($"Namespace \"{xmlDocument.DocumentElement.NamespaceURI}\" has no handler");
             }
+
+            var serializer = new XmlSerializer(type);
+            var reader = new StringReader(xmlString);
+            var model = serializer.Deserialize(reader);
+
+            return model;
         }
     }
 }

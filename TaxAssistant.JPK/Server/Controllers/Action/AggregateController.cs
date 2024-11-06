@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaxAssistant.CQRS;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
-using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model;
 
@@ -11,23 +9,10 @@ namespace TaxAssistant.JPK.Server.Controllers
     [Route("[controller]")]
     public class AggregateController : ControllerBase
     {
-        private readonly ILogger<AggregateController> _logger;
-        private readonly KpirAdapter _adapter;
-        private readonly KpirRepository _kpirRepository;
-        private readonly ImportRepository _importRepository;
-        private readonly Gate _gate;
+        private readonly IGate _gate;
 
-        public AggregateController(
-            ILogger<AggregateController> logger,
-            KpirAdapter adapter,
-            KpirRepository kpirRepository,
-            ImportRepository importRepository,
-            Gate gate)
+        public AggregateController(IGate gate)
         {
-            _logger = logger;
-            _adapter = adapter;
-            _kpirRepository = kpirRepository;
-            _importRepository = importRepository;
             _gate = gate;
         }
 
@@ -42,7 +27,7 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }

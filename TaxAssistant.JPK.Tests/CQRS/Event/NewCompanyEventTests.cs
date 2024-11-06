@@ -1,7 +1,7 @@
 using FluentAssertions;
 using TaxAssistant.JPK.Shared.DomainEvents;
 
-namespace TaxAssistant.JPK.Tests
+namespace TaxAssistant.JPK.Tests.CQRS.Event
 {
     public class NewCompanyEventTests
     {

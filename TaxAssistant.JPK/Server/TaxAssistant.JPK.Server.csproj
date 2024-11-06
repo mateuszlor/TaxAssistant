@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj" />
+    <ProjectReference Include="..\..\TasAssistant.JPK.ApplicationLogic\TaxAssistant.JPK.ApplicationLogic.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj" />
     <ProjectReference Include="..\Client\TaxAssistant.JPK.Client.csproj" />
@@ -20,6 +20,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

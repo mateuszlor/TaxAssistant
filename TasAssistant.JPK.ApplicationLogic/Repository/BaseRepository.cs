@@ -4,7 +4,7 @@ using TaxAssistant.JPK.Shared.Model.Database;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
-    public abstract class BaseRepository<T>
+    public abstract class BaseRepository<T> : IRepository<T>
         where T : BaseModel
     {
         protected readonly DatabaseContext _databaseContext;
