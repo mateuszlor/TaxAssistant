@@ -5,7 +5,7 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
-namespace TaxAssistant.JPK.Tests
+namespace TaxAssistant.JPK.Tests.CQRS.CommandHandler
 {
     public class AggregateKpirCommandHandlerTests
     {
