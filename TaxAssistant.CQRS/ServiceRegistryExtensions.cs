@@ -7,7 +7,7 @@ namespace TaxAssistant.CQRS
     {
         public static void AddCqrs(this IServiceCollection services)
         {
-            services.AddScoped<Gate>();
+            services.AddScoped<IGate, Gate>();
         }
 
         public static void AddCommandHandlers(this IServiceCollection services)
