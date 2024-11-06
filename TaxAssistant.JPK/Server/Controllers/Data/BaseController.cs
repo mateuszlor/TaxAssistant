@@ -10,11 +10,11 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
         where T : BaseModel
     {
         private readonly ILogger<BaseController<T>> _logger;
-        private readonly BaseRepository<T> _repository;
+        private readonly IRepository<T> _repository;
 
-        public BaseController(
+        protected BaseController(
             ILogger<BaseController<T>> logger,
-            BaseRepository<T> repository)
+            IRepository<T> repository)
         {
             _logger = logger;
             _repository = repository;
@@ -38,25 +38,9 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
                     return Ok(data);
                 }
             }
-            catch (Exception ex) when (ex.InnerException is Exception innerException)
-            {
-                var error = new Error
-                {
-                    Message = innerException.Message,
-                    Type = innerException.GetType().Name
-                };
-
-                return BadRequest(error);
-            }
             catch (Exception ex)
             {
-                var error = new Error
-                {
-                    Message = ex.Message,
-                    Type = ex.GetType().Name
-                };
-
-                return BadRequest(error);
+                return HandleError(ex);
             }
         }
 
@@ -71,25 +55,9 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
 
                 return Ok();
             }
-            catch (Exception ex) when (ex.InnerException is Exception innerException)
-            {
-                var error = new Error
-                {
-                    Message = innerException.Message,
-                    Type = innerException.GetType().Name
-                };
-
-                return BadRequest(error);
-            }
             catch (Exception ex)
             {
-                var error = new Error
-                {
-                    Message = ex.Message,
-                    Type = ex.GetType().Name
-                };
-
-                return BadRequest(error);
+                return HandleError(ex);
             }
         }
 
@@ -102,32 +70,16 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
 
                 if (data == null || !data.Any())
                 {
-                    return StatusCode(204, new List<T>());
+                    return NoContent();
                 }
                 else
                 {
                     return Ok(data);
                 }
             }
-            catch (Exception ex) when (ex.InnerException is Exception innerException)
-            {
-                var error = new Error
-                {
-                    Message = innerException.Message,
-                    Type = innerException.GetType().Name
-                };
-
-                return BadRequest(error);
-            }
             catch (Exception ex)
             {
-                var error = new Error
-                {
-                    Message = ex.Message,
-                    Type = ex.GetType().Name
-                };
-
-                return BadRequest(error);
+                return HandleError(ex);
             }
         }
 
@@ -137,6 +89,17 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
             {
                 throw new ValidationException($"Validation errors: {string.Join(";", ModelState.Values.SelectMany(v => v.Errors))}");
             }
+        }
+
+        private IActionResult HandleError(Exception ex)
+        {
+            var error = new Error
+            {
+                Message = ex.Message,
+                Type = ex.GetType().Name
+            };
+
+            return BadRequest(error);
         }
     }
 }

@@ -6,6 +6,10 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Server;
 using TaxAssistant.JPK.Shared.Adapter;
+using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Database.Ewp;
+using TaxAssistant.JPK.Shared.Model.Database.Fa;
+using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +24,12 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<KpirAdapter>();
-builder.Services.AddScoped<KpirRepository>();
+builder.Services.AddScoped<IRepository<Kpir>, KpirRepository>();
 builder.Services.AddScoped<EwpAdapter>();
-builder.Services.AddScoped<EwpRepository>();
+builder.Services.AddScoped<IRepository<Ewp>, EwpRepository>();
 builder.Services.AddScoped<FaAdapter>();
-builder.Services.AddScoped<FaRepository>();
-builder.Services.AddScoped<ImportRepository>();
+builder.Services.AddScoped<IRepository<Fa>, FaRepository>();
+builder.Services.AddScoped<IRepository<Import>, ImportRepository>();
 
 builder.Services.AddCqrs();
 builder.Services.AddCommandHandlers();

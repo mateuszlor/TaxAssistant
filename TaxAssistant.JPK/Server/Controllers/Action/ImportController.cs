@@ -6,6 +6,9 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Database.Ewp;
+using TaxAssistant.JPK.Shared.Model.Database.Fa;
+using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
@@ -20,31 +23,31 @@ namespace TaxAssistant.JPK.Server.Controllers
     {
         private readonly ILogger<ImportController> _logger;
         private readonly KpirAdapter _kpirAdapter;
-        private readonly KpirRepository _kpirRepository;
+        private readonly IRepository<Kpir> _kpirRepository;
         private readonly EwpAdapter _ewpAdapter;
-        private readonly EwpRepository _ewpRepository;
-		private readonly FaAdapter _faAdapter;
-		private readonly FaRepository _faRepository;
-		private readonly ImportRepository _importRepository;
+        private readonly IRepository<Ewp> _ewpRepository;
+        private readonly FaAdapter _faAdapter;
+        private readonly IRepository<Fa> _faRepository;
+        private readonly IRepository<Import> _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
             KpirAdapter kpirAdapter,
-            KpirRepository kpirRepository,
+            IRepository<Kpir> kpirRepository,
             EwpAdapter ewpAdapter,
-            EwpRepository ewpRepository,
-			FaAdapter faAdapter,
-			FaRepository faRepository,
-			ImportRepository importRepository)
+            IRepository<Ewp> ewpRepository,
+            FaAdapter faAdapter,
+            IRepository<Fa> faRepository,
+            IRepository<Import> importRepository)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _kpirAdapter = kpirAdapter ?? throw new ArgumentNullException(nameof(kpirAdapter));
             _kpirRepository = kpirRepository ?? throw new ArgumentNullException(nameof(kpirRepository));
             _ewpAdapter = ewpAdapter ?? throw new ArgumentNullException(nameof(ewpAdapter));
             _ewpRepository = ewpRepository ?? throw new ArgumentNullException(nameof(ewpRepository));
-			_faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
-			_faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
-			_importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
+            _faAdapter = faAdapter ?? throw new ArgumentNullException(nameof(faAdapter));
+            _faRepository = faRepository ?? throw new ArgumentNullException(nameof(faRepository));
+            _importRepository = importRepository ?? throw new ArgumentNullException(nameof(importRepository));
         }
 
         [HttpPost]

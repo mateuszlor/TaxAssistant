@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.MD = README.MD
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TasAssistant.JPK.ApplicationLogic", "TasAssistant.JPK.ApplicationLogic\TasAssistant.JPK.ApplicationLogic.csproj", "{3B1943A2-A523-432B-8AEB-C159672D440F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.ApplicationLogic", "TasAssistant.JPK.ApplicationLogic\TaxAssistant.JPK.ApplicationLogic.csproj", "{3B1943A2-A523-432B-8AEB-C159672D440F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.CQRS", "TaxAssistant.CQRS\TaxAssistant.CQRS.csproj", "{6A68E0FD-BE07-4C12-AE3F-8BF0BC92D0D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Tests", "TaxAssistant.JPK.Tests\TaxAssistant.JPK.Tests.csproj", "{2960CAFC-7B46-4915-B7AA-0BC0EB127198}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests", "TaxAssistant.JPK.Tests\TaxAssistant.JPK.Tests.csproj", "{2960CAFC-7B46-4915-B7AA-0BC0EB127198}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,6 +4,8 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model;
+using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Server.Controllers
 {
@@ -13,15 +15,15 @@ namespace TaxAssistant.JPK.Server.Controllers
     {
         private readonly ILogger<AggregateController> _logger;
         private readonly KpirAdapter _adapter;
-        private readonly KpirRepository _kpirRepository;
-        private readonly ImportRepository _importRepository;
+        private readonly IRepository<Kpir> _kpirRepository;
+        private readonly IRepository<Import> _importRepository;
         private readonly Gate _gate;
 
         public AggregateController(
             ILogger<AggregateController> logger,
             KpirAdapter adapter,
-            KpirRepository kpirRepository,
-            ImportRepository importRepository,
+            IRepository<Kpir> kpirRepository,
+            IRepository<Import> importRepository,
             Gate gate)
         {
             _logger = logger;
@@ -42,7 +44,7 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }

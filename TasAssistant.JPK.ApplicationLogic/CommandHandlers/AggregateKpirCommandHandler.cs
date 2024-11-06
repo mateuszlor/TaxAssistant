@@ -7,9 +7,9 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
 {
     public class AggregateKpirCommandHandler : ICommandHandler<AggregateKpirCommand, AggregateKpirCommandResult>
     {
-        private readonly KpirRepository _repository;
+        private readonly IRepository<Kpir> _repository;
 
-        public AggregateKpirCommandHandler(KpirRepository repository)
+        public AggregateKpirCommandHandler(IRepository<Kpir> repository)
         {
             _repository = repository;
         }

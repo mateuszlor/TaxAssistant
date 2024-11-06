@@ -10,7 +10,7 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     {
         public EwpController(
             ILogger<EwpController> logger,
-            EwpRepository repository)
+            IRepository<Ewp> repository)
             : base(logger, repository)
         {
         }

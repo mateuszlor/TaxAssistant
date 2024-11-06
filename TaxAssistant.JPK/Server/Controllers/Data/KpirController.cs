@@ -10,7 +10,7 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     {
         public KpirController(
             ILogger<KpirController> logger,
-            KpirRepository repository)
+            IRepository<Kpir> repository)
             : base(logger, repository)
         {
         }

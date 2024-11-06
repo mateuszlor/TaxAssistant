@@ -10,7 +10,7 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     {
         public FaController(
             ILogger<FaController> logger,
-            FaRepository repository)
+            IRepository<Fa>repository)
             : base(logger, repository)
         {
         }
