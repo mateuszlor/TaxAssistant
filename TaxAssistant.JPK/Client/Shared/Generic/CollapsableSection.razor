@@ -1,36 +1,36 @@
 ﻿<div class="accordion">
-    <div class="card">
-        <div class="card-header">
-            @if (Collapsed)
-            {
-                <span @onclick="@Toggle"  class="oi oi-plus px-3" aria-hidden="true"></span> @Title
-            }
-            else
-            { 
-                <span @onclick="@Toggle" class="oi oi-minus px-3" aria-hidden="true"></span> @Title
-            }
-        </div>
-        @if(!Collapsed)
-        {
-            <div class="card-body">
-                @ChildContent
-            </div>
-        }
-  </div>
+	<div class="card">
+		<div class="card-header" data-test-id="card-header" @onclick="@Toggle">
+			@if (Collapsed)
+			{
+				<span class="oi oi-plus px-3" aria-hidden="true"></span> @Title
+			}
+			else
+			{
+				<span class="oi oi-minus px-3" aria-hidden="true"></span> @Title
+			}
+		</div>
+		@if (!Collapsed)
+		{
+			<div class="card-body" data-test-id="card-body">
+				@ChildContent
+			</div>
+		}
+	</div>
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+	[Parameter]
+	public required RenderFragment ChildContent { get; set; }
 
-    [Parameter]
-    public bool Collapsed { get; set; }
+	[Parameter]
+	public bool Collapsed { get; set; }
 
-    [Parameter]
-    public string Title { get; set; }
+	[Parameter]
+	public string Title { get; set; }
 
-    void Toggle()
-    {
-        Collapsed = !Collapsed;
-    }
+	void Toggle()
+	{
+		Collapsed = !Collapsed;
+	}
 }
