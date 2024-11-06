@@ -1,13 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using TaxAssistant.CQRS;
 using TaxAssistant.JPK.Server.Controllers;
-using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Commands;
-using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Tests.Controller
 {

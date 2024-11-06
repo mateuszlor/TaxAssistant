@@ -2,6 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
@@ -55,20 +56,10 @@ namespace TaxAssistant.JPK.Server.Controllers
         [ProducesResponseType(typeof(ImportResult), 400)]
         public async Task<IActionResult> Import([FromBody] string content)
         {
-            var result = Deserialize(content);
-
-            if (result is Error error)
+            try
             {
-                var model = new ImportResult
-                {
-                    IsSuccessful = false,
-                    Error = error
-                };
+                var result = Deserialize(content);
 
-                return BadRequest(model);
-            }
-            else
-            {
                 var model = new ImportResult
                 {
                     IsSuccessful = true,
@@ -126,6 +117,22 @@ namespace TaxAssistant.JPK.Server.Controllers
 
                 return Ok(model);
             }
+            catch (Exception ex)
+            {
+                var error = new Error
+                {
+                    Message = ex.Message,
+                    Type = ex.GetType().Name
+                };
+
+                var response = new ImportResult
+                {
+                    IsSuccessful = false,
+                    Error = error
+                };
+
+                return BadRequest(response);
+            }
         }
 
         private IDictionary<string, Type> _namespaces = new Dictionary<string, Type>
@@ -139,32 +146,31 @@ namespace TaxAssistant.JPK.Server.Controllers
 
         private object Deserialize(string content)
         {
-            try
+            if (string.IsNullOrEmpty(content))
             {
-                var xmlString = HttpUtility.HtmlDecode(content);
-
-                var xmlDocument = new XmlDocument();
-                xmlDocument.LoadXml(xmlString);
-
-                if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
-                {
-                    throw new NotImplementedException();
-                }
-
-                var serializer = new XmlSerializer(type);
-                var reader = new StringReader(xmlString);
-                var model = serializer.Deserialize(reader);
-
-                return model;
+                throw new ArgumentException("Empty JPK file content");
             }
-            catch (Exception ex) when (ex.InnerException is Exception innerException)
+
+            var xmlString = HttpUtility.HtmlDecode(content);
+
+            var xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(xmlString);
+
+            if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
-                return new Error { Message = innerException.Message, Type = innerException.GetType().Name };
+                throw new NotImplementedException($"XML has no namespace");
             }
-            catch (Exception ex)
+
+            if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
             {
-                return new Error { Message = ex.Message, Type = ex.GetType().Name };
+                throw new NotImplementedException($"Namespace \"{xmlDocument.DocumentElement.NamespaceURI}\" has no handler");
             }
+
+            var serializer = new XmlSerializer(type);
+            var reader = new StringReader(xmlString);
+            var model = serializer.Deserialize(reader);
+
+            return model;
         }
     }
 }
