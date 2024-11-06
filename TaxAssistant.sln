@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.CQRS", "TaxAss
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests", "TaxAssistant.JPK.Tests\TaxAssistant.JPK.Tests.csproj", "{2960CAFC-7B46-4915-B7AA-0BC0EB127198}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.FrontendTests", "TaxAssistant.JPK.FrontendTests\TaxAssistant.JPK.FrontendTests.csproj", "{7B975CFA-80FF-4465-8E33-073D6651D6DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{2960CAFC-7B46-4915-B7AA-0BC0EB127198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2960CAFC-7B46-4915-B7AA-0BC0EB127198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2960CAFC-7B46-4915-B7AA-0BC0EB127198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B975CFA-80FF-4465-8E33-073D6651D6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B975CFA-80FF-4465-8E33-073D6651D6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B975CFA-80FF-4465-8E33-073D6651D6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B975CFA-80FF-4465-8E33-073D6651D6DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
