@@ -11,47 +11,47 @@
 
 @if (isLoading)
 {
-    <Loading />
+	<Loading />
 }
 else if (@fa == null)
 {
-    <p class="error">Invalid data</p>
+	<p class="error">Invalid data</p>
 }
 else
 {
-    <h3>Summary:</h3>
-    <FaDetailsSummary Fa=@fa />
+	<h3>Summary:</h3>
+	<FaDetailsSummary Fa=@fa />
 
-    <h3>Invoices:</h3>
+	<h3>Invoices:</h3>
 
-    @foreach (var invoice in fa.Invoices)
-    {
-        <hr />
-        <FaInvoiceDetails Invoice=@invoice />
-    }
+	@foreach (var invoice in fa.Invoices)
+	{
+		<hr />
+		<FaInvoiceDetails Invoice=@invoice LinkToSingleInvoice=true />
+	}
 
-    <h3>Orders:</h3>
-    <span>TODO</span>
+	<h3>Orders:</h3>
+	<span>TODO</span>
 }
 
 @code {
-    [Parameter]
-    public Guid FaId { get; set; }
+	[Parameter]
+	public Guid FaId { get; set; }
 
-    private Fa? fa;
-    private bool isLoading;
+	private Fa? fa;
+	private bool isLoading;
 
-    protected override async Task OnInitializedAsync()
-    {
-        isLoading = true;
+	protected override async Task OnInitializedAsync()
+	{
+		isLoading = true;
 
-        try
-        {
-            fa = await Client.GetAsync(FaId);
-        }
-        finally
-        {
-            isLoading = false;
-        }
-    }
+		try
+		{
+			fa = await Client.GetAsync(FaId);
+		}
+		finally
+		{
+			isLoading = false;
+		}
+	}
 }
