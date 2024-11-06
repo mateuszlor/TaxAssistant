@@ -1,4 +1,5 @@
-﻿using TaxAssistant.CQRS;
+﻿using System.Data.SqlTypes;
+using TaxAssistant.CQRS;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
@@ -57,6 +58,7 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
                 var income = revenue - cost;
 
                 var aggregatedPhysicalInventories = kpirs
+                    .Where(x => x.PhysicalInventories != null)
                     .SelectMany(x => x.PhysicalInventories)
                     .OrderBy(x => x.Date)
                     .ToList();
@@ -65,6 +67,17 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
                 {
                     aggregatedPhysicalInventories[i].Kpir = null;
                     aggregatedPhysicalInventories[i].KpirId = Guid.Empty;
+                }
+
+                var headers = kpirs.Where(x => x.Header != null).Select(x => x.Header).ToList();
+
+                var dateFrom = SqlDateTime.MinValue;
+                var dateTo = SqlDateTime.MinValue;
+
+                if (headers.Count > 0)
+                {
+                    dateFrom = headers.Min(x => x.DateFrom);
+                    dateTo = headers.Max(x => x.DateTo);
                 }
 
                 aggregatedKpir = new Kpir
@@ -83,8 +96,8 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
                         FormVariant = firstKpir?.Header?.FormVariant ?? 0,
                         Purpose = TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum.KpirPurpose.FirstTime,
                         TaxOfficeCode = firstKpir?.Header?.TaxOfficeCode,
-                        DateFrom = kpirs.Min(x => x.Header.DateFrom),
-                        DateTo = kpirs.Max(x => x.Header.DateTo)
+                        DateFrom = dateFrom.Value,
+                        DateTo = dateTo.Value
                     },
                     Summary = new KpirSummary
                     {
