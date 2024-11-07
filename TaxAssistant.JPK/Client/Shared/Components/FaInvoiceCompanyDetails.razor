@@ -47,7 +47,7 @@
 	{
 		addressParts = Company?.Address?.Split(",").Select(x => x.Trim()).ToList() ?? [];
 
-		if (!IncludeDefaultCountry)
+		if (addressParts.Any() && !IncludeDefaultCountry)
 		{
 			var lastPart = addressParts.Last();
 
