@@ -9,7 +9,7 @@ using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Client.Pages;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 
-namespace TaxAssistant.JPK.FrontendTests.Generic;
+namespace TaxAssistant.JPK.FrontendTests.Pages;
 
 public class FaListDetailsItemTests : BunitTestContext
 {
