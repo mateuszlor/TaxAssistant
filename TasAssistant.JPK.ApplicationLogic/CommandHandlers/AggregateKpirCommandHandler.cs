@@ -4,23 +4,23 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
-namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
+namespace TaxAssistant.JPK.ApplicationLogic.CommandHandlers
 {
-    public class AggregateKpirCommandHandler : ICommandHandler<AggregateKpirCommand, AggregateKpirCommandResult>
-    {
-        private readonly IRepository<Kpir> _repository;
+	public class AggregateKpirCommandHandler : ICommandHandler<AggregateKpirCommand, AggregateKpirCommandResult>
+	{
+		private readonly IRepository<Kpir> _repository;
 
-        public AggregateKpirCommandHandler(IRepository<Kpir> repository)
-        {
-            _repository = repository;
-        }
+		public AggregateKpirCommandHandler(IRepository<Kpir> repository)
+		{
+			_repository = repository;
+		}
 
 		public Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand? command)
 		{
 			var result = new AggregateKpirCommandResult();
 
 			var kpirs = command == null
-				? new List<Kpir>()
+				? []
 				: command.Ids
 					.AsParallel()
 					.Select(_repository.GetAsync)
@@ -78,7 +78,7 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
 
 		private static KpirHeader AggregateHeaders(List<Kpir> kpirs)
 		{
-			var firstKpir = kpirs.FirstOrDefault();
+			var firstKpir = kpirs.First();
 			var headers = kpirs.Where(x => x.Header != null).Select(x => x.Header).ToList();
 
 			var dateFrom = SqlDateTime.MinValue;
@@ -91,11 +91,11 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
 			}
 			var header = new KpirHeader
 			{
-				Currency = firstKpir?.Header?.Currency ?? string.Empty,
-				FormCode = firstKpir?.Header?.FormCode ?? string.Empty,
-				FormVariant = firstKpir?.Header?.FormVariant ?? 0,
-				Purpose = TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum.KpirPurpose.FirstTime,
-				TaxOfficeCode = firstKpir?.Header?.TaxOfficeCode ?? string.Empty,
+				Currency = firstKpir.Header?.Currency ?? string.Empty,
+				FormCode = firstKpir.Header?.FormCode ?? string.Empty,
+				FormVariant = firstKpir.Header?.FormVariant ?? 0,
+				Purpose = Shared.Model.Database.Kpir.Enum.KpirPurpose.FirstTime,
+				TaxOfficeCode = firstKpir.Header?.TaxOfficeCode ?? string.Empty,
 				DateFrom = dateFrom.Value,
 				DateTo = dateTo.Value
 			};

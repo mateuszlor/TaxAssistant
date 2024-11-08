@@ -1,14 +1,14 @@
 using System;
 using FluentAssertions;
 using NSubstitute;
-using TasAssistant.JPK.ApplicationLogic.CommandHandlers;
+using TaxAssistant.JPK.ApplicationLogic.CommandHandlers;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Tests.CQRS.CommandHandler
 {
-    public class AggregateKpirCommandHandlerTests
+	public class AggregateKpirCommandHandlerTests
     {
         private IRepository<Kpir> _repository;
         private AggregateKpirCommandHandler _sut;
