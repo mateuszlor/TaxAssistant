@@ -9,7 +9,7 @@
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public async Task HandleAsync<T>(T command) where T : ICommand
+        public async Task HandleAsync<T>(T? command) where T : ICommand
         {
             var handlerType = typeof(ICommandHandler<T>);
 
@@ -21,7 +21,7 @@
             await handler.HandleAsync(command);
         }
 
-        public async Task<TOut> HandleAsync<TIn, TOut>(TIn command) where TIn : ICommand
+        public async Task<TOut> HandleAsync<TIn, TOut>(TIn? command) where TIn : ICommand
         {
             var handlerType = typeof(ICommandHandler<TIn, TOut>);
 

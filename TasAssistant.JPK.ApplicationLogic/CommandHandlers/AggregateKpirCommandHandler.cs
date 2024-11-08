@@ -15,7 +15,7 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
             _repository = repository;
         }
 
-        public async Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand command)
+        public Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand? command)
         {
             var kpirs = command == null
                 ? new List<Kpir>()
@@ -49,11 +49,11 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
 
                 var revenue = aggregatedRows
                     .Where(x => x.RevenueTotal.HasValue)
-                    .Sum(x => x.RevenueTotal.Value);
+                    .Sum(x => x.RevenueTotal!.Value);
 
                 var cost = aggregatedRows
                     .Where(x => x.CostTotal.HasValue)
-                    .Sum(x => x.CostTotal.Value);
+                    .Sum(x => x.CostTotal!.Value);
 
                 var income = revenue - cost;
 
@@ -124,7 +124,7 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
                 result.Warnings.Add("No KPiR rows");
             }
 
-            return result;
+            return Task.FromResult(result);
         }
     }
 }

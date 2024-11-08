@@ -9,7 +9,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
     {
         protected readonly DatabaseContext _databaseContext;
 
-        public BaseRepository(DatabaseContext databaseContext)
+        protected BaseRepository(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
         }

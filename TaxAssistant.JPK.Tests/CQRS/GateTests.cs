@@ -49,6 +49,7 @@ namespace TaxAssistant.JPK.Tests.CQRS
 
             // Act 
             await _sut.HandleAsync(command);
+            Assert.Pass();
         }
 
         [Test]
