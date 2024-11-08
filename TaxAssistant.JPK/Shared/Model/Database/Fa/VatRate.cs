@@ -1,6 +1,6 @@
 ﻿namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
-	public enum VatRateEnum
+	public enum VatRate
 	{
 		Item23,
 		Item22,

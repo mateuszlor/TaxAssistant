@@ -15,11 +15,11 @@ else
 {
 	if (LinkToSingleInvoice)
 	{
-		<h3 class="text-center"><a class="text-decoration-none text-reset" href="fa-list/@Invoice.FaId/invoice/@documentNumberEscaped">@Invoice.DocumentNumber</a></h3>
+		<h3 class="text-center" data-test-id="header"><a class="text-decoration-none text-reset" href="fa-list/@Invoice.FaId/invoice/@documentNumberEscaped">@Invoice.DocumentNumber</a></h3>
 	}
 	else
 	{
-		<h3 class="text-center">@Invoice.DocumentNumber</h3>
+		<h3 class="text-center" data-test-id="header">@Invoice.DocumentNumber</h3>
 	}
 
 	<div class="row pt-4">
@@ -37,20 +37,20 @@ else
 		<div class="col-4">
 			<table class="table">
 				<tbody>
-					<tr>
+					<tr data-test-id="issueDate">
 						<th scope="row">Issue date</th>
-						<td>@Invoice.IssueDate.ToShortDateString()</td>
+						<td>@Invoice.IssueDate.ToString("dd.MM.yyyy")</td>
 					</tr>
-					<tr>
+					<tr data-test-id="deliveryDate">
 						<th scope="row">Delivery date</th>
-						<td>@Invoice.DeliveryDate.ToShortDateString()</td>
+						<td>@Invoice.DeliveryDate.ToString("dd.MM.yyyy")</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
 
-	<Table class="table mt-2 align-middle" TRow="FaInvoiceRow" DataSource=@Invoice.Rows>
+	<Table class="table mt-2 align-middle" TRow="FaInvoiceRow" DataSource=@Invoice.Rows data-test-id="rowsTable">
 		<Column TRow="FaInvoiceRow" Title="Item">@context.Name</Column>
 		<Column TRow="FaInvoiceRow" Title="Metric unit">@context.MetricUnit</Column>
 		<Column TRow="FaInvoiceRow" Title="Count">@context.Count</Column>
@@ -63,7 +63,7 @@ else
 	<div class="row mt-2">
 		<div class="col-6"></div>
 		<div class="col-6">
-			<table class="table">
+			<table class="table" data-test-id="summaryTable">
 				<tbody>
 					<tr>
 						<th scope="row">Total net</th>
