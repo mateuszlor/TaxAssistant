@@ -4,24 +4,25 @@
 
 @code {
 	[Parameter]
-	public VatRateEnum? Rate { get; set; }
+	public JPK.Shared.Model.Database.Fa.VatRate? Rate { get; set; }
 
 	private string? displayValue;
 
 	protected override void OnParametersSet()
 	{
-		displayValue = Rate switch
+			displayValue = Rate switch
 		{
-			VatRateEnum.Item23 => "23%",
-			VatRateEnum.Item22 => "22%",
-			VatRateEnum.Item8 => "8%",
-			VatRateEnum.Item7 => "7%",
-			VatRateEnum.Item5 => "5%",
-			VatRateEnum.Item4 => "4%",
-			VatRateEnum.Item3 => "3%",
-			VatRateEnum.Item0 => "0%",
-			VatRateEnum.oo => "oo",
-			VatRateEnum.zw => "zw",
+			JPK.Shared.Model.Database.Fa.VatRate.Item23 => "23%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item22 => "22%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item8 => "8%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item7 => "7%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item5 => "5%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item4 => "4%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item3 => "3%",
+			JPK.Shared.Model.Database.Fa.VatRate.Item0 => "0%",
+			JPK.Shared.Model.Database.Fa.VatRate.oo => "oo",
+			JPK.Shared.Model.Database.Fa.VatRate.zw => "zw",
+			JPK.Shared.Model.Database.Fa.VatRate.np => "np",
 			_ => null
 		};
 	}

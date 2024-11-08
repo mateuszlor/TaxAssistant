@@ -34,7 +34,7 @@ namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal? TotalPriceGross { get; set; }
 
-		public VatRateEnum? VatRate { get; set; }
+		public VatRate? VatRate { get; set; }
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal? VatRateSpecial { get; set; }

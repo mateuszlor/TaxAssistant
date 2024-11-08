@@ -9,96 +9,115 @@
 
 @if (Invoice == null)
 {
-    <Loading />
+	<Loading />
 }
 else
 {
-    <h3 class="text-center">@Invoice.DocumentNumber</h3>
+	if (LinkToSingleInvoice)
+	{
+		<h3 class="text-center" data-test-id="header"><a class="text-decoration-none text-reset" href="fa-list/@Invoice.FaId/invoice/@documentNumberEscaped">@Invoice.DocumentNumber</a></h3>
+	}
+	else
+	{
+		<h3 class="text-center" data-test-id="header">@Invoice.DocumentNumber</h3>
+	}
 
-    <div class="row">
-        <div class="col-6">
-            <div>
-                <b>Seller:</b>
-            </div>
-            <FaInvoiceCompanyDetails Company=@Invoice.Seller />
-            <div class="mt-2">
-                <b>Buyer:</b>
-            </div>
-            <FaInvoiceCompanyDetails Company=@Invoice.Buyer />
-        </div>
-        <div class="col-2"></div>
-        <div class="col-4">
-            <div>
-                <b>Issue date:</b> @Invoice.IssueDate.ToShortDateString()
-            </div>
-            <div>
-                <b>Delivery date:</b> @Invoice.DeliveryDate.ToShortDateString()
-            </div>
-        </div>
-    </div>
+	<div class="row pt-4">
+		<div class="col-6">
+			<div class="mb-1">
+				<b>Seller:</b>
+			</div>
+			<FaInvoiceCompanyDetails Company=@Invoice.Seller />
+			<div class="mt-2 mb-1">
+				<b>Buyer:</b>
+			</div>
+			<FaInvoiceCompanyDetails Company=@Invoice.Buyer />
+		</div>
+		<div class="col-2"></div>
+		<div class="col-4">
+			<table class="table">
+				<tbody>
+					<tr data-test-id="issueDate">
+						<th scope="row">Issue date</th>
+						<td>@Invoice.IssueDate.ToString("dd.MM.yyyy")</td>
+					</tr>
+					<tr data-test-id="deliveryDate">
+						<th scope="row">Delivery date</th>
+						<td>@Invoice.DeliveryDate.ToString("dd.MM.yyyy")</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-    <Table class="table mt-2" TRow="FaInvoiceRow" DataSource=@Invoice.Rows>
-        <Column TRow="FaInvoiceRow" Title="Item">@context.Name</Column>
-        <Column TRow="FaInvoiceRow" Title="Metric unit">@context.MetricUnit</Column>
-        <Column TRow="FaInvoiceRow" Title="Count">@context.Count</Column>
-        <Column TRow="FaInvoiceRow" Title="Unit price net"><Amount Value=@context.UnitPriceNet /></Column>
-        <Column TRow="FaInvoiceRow" Title="Total price net"><Amount Value=@context.TotalPriceNet /></Column>
-        <Column TRow="FaInvoiceRow" Title="Total price gross"><Amount Value=@context.TotalPriceGross /></Column>
-        <Column TRow="FaInvoiceRow" Title="VAT rate"><VatRate Rate=@context.VatRate /></Column>
-    </Table>
+	<Table class="table mt-2 align-middle" TRow="FaInvoiceRow" DataSource=@Invoice.Rows data-test-id="rowsTable">
+		<Column TRow="FaInvoiceRow" Title="Item">@context.Name</Column>
+		<Column TRow="FaInvoiceRow" Title="Metric unit">@context.MetricUnit</Column>
+		<Column TRow="FaInvoiceRow" Title="Count">@context.Count</Column>
+		<Column TRow="FaInvoiceRow" Title="Unit price net"><Amount Value=@context.UnitPriceNet /></Column>
+		<Column TRow="FaInvoiceRow" Title="Total price net"><Amount Value=@context.TotalPriceNet /></Column>
+		<Column TRow="FaInvoiceRow" Title="Total price gross"><Amount Value=@context.TotalPriceGross /></Column>
+		<Column TRow="FaInvoiceRow" Title="VAT rate"><VatRate Rate=@context.VatRate /></Column>
+	</Table>
 
-    <div class="row mt-2">
-        <div class="col-6"></div>
-        <div class="col-6">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th scope="row">Total net</th>
-                        <td><Amount Value=@totalNet /></td>
-                    </tr>
-                    @if (Invoice.TotalVatBaseRate != decimal.Zero)
-                    {
-                        <tr>
-                            <th scope="row">VAT 23%</th>
-                            <td><Amount Value=@Invoice.TotalVatBaseRate /></td>
-                        </tr>
-                    }
-                    @if (Invoice.TotalVatRate8 != decimal.Zero)
-                    {
-                        <tr>
-                            <th scope="row">VAT 8%</th>
-                            <td><Amount Value=@Invoice.TotalVatRate8 /></td>
-                        </tr>
-                    }
-                    @if (Invoice.TotalVatRate5 != decimal.Zero)
-                    {
-                        <tr>
-                            <th scope="row">VAT 5%</th>
-                            <td><Amount Value=@Invoice.TotalVatRate5 /></td>
-                        </tr>
-                    }
-                    <tr>
-                        <th scope="row">Total gross</th>
-                        <td><Amount Value=@totalGross /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<div class="row mt-2">
+		<div class="col-6"></div>
+		<div class="col-6">
+			<table class="table" data-test-id="summaryTable">
+				<tbody>
+					<tr>
+						<th scope="row">Total net</th>
+						<td><Amount Value=@totalNet /></td>
+					</tr>
+					@if (Invoice.TotalVatBaseRate != decimal.Zero)
+					{
+						<tr>
+							<th scope="row">VAT 23%</th>
+							<td><Amount Value=@Invoice.TotalVatBaseRate /></td>
+						</tr>
+					}
+					@if (Invoice.TotalVatRate8 != decimal.Zero)
+					{
+						<tr>
+							<th scope="row">VAT 8%</th>
+							<td><Amount Value=@Invoice.TotalVatRate8 /></td>
+						</tr>
+					}
+					@if (Invoice.TotalVatRate5 != decimal.Zero)
+					{
+						<tr>
+							<th scope="row">VAT 5%</th>
+							<td><Amount Value=@Invoice.TotalVatRate5 /></td>
+						</tr>
+					}
+					<tr>
+						<th scope="row">Total gross</th>
+						<td><Amount Value=@totalGross /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 }
 
 @code {
-    [Parameter]
-    public required FaInvoice Invoice { get; set; }
+	[Parameter]
+	public required FaInvoice Invoice { get; set; }
 
-    private decimal totalNet;
-    private decimal totalVat;
-    private decimal totalGross;
+	[Parameter]
+	public required bool LinkToSingleInvoice { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        totalNet = Invoice.Rows.Sum(x => x.TotalPriceNet);
-        totalGross = Invoice.Rows.Sum(x => x.TotalPriceGross.GetValueOrDefault());
-        totalVat = totalGross - totalNet;
-    }
+	private decimal totalNet;
+	private decimal totalVat;
+	private decimal totalGross;
+	private string? documentNumberEscaped;
+
+	protected override void OnParametersSet()
+	{
+		totalNet = Invoice.Rows.Sum(x => x.TotalPriceNet);
+		totalGross = Invoice.Rows.Sum(x => x.TotalPriceGross.GetValueOrDefault());
+		totalVat = totalGross - totalNet;
+
+		documentNumberEscaped = Invoice.DocumentNumber?.Replace("/", "-").Replace(" ", "_");
+	}
 }

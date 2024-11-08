@@ -72,7 +72,7 @@ namespace TaxAssistant.JPK.Shared.Adapter
 				? x.P_11VatZ
 				: null,
 			VatRate = x.P_12ZSpecified
-				? Enum.Parse<VatRateEnum>(x.P_12Z.ToString())
+				? Enum.Parse<VatRate>(x.P_12Z.ToString())
 				: null,
 			VatSpecialRate = x.P_12Z_XIISpecified
 				? x.P_12Z_XII
@@ -207,7 +207,7 @@ namespace TaxAssistant.JPK.Shared.Adapter
                 ? x.P_11A 
                 : null,
             VatRate = x.P_12Specified
-                ? Enum.Parse<VatRateEnum>(x.P_12.ToString())
+                ? Enum.Parse<VatRate>(x.P_12.ToString())
                 : null,
 			VatRateSpecial = x.P_12_XIISpecified 
                 ? x.P_12_XII

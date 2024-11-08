@@ -1,0 +1,58 @@
+﻿@page "/fa-list/{IdParameter}/invoice/{InvoiceNumberParameter}"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Client.Shared.Components;
+@using TaxAssistant.JPK.Shared.Model.Database.Fa
+
+@inject IApiClient<Fa> Client
+
+<PageTitle>@invoiceNumber</PageTitle>
+
+@if (isLoading)
+{
+	<Loading />
+}
+else if (invoice == null)
+{
+	<p><em>Invoice not found</em></p>
+}
+else
+{
+	<FaInvoiceDetails Invoice=@invoice />
+}
+
+@code {
+	[Parameter]
+	public required string IdParameter { get; set; }
+
+	[Parameter]
+	public required string InvoiceNumberParameter { get; set; }
+
+	private bool isLoading;
+	private string? invoiceNumber;
+	private FaInvoice? invoice;
+
+	protected override async Task OnInitializedAsync()
+	{
+		isLoading = true;
+
+		try
+		{
+			var faId = Guid.Parse(IdParameter);
+			var fa = await Client.GetAsync(faId);
+
+			invoiceNumber = InvoiceNumberParameter.Replace("-", "/").Replace("_", " ");
+
+			invoice = fa?.Invoices.SingleOrDefault(x => x.DocumentNumber == invoiceNumber);
+		}
+		finally
+		{
+			isLoading = false;
+		}
+	}
+}
