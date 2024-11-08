@@ -15,116 +15,127 @@ namespace TasAssistant.JPK.ApplicationLogic.CommandHandlers
             _repository = repository;
         }
 
-        public Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand? command)
-        {
-            var kpirs = command == null
-                ? new List<Kpir>()
-                : command.Ids
-                    .AsParallel()
-                    .Select(_repository.GetAsync)
-                    .Select(x => x.Result)
-                    .Where(x => x != null)
-                    .Select(x => x!)
-                    .ToList();
+		public Task<AggregateKpirCommandResult> HandleAsync(AggregateKpirCommand? command)
+		{
+			var result = new AggregateKpirCommandResult();
 
-            var firstKpir = kpirs.FirstOrDefault();
+			var kpirs = command == null
+				? new List<Kpir>()
+				: command.Ids
+					.AsParallel()
+					.Select(_repository.GetAsync)
+					.Select(x => x.Result)
+					.Where(x => x != null)
+					.Select(x => x!)
+					.ToList();
 
-            var aggregatedRows = kpirs
-                .Where(x => x.Rows != null)
-                .SelectMany(x => x.Rows)
-                .OrderBy(x => x.Date)
-                .ThenBy(x => x.Number)
-                .ToList();
+			if (!kpirs.Any())
+			{
+				result.Warnings.Add("No source KPiRs");
 
-            Kpir? aggregatedKpir = null;
+				return Task.FromResult(result);
+			}
 
-            if (aggregatedRows.Any())
-            {
-                for (var i = 0; i < aggregatedRows.Count; i++)
-                {
-                    aggregatedRows[i].Number = i + 1;
-                    aggregatedRows[i].Kpir = null;
-                    aggregatedRows[i].KpirId = Guid.Empty;
-                }
+			result.SourceKpirs = kpirs;
+			var aggregatedRows = AggregateRows(kpirs);
 
-                var revenue = aggregatedRows
-                    .Where(x => x.RevenueTotal.HasValue)
-                    .Sum(x => x.RevenueTotal!.Value);
+			if (!aggregatedRows.Any())
+			{
+				result.Warnings.Add("No KPiR rows");
 
-                var cost = aggregatedRows
-                    .Where(x => x.CostTotal.HasValue)
-                    .Sum(x => x.CostTotal!.Value);
+				return Task.FromResult(result);
+			}
 
-                var income = revenue - cost;
+			var revenue = aggregatedRows
+				.Where(x => x.RevenueTotal.HasValue)
+				.Sum(x => x.RevenueTotal!.Value);
 
-                var aggregatedPhysicalInventories = kpirs
-                    .Where(x => x.PhysicalInventories != null)
-                    .SelectMany(x => x.PhysicalInventories)
-                    .OrderBy(x => x.Date)
-                    .ToList();
+			var cost = aggregatedRows
+				.Where(x => x.CostTotal.HasValue)
+				.Sum(x => x.CostTotal!.Value);
 
-                for (var i = 0; i < aggregatedPhysicalInventories.Count; i++)
-                {
-                    aggregatedPhysicalInventories[i].Kpir = null;
-                    aggregatedPhysicalInventories[i].KpirId = Guid.Empty;
-                }
+			result.AggregatedKpir = new Kpir
+			{
+				Rows = aggregatedRows,
+				PhysicalInventories = AggregatePhysicalInventories(kpirs),
+				ControlData = new KpirControlData
+				{
+					RowCount = aggregatedRows.Count,
+					TotalIncome = revenue,
+				},
+				Header = AggregateHeaders(kpirs),
+				Summary = new KpirSummary
+				{
+					TotalCost = cost,
+					TotalIncome = revenue - cost,
+					PhysicalInventoryYearStart = kpirs.Min(x => x.Summary?.PhysicalInventoryYearStart ?? 0),
+					PhysicalInventoryYearEnd = kpirs.Max(x => x.Summary?.PhysicalInventoryYearEnd ?? 0)
+				}
+			};
 
-                var headers = kpirs.Where(x => x.Header != null).Select(x => x.Header).ToList();
+			return Task.FromResult(result);
+		}
 
-                var dateFrom = SqlDateTime.MinValue;
-                var dateTo = SqlDateTime.MinValue;
+		private static KpirHeader AggregateHeaders(List<Kpir> kpirs)
+		{
+			var firstKpir = kpirs.FirstOrDefault();
+			var headers = kpirs.Where(x => x.Header != null).Select(x => x.Header).ToList();
 
-                if (headers.Count > 0)
-                {
-                    dateFrom = headers.Min(x => x.DateFrom);
-                    dateTo = headers.Max(x => x.DateTo);
-                }
+			var dateFrom = SqlDateTime.MinValue;
+			var dateTo = SqlDateTime.MinValue;
 
-                aggregatedKpir = new Kpir
-                {
-                    Rows = aggregatedRows,
-                    PhysicalInventories = aggregatedPhysicalInventories,
-                    ControlData = new KpirControlData
-                    {
-                        RowCount = aggregatedRows.Count,
-                        TotalIncome = revenue,
-                    },
-                    Header = new KpirHeader
-                    {
-                        Currency = firstKpir?.Header?.Currency,
-                        FormCode = firstKpir?.Header?.FormCode,
-                        FormVariant = firstKpir?.Header?.FormVariant ?? 0,
-                        Purpose = TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum.KpirPurpose.FirstTime,
-                        TaxOfficeCode = firstKpir?.Header?.TaxOfficeCode,
-                        DateFrom = dateFrom.Value,
-                        DateTo = dateTo.Value
-                    },
-                    Summary = new KpirSummary
-                    {
-                        TotalCost = cost,
-                        TotalIncome = income,
-                        PhysicalInventoryYearStart = 0, // TODO: what to insert here?
-                        PhysicalInventoryYearEnd = 0 // TODO: what to insert here?
-                    }
-                };
-            }
+			if (headers.Count > 0)
+			{
+				dateFrom = headers.Min(x => x.DateFrom);
+				dateTo = headers.Max(x => x.DateTo);
+			}
+			var header = new KpirHeader
+			{
+				Currency = firstKpir?.Header?.Currency ?? string.Empty,
+				FormCode = firstKpir?.Header?.FormCode ?? string.Empty,
+				FormVariant = firstKpir?.Header?.FormVariant ?? 0,
+				Purpose = TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum.KpirPurpose.FirstTime,
+				TaxOfficeCode = firstKpir?.Header?.TaxOfficeCode ?? string.Empty,
+				DateFrom = dateFrom.Value,
+				DateTo = dateTo.Value
+			};
+			return header;
+		}
 
-            var result = new AggregateKpirCommandResult
-            {
-                AggregatedKpir = aggregatedKpir,
-                SourceKpirs = kpirs
-            };
+		private static List<KpirRow> AggregateRows(List<Kpir> kpirs)
+		{
+			var rows = kpirs
+				.Where(x => x.Rows != null)
+				.SelectMany(x => x.Rows)
+				.OrderBy(x => x.Date)
+				.ThenBy(x => x.Number)
+				.ToList();
 
-            if (firstKpir == null)
-            {
-                result.Warnings.Add("No source KPiRs");
-            }
-            else if (!aggregatedRows.Any())
-            {
-                result.Warnings.Add("No KPiR rows");
-            }
+			for (var i = 0; i < rows.Count; i++)
+			{
+				rows[i].Number = i + 1;
+				rows[i].Kpir = null;
+				rows[i].KpirId = Guid.Empty;
+			}
 
-            return Task.FromResult(result);
-        }
-    }
+			return rows;
+		}
+
+		private static List<KpirPhysicalInventory> AggregatePhysicalInventories(List<Kpir> kpirs)
+		{
+			var aggregatedPhysicalInventories = kpirs
+				.Where(x => x.PhysicalInventories != null)
+				.SelectMany(x => x.PhysicalInventories)
+				.OrderBy(x => x.Date)
+				.ToList();
+
+			for (var i = 0; i < aggregatedPhysicalInventories.Count; i++)
+			{
+				aggregatedPhysicalInventories[i].Kpir = null;
+				aggregatedPhysicalInventories[i].KpirId = Guid.Empty;
+			}
+
+			return aggregatedPhysicalInventories;
+		}
+	}
 }
