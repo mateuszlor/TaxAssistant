@@ -6,8 +6,8 @@ namespace TaxAssistant.JPK.Shared.Commands
     {
         public Kpir? AggregatedKpir { get; set; }
 
-        public IList<Kpir> SourceKpirs { get; set; }
+        public IList<Kpir> SourceKpirs { get; set; } = new List<Kpir>();
 
-        public IList<string> Warnings { get; set; } = new List<string>();
+		public IList<string> Warnings { get; set; } = new List<string>();
     }
 }

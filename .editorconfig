@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# S6608: Prefer indexing instead of "Enumerable" methods on types implementing "IList"
+dotnet_diagnostic.S6608.severity = none
+
+# CA1860: Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1860.severity = none
