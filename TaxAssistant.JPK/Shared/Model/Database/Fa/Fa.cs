@@ -12,6 +12,6 @@ namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 
 		public virtual IList<FaInvoice> Invoices { get; set; }
 
-		public virtual IList<FaOrder>? Orders { get; set; }
+		public virtual IList<FaOrder> Orders { get; set; }
 	}
 }

@@ -4,7 +4,7 @@
 
 @code {
 	[Parameter]
-	public JPK.Shared.Model.Database.Fa.VatRate? Rate { get; set; }
+	public JPK.Shared.Model.Database.Fa.Enum.VatRate? Rate { get; set; }
 
 	private string? displayValue;
 
@@ -12,17 +12,17 @@
 	{
 		displayValue = Rate switch
 		{
-			JPK.Shared.Model.Database.Fa.VatRate.Item23 => "23%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item22 => "22%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item8 => "8%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item7 => "7%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item5 => "5%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item4 => "4%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item3 => "3%",
-			JPK.Shared.Model.Database.Fa.VatRate.Item0 => "0%",
-			JPK.Shared.Model.Database.Fa.VatRate.oo => "oo",
-			JPK.Shared.Model.Database.Fa.VatRate.zw => "zw",
-			JPK.Shared.Model.Database.Fa.VatRate.np => "np",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item23 => "23%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item22 => "22%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item8 => "8%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item7 => "7%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item5 => "5%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item4 => "4%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item3 => "3%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.Item0 => "0%",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.oo => "oo",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.zw => "zw",
+			JPK.Shared.Model.Database.Fa.Enum.VatRate.np => "np",
 			_ => null
 		};
 	}
