@@ -1,6 +1,7 @@
 ﻿using TaxAssistant.JPK.Shared.Extensions;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir.Enum;
+using TaxAssistant.JPK.Shared.Model.Database.Shared;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 
 namespace TaxAssistant.JPK.Shared.Adapter
@@ -28,7 +29,7 @@ namespace TaxAssistant.JPK.Shared.Adapter
                 DateTo = item.Naglowek.DataDo,
                 FormCode = item.Naglowek.KodFormularza.Value.ToString(),
                 FormVariant = item.Naglowek.WariantFormularza,
-                Purpose = (KpirPurpose)item.Naglowek.CelZlozenia,
+                Purpose = (JpkPurpose)item.Naglowek.CelZlozenia,
                 TaxOfficeCode = item.Naglowek.KodUrzedu.ToString()
             },
             Summary = new KpirSummary

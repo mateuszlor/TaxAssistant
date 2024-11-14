@@ -8,6 +8,7 @@ using NSubstitute;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Client.Pages;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
+using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
 namespace TaxAssistant.JPK.FrontendTests.Pages;
 
