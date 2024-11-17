@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using TaxAssistant.CQRS;
 using TaxAssistant.DDD;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Server;
 using TaxAssistant.JPK.Shared.Adapter;
@@ -11,6 +12,7 @@ using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Ewp;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
+using TaxAssistant.JPK.Shared.Model.Domain.Company;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,7 @@ builder.Services.AddScoped<IRepository<Ewp>, EwpRepository>();
 builder.Services.AddScoped<FaAdapter>();
 builder.Services.AddScoped<IRepository<Fa>, FaRepository>();
 builder.Services.AddScoped<IRepository<Import>, ImportRepository>();
+builder.Services.AddScoped<IRepository<Company>, CompanyRepository>();
 
 builder.Services.AddCqrs();
 builder.Services.AddCommandHandlers();

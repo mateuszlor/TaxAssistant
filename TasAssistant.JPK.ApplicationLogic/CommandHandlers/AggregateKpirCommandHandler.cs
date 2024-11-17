@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlTypes;
 using TaxAssistant.CQRS.Abstraction;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Database.Shared;

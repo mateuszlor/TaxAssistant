@@ -14,7 +14,4 @@
     <ProjectReference Include="..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DomainEventHandlers\" />
-  </ItemGroup>
 </Project>

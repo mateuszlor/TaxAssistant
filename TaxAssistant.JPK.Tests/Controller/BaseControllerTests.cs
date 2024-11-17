@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Abstraction;

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Abstraction;
 

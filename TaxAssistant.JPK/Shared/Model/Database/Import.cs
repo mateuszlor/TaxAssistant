@@ -1,10 +1,13 @@
-﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+﻿using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Shared.Model.Database
 {
-	public class Import : BaseModel
-    {
-        public Guid? KpirId { get; set; }
+	public class Import : BaseModel, IAggregate
+	{
+		public IList<IDomainEvent> Events { get; } = [];
+
+		public Guid? KpirId { get; set; }
 
         public virtual Kpir.Kpir? Kpir { get; set; }
 

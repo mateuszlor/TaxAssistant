@@ -1,4 +1,7 @@
-﻿using TaxAssistant.JPK.Database;
+﻿using Microsoft.Extensions.Logging;
+using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
+using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Shared.DomainEvents;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 
@@ -6,27 +9,27 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
 	public class FaRepository : BaseRepository<Fa>
 	{
-		public FaRepository(DatabaseContext databaseContext)
-			: base(databaseContext)
+		public FaRepository(DatabaseContext databaseContext, IDomainEventDispatcher dispatcher, ILogger<FaRepository> logger)
+			: base(databaseContext, dispatcher, logger)
 		{
 		}
 
 		public override async Task<Fa> AddAsync(Fa item)
 		{
-			var result = await base.AddAsync(item);
-
-			var companies = result
+			var events = item
 				.Invoices
 				.Select(x => new NewCompanyEvent(x.Seller.Name, x.Seller.TaxIdentificationNumber, x.Seller.Address))
 				.Distinct()
 				.ToList();
 
-			companies.AddRange(result
+			events.AddRange(item
 				.Invoices
 				.Select(x => new NewCompanyEvent(x.Buyer.Name, x.Buyer.TaxIdentificationNumber, x.Buyer.Address))
 				.Distinct());
 
-			// TODO handle new companies
+			events.ForEach(x => item.Events.Add(x));
+
+			var result = await base.AddAsync(item);
 
 			return result;
 		}

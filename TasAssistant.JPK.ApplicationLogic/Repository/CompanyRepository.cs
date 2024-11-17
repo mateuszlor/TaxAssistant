@@ -2,15 +2,15 @@
 using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Database;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Domain.Company;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
-	public class ImportRepository : BaseRepository<Import>
-    {
-        public ImportRepository(DatabaseContext databaseContext, IDomainEventDispatcher dispatcher, ILogger<ImportRepository> logger)
+	public class CompanyRepository : BaseRepository<Company>
+	{
+		public CompanyRepository(DatabaseContext databaseContext, IDomainEventDispatcher dispatcher, ILogger<CompanyRepository> logger)
 			: base(databaseContext, dispatcher, logger)
 		{
-        }
-    }
+		}
+	}
 }

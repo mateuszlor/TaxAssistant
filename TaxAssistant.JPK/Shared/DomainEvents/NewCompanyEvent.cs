@@ -1,15 +1,20 @@
-﻿namespace TaxAssistant.JPK.Shared.DomainEvents
+﻿using TaxAssistant.DDD.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.DomainEvents
 {
-    public class NewCompanyEvent
+    public class NewCompanyEvent : IDomainEvent
 	{
 		public NewCompanyEvent(string companyData, string address)
 		{
-			CompanyData = companyData;
+			CompanyName = companyData.Split("\n").FirstOrDefault();
 			Address = address;
+
+			CompanyData = companyData;
 		}
 
 		public NewCompanyEvent(string companyName, string taxIdentificationNumber, string address)
 		{
+			CompanyName = companyName;
 			TaxIdentificationNumber = taxIdentificationNumber;
 			Address = address;
 
@@ -17,6 +22,7 @@
 		}
 
 		public string CompanyData { get; set; }
+		public string CompanyName { get; }
 		public string? TaxIdentificationNumber { get; }
 		public string Address { get; set; }
 
@@ -39,7 +45,7 @@
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CompanyData, TaxIdentificationNumber, Address);
+            return HashCode.Combine(TaxIdentificationNumber, CompanyName, CompanyData, Address);
         }
     }
 }

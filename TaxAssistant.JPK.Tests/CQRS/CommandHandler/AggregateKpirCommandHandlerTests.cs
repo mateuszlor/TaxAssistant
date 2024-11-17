@@ -2,7 +2,7 @@ using System;
 using FluentAssertions;
 using NSubstitute;
 using TaxAssistant.JPK.ApplicationLogic.CommandHandlers;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 

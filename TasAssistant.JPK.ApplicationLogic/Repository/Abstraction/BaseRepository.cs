@@ -1,0 +1,106 @@
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
+{
+	public abstract class BaseRepository<T> : IRepository<T>
+		where T : BaseModel, IAggregate
+	{
+		protected readonly DatabaseContext _databaseContext;
+		private readonly IDomainEventDispatcher _dispatcher;
+		private readonly ILogger<BaseRepository<T>> _logger;
+
+		protected BaseRepository(DatabaseContext databaseContext, IDomainEventDispatcher dispatcher, ILogger<BaseRepository<T>> logger)
+		{
+			_databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+			_dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		}
+
+		public virtual async Task<T> AddAsync(T item)
+		{
+			var result = _databaseContext.Add(item);
+
+			foreach (var e in item.Events)
+			{
+				try
+				{
+					await _dispatcher.DispatchAsync(e);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Error handling domain event {eventType}", e.GetType().Name);
+				}
+			}
+
+			item.Events.Clear();
+
+			await _databaseContext.SaveChangesAsync();
+
+			return result.Entity;
+		}
+
+		public virtual async Task<T> UpdateAsync(T item)
+		{
+			var existingItem = await GetAsync(item.Id);
+
+			if (existingItem == null)
+			{
+				throw new InvalidOperationException($"{typeof(T).Name} with Id='{item.Id}' not exist");
+			}
+
+			item.IncrementVersion(existingItem);
+
+			var newItem = _databaseContext.Update(item);
+			await _databaseContext.SaveChangesAsync();
+
+			return newItem.Entity;
+		}
+
+		public virtual async Task<IList<T>> GetAllAsync()
+		{
+			return await _databaseContext
+				.Set<T>()
+				.Where(x => !x.IsDeleted)
+				.ToListAsync();
+		}
+
+		public virtual async Task<T?> GetAsync(Guid id)
+		{
+			var set = _databaseContext.Set<T>();
+
+			if (set == null)
+			{
+				return null;
+			}
+
+			var result = await set.SingleOrDefaultAsync(x => x.Id == id);
+
+			return result;
+		}
+
+		public virtual async Task DeleteAsync(Guid id)
+		{
+			var existingItem = await GetAsync(id);
+
+			if (existingItem != null && !existingItem.IsDeleted)
+			{
+				existingItem.Delete();
+				await UpdateAsync(existingItem);
+			}
+		}
+
+		public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> query)
+		{
+			return await _databaseContext
+				.Set<T>()
+				.Where(x => !x.IsDeleted)
+				.Where(query)
+				.AnyAsync();
+		}
+	}
+}

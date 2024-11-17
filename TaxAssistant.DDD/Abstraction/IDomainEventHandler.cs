@@ -3,6 +3,6 @@
 	public interface IDomainEventHandler<in TIn>
 		where TIn : IDomainEvent
 	{
-		Task HandleAsync(TIn? command);
+		Task HandleAsync(TIn? domanEvent);
 	}
 }

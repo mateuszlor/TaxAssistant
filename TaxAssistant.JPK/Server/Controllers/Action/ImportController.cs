@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Database;
@@ -18,7 +18,7 @@ using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_2;
 
 namespace TaxAssistant.JPK.Server.Controllers
 {
-    [ApiController]
+	[ApiController]
     [Route("[controller]")]
     public class ImportController : ControllerBase
     {
@@ -65,21 +65,17 @@ namespace TaxAssistant.JPK.Server.Controllers
                     IsSuccessful = true,
                 };
 
+                Guid? kpirId = null;
+                Guid? ewpId = null;
+                Guid? faId = null;
+
                 switch (result)
                 {
                     case JPK_PKPIR kpir:
                     {
                         var items = _kpirAdapter.Adapt(kpir);
                         var addedItems = await _kpirRepository.AddAsync(items);
-
-                        var importData = new Import
-                        {
-                            KpirId = addedItems.Id
-                        };
-
-                        var addedImportData = await _importRepository.AddAsync(importData);
-
-                        model.Data = addedImportData;
+                        kpirId = addedItems.Id;
 
                         break;
                     }
@@ -87,35 +83,32 @@ namespace TaxAssistant.JPK.Server.Controllers
                     {
                         var items = _ewpAdapter.Adapt(ewp);
                         var addedItems = await _ewpRepository.AddAsync(items);
-
-                        var importData = new Import
-                        {
-                            EwpId = addedItems.Id
-                        };
-
-                        var addedImportData = await _importRepository.AddAsync(importData);
-
-                        model.Data = addedImportData;
+                        ewpId = addedItems.Id;
 
                         break;
                     }
                     case JPK_FA fa:
                     {
                         var item = _faAdapter.Adapt(fa);
-                        var added = await _faRepository.AddAsync(item);
-                        var importData = new Import
-                        {
-                            FaId = added.Id
-                        };
+						var added = await _faRepository.AddAsync(item);
+                        faId = added.Id;
 
-                        var addedImportData = await _importRepository.AddAsync(importData);
-
-                        model.Data = addedImportData;
-                        break;
+						break;
                     }
                 }
 
-                return Ok(model);
+				var importData = new Import
+				{
+                    KpirId = kpirId,
+                    EwpId = ewpId,
+					FaId = faId
+				};
+
+				var addedImportData = await _importRepository.AddAsync(importData);
+
+				model.Data = addedImportData;
+
+				return Ok(model);
             }
             catch (Exception ex)
             {

@@ -1,10 +1,9 @@
-﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
-
-namespace TaxAssistant.JPK.Shared.Model.Domain.Address
+﻿namespace TaxAssistant.JPK.Shared.Model.Domain.Address
 {
-	public class Address: IIdentifiable
+	public class Address : BaseDomainModel
 	{
-		public Address(string country, string postalCode, string city, string? street, string buildingNumber, string? localNumber = null)
+		public Address(Origin origin, string country, string postalCode, string city, string? street, string buildingNumber, string? localNumber = null)
+			: base(origin)
 		{
 			Country = country;
 			PostalCode = postalCode;
@@ -13,8 +12,6 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Address
 			BuildingNumber = buildingNumber;
 			LocalNumber = localNumber;
 		}
-
-		public Guid Id { get; } = Guid.NewGuid();
 
 		public string Country { get; set; }
 

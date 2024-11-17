@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework.Internal;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Server.Controllers;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
@@ -14,7 +14,7 @@ using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Tests.Controller
 {
-    public class ImportControllerTests
+	public class ImportControllerTests
     {
         private ImportController _sut;
 

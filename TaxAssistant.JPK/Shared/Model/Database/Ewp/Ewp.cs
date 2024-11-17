@@ -1,10 +1,13 @@
-﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+﻿using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
 {
-	public class Ewp : BaseModel
-    {
-        public virtual EwpHeader Header { get; set; }
+	public class Ewp : BaseModel, IAggregate
+	{
+		public IList<IDomainEvent> Events { get; } = [];
+
+		public virtual EwpHeader Header { get; set; }
 
         public virtual EwpCompany Subject { get; set; }
 
@@ -19,5 +22,5 @@ namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
         public Guid? FixedAssetsControlDataId { get; set; }
 
         public virtual EwpControlData? FixedAssetsControlData { get; set; }
-    }
+	}
 }
