@@ -2,6 +2,7 @@
 {
     public enum TaxIdentificationNumberType
     {
+        UNKNOWN,
         EUPLVATID,
         IMPLVATID,
         NIP,
