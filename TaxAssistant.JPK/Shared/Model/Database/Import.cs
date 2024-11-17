@@ -1,6 +1,8 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Database
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Database
 {
-    public class Import : BaseModel
+	public class Import : BaseModel
     {
         public Guid? KpirId { get; set; }
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaxAssistant.JPK.Database;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
-    public abstract class BaseRepository<T> : IRepository<T>
+	public abstract class BaseRepository<T> : IRepository<T>
         where T : BaseModel
     {
         protected readonly DatabaseContext _databaseContext;
@@ -16,10 +16,6 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
 
         public virtual async Task<T> AddAsync(T item)
         {
-            item.Version = 1;
-            item.ModificationDate = null;
-            item.CreationDate = DateTime.UtcNow;
-
             var result = _databaseContext.Add(item);
 
             await _databaseContext.SaveChangesAsync();
@@ -36,9 +32,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
                 throw new InvalidOperationException($"{typeof(T).Name} with Id='{item.Id}' not exist");
             }
 
-            item.ModificationDate = DateTime.UtcNow;
-            item.CreationDate = existingItem.CreationDate;
-            item.Version = existingItem.Version + 1;
+			item.IncrementVersion(existingItem);
 
             var newItem = _databaseContext.Update(item);
             await _databaseContext.SaveChangesAsync();
@@ -70,14 +64,13 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
 
         public virtual async Task DeleteAsync(Guid id)
         {
-            var item = await GetAsync(id);
+            var existingItem = await GetAsync(id);
 
-            if (item != null)
+            if (existingItem != null && !existingItem.IsDeleted)
             {
-                item.IsDeleted = true;
+                existingItem.Delete();
+                await UpdateAsync(existingItem);
             }
-
-            await UpdateAsync(item);
         }
     }
 }

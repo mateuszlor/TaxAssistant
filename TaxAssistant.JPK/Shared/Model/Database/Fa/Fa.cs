@@ -1,8 +1,9 @@
-﻿using TaxAssistant.JPK.Shared.Model.Database.Kpir;
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
-    public class Fa : BaseModel
+	public class Fa : BaseModel
     {
         public virtual FaHeader Header { get; set; }
 

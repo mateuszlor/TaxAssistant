@@ -7,7 +7,7 @@ namespace TaxAssistant.JPK.Tests.Controller
 {
     public class FaControllerTests : BaseControllerTests<Fa>
     {
-        public FaControllerTests() : base(new Fa { Id = Guid.NewGuid() })
+        public FaControllerTests() : base(new Fa())
         {
             _getSut = () => new FaController(Substitute.For<ILogger<FaController>>(), _repository);
         }

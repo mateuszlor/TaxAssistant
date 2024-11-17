@@ -7,7 +7,7 @@ namespace TaxAssistant.JPK.Tests.Controller
 {
     public class KpirControllerTests : BaseControllerTests<Kpir>
     {
-        public KpirControllerTests() : base(new Kpir { Id = Guid.NewGuid() })
+        public KpirControllerTests() : base(new Kpir())
         {
             _getSut = () => new KpirController(Substitute.For<ILogger<KpirController>>(), _repository);
         }

@@ -1,4 +1,6 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Database.Fa
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
 	public class FaInvoiceCompany : BaseModel
 	{

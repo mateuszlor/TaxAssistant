@@ -7,7 +7,7 @@ namespace TaxAssistant.JPK.Tests.Controller
 {
     public class EwpControllerTests : BaseControllerTests<Ewp>
     {
-        public EwpControllerTests() : base(new Ewp { Id = Guid.NewGuid() })
+        public EwpControllerTests() : base(new Ewp())
         {
             _getSut = () => new EwpController(Substitute.For<ILogger<EwpController>>(), _repository);
         }

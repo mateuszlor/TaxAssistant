@@ -1,8 +1,8 @@
-﻿using TaxAssistant.JPK.Shared.Model.Database;
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
-    public interface IRepository<T>
+	public interface IRepository<T>
         where T : BaseModel
     {
         Task<T> AddAsync(T item);

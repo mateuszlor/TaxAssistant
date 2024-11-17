@@ -1,5 +1,5 @@
 ﻿using System.Data.SqlTypes;
-using TaxAssistant.CQRS;
+using TaxAssistant.CQRS.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
@@ -7,7 +7,7 @@ using TaxAssistant.JPK.Shared.Model.Database.Shared;
 
 namespace TaxAssistant.JPK.ApplicationLogic.CommandHandlers
 {
-    public class AggregateKpirCommandHandler : ICommandHandler<AggregateKpirCommand, AggregateKpirCommandResult>
+	public class AggregateKpirCommandHandler : ICommandHandler<AggregateKpirCommand, AggregateKpirCommandResult>
 	{
 		private readonly IRepository<Kpir> _repository;
 

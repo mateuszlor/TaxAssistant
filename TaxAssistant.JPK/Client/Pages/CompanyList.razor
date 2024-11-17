@@ -1,0 +1,54 @@
+﻿@page "/company"
+
+@using Newtonsoft.Json
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using TaxAssistant.JPK.Shared.Model.Domain.Company
+
+@inject IApiClient<Company> Client
+
+<PageTitle>Import history</PageTitle>
+
+<h1>Import history</h1>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@companies == null)
+{
+    <div class="alert alert-danger">No companies found</div>
+}
+else 
+{
+    <Table DataSource=@companies>
+        <Column TRow="Company" Title="ID">@context.Id</Column>
+        <Column TRow="Company" Title="CreationDate">@context.CreationDate</Column>
+        <Column TRow="Company" Title="NIP">@context.TaxIdentificationNumber</Column>
+        <Column TRow="Company" Title="REGON">@context.NationalStatisticNumber</Column>
+        <Column TRow="Company" Title="Name">@context.Name</Column>
+    </Table>
+}
+
+@code {
+    private IList<Company>? companies;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            companies = await Client.GetAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

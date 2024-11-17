@@ -1,8 +1,10 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Application
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Application
 {
-    public class BaseApplicationModel
+	public class BaseApplicationModel : IIdentifiable
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; } = Guid.NewGuid();
         public DateTime CreationDate { get; set; } = DateTime.UtcNow;
     }
 }

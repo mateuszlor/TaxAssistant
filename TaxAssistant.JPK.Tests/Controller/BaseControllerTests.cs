@@ -5,12 +5,12 @@ using NSubstitute.ExceptionExtensions;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Model;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.Tests.Controller
 {
-    public abstract class BaseControllerTests<T>
+	public abstract class BaseControllerTests<T>
         where T : BaseModel
     {
         protected IRepository<T> _repository;

@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using TaxAssistant.CQRS;
+using TaxAssistant.CQRS.Abstraction;
 using TaxAssistant.JPK.Server.Controllers;
 using TaxAssistant.JPK.Shared.Commands;
 
 namespace TaxAssistant.JPK.Tests.Controller
 {
-    public class AggregateControllerTests
+	public class AggregateControllerTests
     {
         private IGate _gate;
         private AggregateController _sut;

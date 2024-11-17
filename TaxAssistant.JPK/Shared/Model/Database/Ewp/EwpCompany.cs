@@ -1,6 +1,8 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
 {
-    public class EwpCompany : BaseModel
+	public class EwpCompany : BaseModel
     {
         public Guid EwpId { get; set; }
 

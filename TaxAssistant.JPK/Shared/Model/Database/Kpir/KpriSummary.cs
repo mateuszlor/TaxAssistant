@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
 {
-    public class KpirSummary : BaseModel
+	public class KpirSummary : BaseModel
     {
         public Guid KpirId { get; set; }
 

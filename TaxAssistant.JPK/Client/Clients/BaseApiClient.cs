@@ -1,12 +1,12 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.View;
 
 namespace TaxAssistant.JPK.Client.Clients
 {
-    public abstract class BaseApiClient<T> : IApiClient<T>
+	public abstract class BaseApiClient<T> : IApiClient<T>
         where T : BaseModel
     {
         private readonly HttpClient _httpClient;

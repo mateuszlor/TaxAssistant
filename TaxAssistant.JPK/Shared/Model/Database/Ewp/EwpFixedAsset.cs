@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
 {
-    public class EwpFixedAsset : BaseModel
+	public class EwpFixedAsset : BaseModel
     {
         public Guid EwpId { get; set; }
 

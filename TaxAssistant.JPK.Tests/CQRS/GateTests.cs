@@ -1,11 +1,12 @@
 using FluentAssertions;
 using NSubstitute;
 using TaxAssistant.CQRS;
+using TaxAssistant.CQRS.Abstraction;
 using TaxAssistant.JPK.Tests.CQRS.Model;
 
 namespace TaxAssistant.JPK.Tests.CQRS
 {
-    public class GateTests
+	public class GateTests
     {
         private IServiceProvider _serviceProvider;
         private Gate _sut;

@@ -1,8 +1,8 @@
-﻿using TaxAssistant.CQRS;
+﻿using TaxAssistant.CQRS.Abstraction;
 
 namespace TaxAssistant.JPK.Tests.CQRS.Model
 {
-    class ExampleCommand : ICommand
+	class ExampleCommand : ICommand
     {
     }
 }
