@@ -1,8 +1,10 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Abstraction
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TaxAssistant.JPK.Shared.Model.Abstraction
 {
 	public abstract class BaseModel : IIdentifiable
 	{
-		public Guid Id { get; } = Guid.NewGuid();
+		public Guid Id { get; init; } = Guid.NewGuid();
 		public DateTime CreationDate { get; private set; } = DateTime.UtcNow;
 		public bool IsDeleted { get; protected set; }
 		public int Version { get; private set; } = 1;
