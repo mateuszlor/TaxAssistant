@@ -188,18 +188,18 @@ namespace TaxAssistant.JPK.Tests.Adapter
 				{
 					IdentyfikatorPodmiotu = new TIdentyfikatorOsobyNiefizycznej1
 					{
-						PelnaNazwa = "Monsters Inc.",
-						ItemElementName = ItemChoiceType.NIP,
-						Item = "1234567890"
+						PelnaNazwa = "Queen LTD",
+						ItemElementName = ItemChoiceType.IMPLVATID,
+						Item = "GB123456789"
 					},
 					Item = new TAdresZagraniczny
 					{
-						KodKraju = TKodKraju.PL,
-						KodPocztowy = "01-234",
-						Miejscowosc = "Pcim Dolny",
-						NrDomu = "123A",
-						NrLokalu = "4 Kl. 2",
-						Ulica = "Krótka"
+						KodKraju = TKodKraju.GB,
+						KodPocztowy = "SW1A 1AA",
+						Miejscowosc = "London",
+						NrDomu = "Room No 1",
+						NrLokalu = "Second bed to the left",
+						Ulica = "Buckingham Palace"
 					}
 				}
 			});
@@ -213,16 +213,16 @@ namespace TaxAssistant.JPK.Tests.Adapter
 			result!.Orders.Should().NotBeNull();
 
 			result!.Subject.Should().NotBeNull();
-			result!.Subject.Name.Should().Be("Monsters Inc.");
-			result!.Subject.TaxIdentificationNumber.Should().Be("1234567890");
-			result!.Subject.TaxIdentificationNumberType.Should().Be(TaxIdentificationNumberType.NIP);
+			result!.Subject.Name.Should().Be("Queen LTD");
+			result!.Subject.TaxIdentificationNumber.Should().Be("GB123456789");
+			result!.Subject.TaxIdentificationNumberType.Should().Be(TaxIdentificationNumberType.IMPLVATID);
 			result!.Subject.Address.Should().NotBeNull();
-			result!.Subject.Address!.CountryCode.Should().Be("PL");
-			result!.Subject.Address!.PostalCode.Should().Be("01-234");
-			result!.Subject.Address!.City.Should().Be("Pcim Dolny");
-			result!.Subject.Address!.BuildingNumber.Should().Be("123A");
-			result!.Subject.Address!.LocalNumber.Should().Be("4 Kl. 2");
-			result!.Subject.Address!.Street.Should().Be("Krótka");
+			result!.Subject.Address!.CountryCode.Should().Be("GB");
+			result!.Subject.Address!.PostalCode.Should().Be("SW1A 1AA");
+			result!.Subject.Address!.City.Should().Be("London");
+			result!.Subject.Address!.BuildingNumber.Should().Be("Room No 1");
+			result!.Subject.Address!.LocalNumber.Should().Be("Second bed to the left");
+			result!.Subject.Address!.Street.Should().Be("Buckingham Palace");
 
 			result!.Subject.Address!.Municipality.Should().BeNull();
 			result!.Subject.Address!.District.Should().BeNull();
