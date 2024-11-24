@@ -20,15 +20,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Applicatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.CQRS", "TaxAssistant.CQRS\TaxAssistant.CQRS.csproj", "{6A68E0FD-BE07-4C12-AE3F-8BF0BC92D0D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests.UnitTests", "TaxAssistant.JPK.Tests\TaxAssistant.JPK.Tests.UnitTests.csproj", "{2960CAFC-7B46-4915-B7AA-0BC0EB127198}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests.UnitTests", "Tests\TaxAssistant.JPK.Tests.UnitTests\TaxAssistant.JPK.Tests.UnitTests.csproj", "{2960CAFC-7B46-4915-B7AA-0BC0EB127198}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests.FrontendTests", "TaxAssistant.JPK.FrontendTests\TaxAssistant.JPK.Tests.FrontendTests.csproj", "{7B975CFA-80FF-4465-8E33-073D6651D6DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaxAssistant.JPK.Tests.IntegrationTests", "Tests\TaxAssistant.JPK.Tests.IntegrationTests\TaxAssistant.JPK.Tests.IntegrationTests.csproj", "{7B975CFA-80FF-4465-8E33-073D6651D6DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.DDD", "TaxAssistant.DDD\TaxAssistant.DDD.csproj", "{6FA79174-A5EF-441D-86E7-DC2E92CEA7B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5C1B8F61-7AE8-4E44-BF7C-B8703BECBDFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Tests.IntegrationTests", "TaxAssistant.JPK.Tests.IntegrationTests\TaxAssistant.JPK.Tests.IntegrationTests.csproj", "{392AD911-CB44-476E-A715-40962E6BB0F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaxAssistant.JPK.Tests.FrontendTests", "Tests\TaxAssistant.JPK.Tests.FrontendTests\TaxAssistant.JPK.Tests.FrontendTests.csproj", "{E882E830-1C1F-4ABC-88AE-D059E4BF5591}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,10 +72,10 @@ Global
 		{6FA79174-A5EF-441D-86E7-DC2E92CEA7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA79174-A5EF-441D-86E7-DC2E92CEA7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA79174-A5EF-441D-86E7-DC2E92CEA7B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{392AD911-CB44-476E-A715-40962E6BB0F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{392AD911-CB44-476E-A715-40962E6BB0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{392AD911-CB44-476E-A715-40962E6BB0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{392AD911-CB44-476E-A715-40962E6BB0F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E882E830-1C1F-4ABC-88AE-D059E4BF5591}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E882E830-1C1F-4ABC-88AE-D059E4BF5591}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E882E830-1C1F-4ABC-88AE-D059E4BF5591}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E882E830-1C1F-4ABC-88AE-D059E4BF5591}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,7 +83,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2960CAFC-7B46-4915-B7AA-0BC0EB127198} = {5C1B8F61-7AE8-4E44-BF7C-B8703BECBDFC}
 		{7B975CFA-80FF-4465-8E33-073D6651D6DB} = {5C1B8F61-7AE8-4E44-BF7C-B8703BECBDFC}
-		{392AD911-CB44-476E-A715-40962E6BB0F6} = {5C1B8F61-7AE8-4E44-BF7C-B8703BECBDFC}
+		{E882E830-1C1F-4ABC-88AE-D059E4BF5591} = {5C1B8F61-7AE8-4E44-BF7C-B8703BECBDFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CD3373B0-379D-4349-8413-738D5DE8544F}

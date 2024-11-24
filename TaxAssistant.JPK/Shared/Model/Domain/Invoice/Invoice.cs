@@ -11,17 +11,21 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 			Events.Add(new InvoiceCreatedEvent(Id));
 		}
 
-		public Origin Orogin { get; }
-		public required string DocumentNumber { get; set; }
+		public string DocumentNumber { get; set; }
 		public Company.Company? Seller { get; set; }
-		public Company.Company? Byuer { get; set; }
+		public Company.Company? Buyer { get; set; }
 		public decimal TotalNetValue { get; set; }
 		public decimal TotalGrossValue { get; set; }
 		public decimal TotalVat { get; set; }
 
 		public void SetSeller(Company.Company company)
-		{
-			if (Seller == null)
+        {
+            if (company == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (Seller == null)
 			{
 				Seller = company;
 
@@ -33,11 +37,16 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 			}
 		}
 
-		public void SetByuer(Company.Company company)
+		public void SetBuyer(Company.Company company)
 		{
-			if (Byuer == null)
+			if (company == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+			if (Buyer == null)
 			{
-				Byuer = company;
+				Buyer = company;
 
 				Events.Add(new BuyerSetEvent(Id, company));
 			}
@@ -48,15 +57,20 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 		}
 
 		public void SetAmountValues(decimal totalNetValue, decimal totalGrossValue, decimal totalVat)
-		{
-			if (TotalNetValue != decimal.Zero || TotalGrossValue != decimal.Zero || TotalVat != decimal.Zero)
-			{
-				throw new InvalidOperationException();
-			}
+        {
+            if (totalNetValue == decimal.Zero)
+            {
+                throw new ArgumentException("TotalNetValue cannot be 0");
+            }
 
-			if (totalVat != totalGrossValue - totalNetValue)
+            if (totalGrossValue == decimal.Zero)
+            {
+                throw new ArgumentException("TotalGrossValue cannot be 0");
+            }
+
+            if (totalVat != totalGrossValue - totalNetValue)
 			{
-				throw new ArgumentException("Invalid amounts");
+				throw new ArgumentException("Net/gross/VAT amounts does not match");
 			}
 
 			TotalNetValue = totalNetValue;

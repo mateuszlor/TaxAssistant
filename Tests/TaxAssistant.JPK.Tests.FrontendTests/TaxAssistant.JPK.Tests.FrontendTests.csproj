@@ -37,7 +37,7 @@
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TaxAssistant.JPK\Client\TaxAssistant.JPK.Client.csproj" />
+	  <ProjectReference Include="..\..\TaxAssistant.JPK\Client\TaxAssistant.JPK.Client.csproj" />
 	</ItemGroup>
 
 

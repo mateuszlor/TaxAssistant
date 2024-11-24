@@ -1,7 +1,7 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
+﻿namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice.Events
 {
-	internal class BuyerSetEvent : BaseCompanySetEvent
-	{
-		public BuyerSetEvent(Guid entityId, Company.Company company) : base(entityId, company) { }
-	}
+    public class BuyerSetEvent : BaseCompanySetEvent
+    {
+        public BuyerSetEvent(Guid entityId, Company.Company company) : base(entityId, company) { }
+    }
 }

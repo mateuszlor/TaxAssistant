@@ -34,10 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TaxAssistant.JPK\Server\TaxAssistant.JPK.Server.csproj" />
-    <ProjectReference Include="..\TaxAssistant.JPK\Shared\TaxAssistant.JPK.Shared.csproj" />
+    <ProjectReference Include="..\..\TaxAssistant.JPK\Server\TaxAssistant.JPK.Server.csproj" />
+    <ProjectReference Include="..\..\TaxAssistant.JPK\Shared\TaxAssistant.JPK.Shared.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
