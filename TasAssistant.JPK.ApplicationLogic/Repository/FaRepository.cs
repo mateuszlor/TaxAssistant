@@ -18,14 +18,15 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
 		{
 			var events = item
 				.Invoices
-				.Select(x => new NewCompanyEvent(x.Seller.Name, x.Seller.TaxIdentificationNumber, x.Seller.Address))
+				?.Select(x => new NewCompanyEvent(x.Seller.Name, x.Seller.TaxIdentificationNumber, x.Seller.Address))
 				.Distinct()
-				.ToList();
+				.ToList()
+				?? [];
 
 			events.AddRange(item
 				.Invoices
-				.Select(x => new NewCompanyEvent(x.Buyer.Name, x.Buyer.TaxIdentificationNumber, x.Buyer.Address))
-				.Distinct());
+				?.Select(x => new NewCompanyEvent(x.Buyer.Name, x.Buyer.TaxIdentificationNumber, x.Buyer.Address))
+				.Distinct() ?? []);
 
 			events.ForEach(x => item.Events.Add(x));
 

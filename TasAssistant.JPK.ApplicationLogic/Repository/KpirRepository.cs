@@ -7,24 +7,25 @@ using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {
-	public class KpirRepository : BaseRepository<Kpir>
+    public class KpirRepository : BaseRepository<Kpir>
     {
         public KpirRepository(DatabaseContext databaseContext, IDomainEventDispatcher dispatcher, ILogger<KpirRepository> logger)
-			: base(databaseContext, dispatcher, logger)
-		{
+            : base(databaseContext, dispatcher, logger)
+        {
         }
 
         public override async Task<Kpir> AddAsync(Kpir item)
-		{
-			var companies = item
-				.Rows
-				.Select(x => new NewCompanyEvent(x.CompanyData, x.CompanyAddress))
-				.Distinct()
-				.ToList();
+        {
+            var companies = item
+                .Rows
+                ?.Select(x => new NewCompanyEvent(x.CompanyData, x.CompanyAddress))
+                .Distinct()
+                .ToList()
+                ?? [];
 
             companies.ForEach(x => item.Events.Add(x));
 
-			var result = await base.AddAsync(item);
+            var result = await base.AddAsync(item);
 
             // TODO handle new companies
 

@@ -22,29 +22,17 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 		}
 
 		public virtual async Task<T> AddAsync(T item)
-		{
-			var result = _databaseContext.Add(item);
+        {
+            var result = _databaseContext.Add(item);
 
-			foreach (var e in item.Events)
-			{
-				try
-				{
-					await _dispatcher.DispatchAsync(e);
-				}
-				catch (Exception ex)
-				{
-					_logger.LogError(ex, "Error handling domain event {eventType}", e.GetType().Name);
-				}
-			}
+            await HandleEvents(item);
 
-			item.Events.Clear();
+            await _databaseContext.SaveChangesAsync();
 
-			await _databaseContext.SaveChangesAsync();
+            return result.Entity;
+        }
 
-			return result.Entity;
-		}
-
-		public virtual async Task<T> UpdateAsync(T item)
+        public virtual async Task<T> UpdateAsync(T item)
 		{
 			var existingItem = await GetAsync(item.Id);
 
@@ -56,7 +44,10 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 			item.IncrementVersion(existingItem);
 
 			var newItem = _databaseContext.Update(item);
-			await _databaseContext.SaveChangesAsync();
+
+            await HandleEvents(item);
+
+            await _databaseContext.SaveChangesAsync();
 
 			return newItem.Entity;
 		}
@@ -78,7 +69,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 				return null;
 			}
 
-			var result = await set.SingleOrDefaultAsync(x => x.Id == id);
+			var result = await set.SingleOrDefaultAsync(x => !x.IsDeleted && x.Id == id);
 
 			return result;
 		}
@@ -101,6 +92,23 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 				.Where(x => !x.IsDeleted)
 				.Where(query)
 				.AnyAsync();
-		}
-	}
+        }
+
+        private async Task HandleEvents(T item)
+        {
+            foreach (var e in item.Events)
+            {
+                try
+                {
+                    await _dispatcher.DispatchAsync(e);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error handling domain event {EventType}", e.GetType().Name);
+                }
+            }
+
+            item.Events.Clear();
+        }
+    }
 }
