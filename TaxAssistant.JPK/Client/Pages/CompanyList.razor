@@ -1,4 +1,4 @@
-﻿@page "/company"
+﻿@page "/company-list"
 
 @using TaxAssistant.JPK.Shared.Model
 @using Microsoft.AspNetCore.Components.Forms
@@ -25,11 +25,11 @@ else if (@companies == null)
 else 
 {
     <Table DataSource=@companies>
-        <Column TRow="Company" Title="ID">@context.Id</Column>
-        <Column TRow="Company" Title="CreationDate">@context.CreationDate</Column>
+        <Column TRow="Company" Title="Link"><a href=@($"/company-list/{@context.Id}/Preview")>>>></a></Column>
+        <Column TRow="Company" Title="Name">@context.Name</Column>
         <Column TRow="Company" Title="NIP">@context.TaxIdentificationNumber</Column>
         <Column TRow="Company" Title="REGON">@context.NationalStatisticNumber</Column>
-        <Column TRow="Company" Title="Name">@context.Name</Column>
+        <Column TRow="Company" Title="CreationDate">@context.CreationDate</Column>
     </Table>
 }
 
