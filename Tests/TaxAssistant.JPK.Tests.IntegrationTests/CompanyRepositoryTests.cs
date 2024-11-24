@@ -8,6 +8,7 @@ using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Shared.DomainEvents;
 using TaxAssistant.JPK.Shared.Model.Domain;
+using TaxAssistant.JPK.Shared.Model.Domain.Address;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
 
 namespace TaxAssistant.JPK.Tests.IntegrationTests
@@ -52,7 +53,7 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
 
             result.Version.Should().Be(1);
             result.IsDeleted.Should().BeFalse();
-            result.Events.Should().BeEmpty(); 
+            result.Events.Should().BeEmpty();
             result.CreationDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
 
             result.Name.Should().Be(itemToAdd.Name);
@@ -62,6 +63,45 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
             result.Address.Should().BeNull();
             result.AddressId.Should().BeNull();
             result.ModificationDate.Should().BeNull();
+
+            await _eventDispatcher.DidNotReceiveWithAnyArgs().DispatchAsync(Arg.Any<IDomainEvent>());
+        }
+
+        [Test]
+        public async Task Add_WithAddress_ShouldSucceed()
+        {
+            // Arrange
+            var addressToAdd = new Address(Origin.JPK, "Polska", "00-000", "Warszawa", "Prosta", "1", "2");
+            var itemToAdd = new Company(Origin.JPK, "1234567890", "Monsters Inc.", addressToAdd);
+
+            // Act
+            var result = await _sut.AddAsync(itemToAdd);
+
+            // Assert
+            result.Should().NotBeNull();
+
+            result.Id.Should().NotBeEmpty();
+
+            result.Version.Should().Be(1);
+            result.IsDeleted.Should().BeFalse();
+            result.Events.Should().BeEmpty();
+            result.CreationDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            result.Name.Should().Be(itemToAdd.Name);
+            result.TaxIdentificationNumber.Should().Be(itemToAdd.TaxIdentificationNumber);
+            result.NationalStatisticNumber.Should().Be(itemToAdd.NationalStatisticNumber);
+
+            result.ModificationDate.Should().BeNull();
+
+            result.AddressId.Should().NotBeEmpty();
+            result.Address.Should().NotBeNull();
+            result.Address!.Id.Should().NotBeEmpty();
+            result.Address.Country.Should().Be(addressToAdd.Country);
+            result.Address.PostalCode.Should().Be(addressToAdd.PostalCode);
+            result.Address.City.Should().Be(addressToAdd.City);
+            result.Address.BuildingNumber.Should().Be(addressToAdd.BuildingNumber);
+            result.Address.LocalNumber.Should().Be(addressToAdd.LocalNumber);
+            result.Address.LocalNumber.Should().Be(addressToAdd.LocalNumber);
 
             await _eventDispatcher.DidNotReceiveWithAnyArgs().DispatchAsync(Arg.Any<IDomainEvent>());
         }
