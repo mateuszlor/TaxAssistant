@@ -17,16 +17,13 @@ namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
 
 		public async Task HandleAsync(NewCompanyEvent? domainEvent)
 		{
-			if (domainEvent!.TaxIdentificationNumber != null)
+			if (domainEvent!.TaxIdentificationNumber != null && await _repository.AnyAsync(x => x.TaxIdentificationNumber == domainEvent!.TaxIdentificationNumber))
 			{
-				if(await _repository.AnyAsync(x => x.TaxIdentificationNumber == domainEvent!.TaxIdentificationNumber))
-				{
-					return;
-				}
+				return;
 			}
 
 			if (await _repository.AnyAsync(x => x.Name == domainEvent!.CompanyName))
-				{
+			{
 				return;
 			}
 
