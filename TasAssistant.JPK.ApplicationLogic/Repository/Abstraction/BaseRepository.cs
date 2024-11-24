@@ -62,14 +62,9 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 
 		public virtual async Task<T?> GetAsync(Guid id)
 		{
-			var set = _databaseContext.Set<T>();
-
-			if (set == null)
-			{
-				return null;
-			}
-
-			var result = await set.SingleOrDefaultAsync(x => !x.IsDeleted && x.Id == id);
+			var result = await _databaseContext
+				.Set<T>()
+				.SingleOrDefaultAsync(x => !x.IsDeleted && x.Id == id);
 
 			return result;
 		}
@@ -105,6 +100,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error handling domain event {EventType}", e.GetType().Name);
+					throw new InvalidOperationException("Error handling domain event", ex);
                 }
             }
 

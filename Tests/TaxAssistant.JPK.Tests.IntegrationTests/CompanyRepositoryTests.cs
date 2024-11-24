@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
@@ -83,12 +84,34 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         }
 
         [Test]
+        public async Task Add_WithFailedEvents_ShouldThrow()
+        {
+            // Arrange
+            var itemToAdd = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
+            itemToAdd.Events.Add(new NewCompanyEvent("Monsters Inc.", "1234567890", string.Empty));
+
+            _eventDispatcher.DispatchAsync(Arg.Any<IDomainEvent>()).ThrowsAsync(new Exception("SOME ERROR"));
+
+            // Act & Assert
+            await _sut
+                .Invoking(x => x.AddAsync(itemToAdd))
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage("Error handling domain event")
+                .WithInnerException(typeof(Exception))
+                .WithMessage("SOME ERROR");
+
+            // Assert
+            _databaseContext.Company.Should().BeEmpty();
+        }
+
+        [Test]
         public async Task Update_ForExistingItem_ShouldSucceed()
         {
             // Arrange
             var existingItem = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            _databaseContext.Add(existingItem);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem);
+            await _databaseContext.SaveChangesAsync();
 
             // Act
             existingItem.Events.Add(new NewCompanyEvent("Monsters Inc.", "1234567890", string.Empty));
@@ -130,8 +153,8 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var existingItem = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            _databaseContext.Add(existingItem);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem);
+            await _databaseContext.SaveChangesAsync();
 
             // Act
             await _sut.DeleteAsync(existingItem.Id);
@@ -167,8 +190,8 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var existingItem = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            _databaseContext.Add(existingItem);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem);
+            await _databaseContext.SaveChangesAsync();
 
             // Act
             var result = await _sut.AnyAsync(x => x.Id == existingItem.Id);
@@ -184,8 +207,8 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var existingItem = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            _databaseContext.Add(existingItem);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem);
+            await _databaseContext.SaveChangesAsync();
 
             // Act
             var result = await _sut.AnyAsync(x => x.Id == Guid.NewGuid());
@@ -201,12 +224,12 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var existingItem1 = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            _databaseContext.Add(existingItem1);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem1);
+            await _databaseContext.SaveChangesAsync();
             
             var existingItem2 = new Company(Origin.JPK, "1111222233", "Evil Corp");
-            _databaseContext.Add(existingItem2);
-            _databaseContext.SaveChanges();
+            await _databaseContext.AddAsync(existingItem2);
+            await _databaseContext.SaveChangesAsync();
             
             await _sut.DeleteAsync(existingItem1.Id);
 
