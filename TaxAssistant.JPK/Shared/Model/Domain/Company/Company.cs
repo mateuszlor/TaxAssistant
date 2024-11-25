@@ -27,11 +27,11 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company
 			AddressId = addressId;
 		}
 
-		public string? TaxIdentificationNumber { get; internal set; }
+		public string? TaxIdentificationNumber { get; set; }
 
-		public string Name { get; internal set; }
+		public string Name { get; set; }
 
-		public string? NationalStatisticNumber { get; internal set; }
+		public string? NationalStatisticNumber { get; set; }
 
 		public Guid? AddressId { get; internal set; }
 

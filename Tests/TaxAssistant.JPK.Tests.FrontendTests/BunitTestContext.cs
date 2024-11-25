@@ -6,9 +6,9 @@ namespace TaxAssistant.JPK.Tests.FrontendTests;
 /// </summary>
 public abstract class BunitTestContext : TestContextWrapper
 {
-	[SetUp]
-	public virtual void Setup() => TestContext = new Bunit.TestContext();
+    [SetUp]
+    public virtual void Setup() => TestContext = new Bunit.TestContext();
 
-	[TearDown]
-	public void TearDown() => TestContext?.Dispose();
+    [TearDown]
+    public void TearDown() => TestContext?.Dispose();
 }

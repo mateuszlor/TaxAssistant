@@ -21,40 +21,40 @@
 }
 else if (@company == null)
 {
-    <div class="alert alert-danger">No company found</div>
+        <div class="alert alert-danger">Company not found</div>
 }
 else
 {
-    <form>
+    <form data-test-id="form">
         <fieldset disabled=@(formMode == FormMode.Preview)>
-            <legend>Company - details</legend>
+            <legend data-test-id="header">Company - details</legend>
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" class="form-control" placeholder=@company.Name>
+                <InputText id="name" class="form-control" @bind-Value=@company.Name />
             </div>
             <div class="mb-3">
                 <label for="taxIdentificationNumber" class="form-label">NIP</label>
-                <input type="text" id="taxIdentificationNumber" class="form-control" placeholder=@company.TaxIdentificationNumber>
+                <InputText id="taxIdentificationNumber" class="form-control" @bind-Value=@company.TaxIdentificationNumber />
             </div>
             <div class="mb-3">
                 <label for="nationalStatisticNumber" class="form-label">REGON</label>
-                <input type="text" id="nationalStatisticNumber" class="form-control" placeholder=@company.NationalStatisticNumber>
+                <InputText id="nationalStatisticNumber" class="form-control" @bind-Value=@company.NationalStatisticNumber />
             </div>
             <div class="mb-3">
                 <label for="origin" class="form-label">Origin</label>
-                <input type="text" id="origin" class="form-control" placeholder=@company.Origin>
+                <input type="text" id="origin" class="form-control" disabled value=@company.Origin>
             </div>
             <div class="mb-3">
                 <label for="creationDate" class="form-label">Creation date</label>
-                <input type="text" id="creationDate" class="form-control" placeholder=@company.CreationDate>
+                <input type="text" id="creationDate" class="form-control" disabled value=@company.CreationDate>
             </div>
             <div class="mb-3">
                 <label for="modificationDate" class="form-label">Creation date</label>
-                <input type="text" id="modificationDate" class="form-control" placeholder=@company.ModificationDate>
+                <input type="text" id="modificationDate" class="form-control" disabled value=@company.ModificationDate>
             </div>
             <div class="mb-3">
                 <label for="version" class="form-label">Version</label>
-                <input type="text" id="version" class="form-control" placeholder=@company.Version>
+                    <input type="text" id="version" class="form-control" disabled value=@company.Version>
             </div>
         </fieldset>
         <button type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Preview) @onclick=@OnDelete>Delete</button>
