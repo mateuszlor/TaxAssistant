@@ -6,11 +6,10 @@ using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Model;
 using TaxAssistant.JPK.Shared.Model.Abstraction;
-using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
-namespace TaxAssistant.JPK.Tests.Controller
+namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 {
-	public abstract class BaseControllerTests<T>
+    public abstract class BaseControllerTests<T>
         where T : BaseModel
     {
         protected IRepository<T> _repository;
@@ -125,7 +124,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         public async Task Get_ForFoundResult_ShouldReturn200()
         {
             // Arrange
-            _repository.GetAsync(_mockedResult.Id).Returns(Task.FromResult<T?>(_mockedResult));
+            _repository.GetAsync(_mockedResult.Id).Returns(Task.FromResult(_mockedResult));
 
             // Act
             var result = await _sut.Get(_mockedResult.Id);
