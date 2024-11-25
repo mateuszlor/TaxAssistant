@@ -17,6 +17,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
             // Assert
             result.Should().BeFalse();
         }
+
         [Test]
         public void Equals_ForNullObject_ReturnsFalse()
         {
@@ -126,6 +127,34 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 
             // Assert
             result.Should().BeFalse();
+        }
+
+        [Test]
+        public void Constructor_ForTaxIdentificationNumberProvided_ShouldSplit()
+        {
+            // Act
+            var result = new NewCompanyEvent($"Monsters Inc.{Environment.NewLine}NIP: 1234567890", "00-000 City Street 1/2");
+
+            // Assert
+            result.Should().NotBeNull();
+            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}NIP: 1234567890");
+            result.CompanyName.Should().Be("Monsters Inc.");
+            result.TaxIdentificationNumber.Should().Be("1234567890");
+            result.Address.Should().Be("00-000 City Street 1/2");
+        }
+
+        [Test]
+        public void Constructor_ForSplittedData_ShouldMerge()
+        {
+            // Act
+            var result = new NewCompanyEvent("Monsters Inc.", "1234567890", "00-000 City Street 1/2");
+
+            // Assert
+            result.Should().NotBeNull();
+            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}NIP: 1234567890");
+            result.CompanyName.Should().Be("Monsters Inc.");
+            result.TaxIdentificationNumber.Should().Be("1234567890");
+            result.Address.Should().Be("00-000 City Street 1/2");
         }
     }
 }

@@ -4,11 +4,34 @@ namespace TaxAssistant.JPK.Shared.DomainEvents
 {
     public class NewCompanyEvent : IDomainEvent
 	{
-		public NewCompanyEvent(string companyData, string address)
+		public NewCompanyEvent(string? companyData, string? address)
 		{
-			CompanyName = companyData.Split("\n").FirstOrDefault();
-			Address = address;
+			if (string.IsNullOrWhiteSpace(companyData))
+			{
+				throw new ArgumentNullException(nameof(companyData));
+			}
 
+			var companyDataParts = companyData!.Split("\n");
+
+			CompanyName = companyDataParts[0].Trim();
+
+			if (companyDataParts.Length > 1)
+			{
+				TaxIdentificationNumber = companyDataParts.Last();
+
+                if (TaxIdentificationNumber.StartsWith("NIP:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(4);
+                }
+                else if (TaxIdentificationNumber.StartsWith("PESEL:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(6);
+                }
+
+                TaxIdentificationNumber = TaxIdentificationNumber.Trim();
+			}
+
+			Address = address;
 			CompanyData = companyData;
 		}
 
@@ -24,7 +47,7 @@ namespace TaxAssistant.JPK.Shared.DomainEvents
 		public string CompanyData { get; set; }
 		public string CompanyName { get; }
 		public string? TaxIdentificationNumber { get; }
-		public string Address { get; set; }
+		public string? Address { get; set; }
 
         public override bool Equals(object? obj)
         {
