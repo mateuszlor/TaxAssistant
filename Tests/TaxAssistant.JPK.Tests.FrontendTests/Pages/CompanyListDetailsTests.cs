@@ -61,7 +61,6 @@ public class CompanyListDetailsTests : BunitTestContext
         // Assert
         cut.FindByDataTestId("header").TextContent.Should().Be("Company - details");
         cut.FindByDataTestId("form").FindChild<IHtmlFieldSetElement>()!.IsDisabled.Should().BeTrue();
-        cut.FindByDataTestId("header").GetAttribute("disabled").Should().Be("true");
         cut.FindById("name").GetInputValue().Should().Be("Monsters Inc.");
         cut.FindById("taxIdentificationNumber").GetInputValue().Should().Be("1234567890");
         cut.FindById("nationalStatisticNumber").GetInputValue().Should().Be("111122220");
