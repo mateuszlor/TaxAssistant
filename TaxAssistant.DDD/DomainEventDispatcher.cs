@@ -22,13 +22,7 @@ namespace TaxAssistant.DDD
 			{
 				var methodName = nameof(IDomainEventHandler<T>.HandleAsync);
 				var method = handler!.GetType().GetMethod(methodName);
-
-				if (method == null)
-				{
-					throw new Exception($"Handler {handler.GetType().FullName} is invalid");
-				}
-
-				var task = method.Invoke(handler, [e]) as Task;
+				var task = method!.Invoke(handler, [e]) as Task;
 
 				await task!;
 			}
