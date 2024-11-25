@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
-    public class FaOrderRow : BaseModel
+	public class FaOrderRow : BaseModel
 	{
 		public Guid OrderId { get; set; }
 

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Model;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Server.Controllers.Data
 {
-    public abstract class BaseController<T> : ControllerBase
+	public abstract class BaseController<T> : ControllerBase
         where T : BaseModel
     {
         private readonly ILogger<BaseController<T>> _logger;

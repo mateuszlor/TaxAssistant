@@ -1,0 +1,113 @@
+﻿@page "/company-list/{IdParameter}/{FormModeParameter}"
+
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using TaxAssistant.JPK.Shared.Model.Domain.Company
+
+@inject IApiClient<Company> Client
+@inject NavigationManager NavigationManager
+
+<PageTitle>Import history</PageTitle>
+
+<h1>Import history</h1>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (@company == null)
+{
+        <div class="alert alert-danger">Company not found</div>
+}
+else
+{
+    <form data-test-id="form">
+        <fieldset disabled=@(formMode == FormMode.Preview)>
+            <legend data-test-id="header">Company - details</legend>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText id="name" class="form-control" @bind-Value=@company.Name />
+            </div>
+            <div class="mb-3">
+                <label for="taxIdentificationNumber" class="form-label">NIP</label>
+                <InputText id="taxIdentificationNumber" class="form-control" @bind-Value=@company.TaxIdentificationNumber />
+            </div>
+            <div class="mb-3">
+                <label for="nationalStatisticNumber" class="form-label">REGON</label>
+                <InputText id="nationalStatisticNumber" class="form-control" @bind-Value=@company.NationalStatisticNumber />
+            </div>
+            <div class="mb-3">
+                <label for="origin" class="form-label">Origin</label>
+                <input type="text" id="origin" class="form-control" disabled value=@company.Origin>
+            </div>
+            <div class="mb-3">
+                <label for="creationDate" class="form-label">Creation date</label>
+                <input type="text" id="creationDate" class="form-control" disabled value=@company.CreationDate>
+            </div>
+            <div class="mb-3">
+                <label for="modificationDate" class="form-label">Creation date</label>
+                <input type="text" id="modificationDate" class="form-control" disabled value=@company.ModificationDate>
+            </div>
+            <div class="mb-3">
+                <label for="version" class="form-label">Version</label>
+                    <input type="text" id="version" class="form-control" disabled value=@company.Version>
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Preview) @onclick=@OnDelete>Delete</button>
+        <button type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Edit) @onclick=@OnEdit>Edit</button>
+    </form>
+}
+
+@code {
+    [Parameter]
+    public string IdParameter { get; set; }
+
+    [Parameter]
+    public string FormModeParameter { get; set; }
+
+    private FormMode formMode;
+    private Guid? companyId;
+    private Company? company;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            companyId = Guid.Parse(IdParameter);
+            formMode = Enum.Parse<FormMode>(FormModeParameter);
+
+            if (companyId.HasValue)
+            {
+                company = await Client.GetAsync(companyId.Value);
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected async Task OnDelete(MouseEventArgs mouseEventArgs)
+    {
+        if (companyId.HasValue)
+        {
+            await Client.DeleteAsync(companyId.Value);
+            NavigationManager.NavigateTo($"/company-list");
+        }
+    }
+
+    protected async Task OnEdit(MouseEventArgs mouseEventArgs)
+    {
+        formMode = FormMode.Edit;
+        NavigationManager.NavigateTo($"/company-list/{IdParameter}/{formMode}", false);
+
+        StateHasChanged();
+    }
+}

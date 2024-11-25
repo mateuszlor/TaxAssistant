@@ -1369,6 +1369,95 @@ namespace TaxAssistant.JPK.Database.Migrations
                     b.ToTable("KpirSummary");
                 });
 
+            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Address.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BuildingNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LocalNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Origin")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address");
+                });
+
+            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Company.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModificationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalStatisticNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Origin")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TaxIdentificationNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.ToTable("Company");
+                });
+
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Database.Ewp.Ewp", b =>
                 {
                     b.HasOne("TaxAssistant.JPK.Shared.Model.Database.Ewp.EwpControlData", "FixedAssetsControlData")
@@ -1641,6 +1730,15 @@ namespace TaxAssistant.JPK.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Kpir");
+                });
+
+            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Company.Company", b =>
+                {
+                    b.HasOne("TaxAssistant.JPK.Shared.Model.Domain.Address.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Database.Ewp.Ewp", b =>

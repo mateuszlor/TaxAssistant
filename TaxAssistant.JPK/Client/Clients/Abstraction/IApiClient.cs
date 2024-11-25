@@ -1,9 +1,9 @@
-﻿using TaxAssistant.JPK.Shared.Model.Database;
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.View;
 
 namespace TaxAssistant.JPK.Client.Clients.Abstraction
 {
-    public interface IApiClient<T> where T : BaseModel
+	public interface IApiClient<T> where T : BaseModel
     {
         Task<IList<T>?> GetAsync();
 

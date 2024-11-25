@@ -1,6 +1,8 @@
-﻿namespace TaxAssistant.CQRS
+﻿using TaxAssistant.CQRS.Abstraction;
+
+namespace TaxAssistant.CQRS
 {
-    public class Gate : IGate
+	public class Gate : IGate
     {
         private readonly IServiceProvider _serviceProvider;
 

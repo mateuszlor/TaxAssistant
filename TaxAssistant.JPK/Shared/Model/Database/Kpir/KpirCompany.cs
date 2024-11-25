@@ -1,4 +1,6 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
 {
 	public class KpirCompany : BaseModel
     {

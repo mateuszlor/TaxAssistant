@@ -1,17 +1,22 @@
-﻿namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
+﻿using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Database.Kpir
 {
-    public class Kpir : BaseModel
-    {
-        public virtual ICollection<KpirRow> Rows { get; set; }
+	public class Kpir : BaseModel, IAggregate
+	{
+		public IList<IDomainEvent> Events { get; } = [];
 
-        public virtual ICollection<KpirPhysicalInventory> PhysicalInventories { get; set; }
+		public virtual ICollection<KpirRow> Rows { get; set; }
 
-        public virtual KpirSummary Summary { get; set; }
+		public virtual ICollection<KpirPhysicalInventory> PhysicalInventories { get; set; }
 
-        public virtual KpirHeader Header { get; set; }
+		public virtual KpirSummary Summary { get; set; }
 
-        public virtual KpirControlData ControlData { get; set; }
+		public virtual KpirHeader Header { get; set; }
 
-        public virtual KpirCompany Subject { get; set; }
-    }
+		public virtual KpirControlData ControlData { get; set; }
+
+		public virtual KpirCompany Subject { get; set; }
+	}
 }

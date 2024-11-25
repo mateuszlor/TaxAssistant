@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaxAssistant.CQRS;
+using TaxAssistant.CQRS.Abstraction;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model;
 
 namespace TaxAssistant.JPK.Server.Controllers
 {
-    [ApiController]
+	[ApiController]
     [Route("[controller]")]
     public class AggregateController : ControllerBase
     {

@@ -2,6 +2,12 @@
 
 ## Migration
 
+Make sute you have installed .NET EF tools
+
+```powershell
+dotnet tool install --global dotnet-ef
+```
+
 Run `dotnet ef migrations add <MigrationName>` in Blazor server application project directory, with `--project` parameter indicating project with database context and migrations
 
 Eg:

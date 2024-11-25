@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.Database.Ewp.Enum;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Ewp
 {
-    public class EwpHeader : BaseModel
+	public class EwpHeader : BaseModel
     {
         public Guid EwpId { get; set; }
 

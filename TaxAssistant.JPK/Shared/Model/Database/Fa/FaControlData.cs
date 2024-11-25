@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
-    public class FaControlData : BaseModel
+	public class FaControlData : BaseModel
     {
         public Guid FaId { get; set; }
 

@@ -1,15 +1,43 @@
-﻿namespace TaxAssistant.JPK.Shared.DomainEvents
+﻿using TaxAssistant.DDD.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.DomainEvents
 {
-    public class NewCompanyEvent
+    public class NewCompanyEvent : IDomainEvent
 	{
-		public NewCompanyEvent(string companyData, string address)
+		public NewCompanyEvent(string? companyData, string? address)
 		{
-			CompanyData = companyData;
+			if (string.IsNullOrWhiteSpace(companyData))
+			{
+				throw new ArgumentNullException(nameof(companyData));
+			}
+
+			var companyDataParts = companyData!.Split("\n");
+
+			CompanyName = companyDataParts[0].Trim();
+
+			if (companyDataParts.Length > 1)
+			{
+				TaxIdentificationNumber = companyDataParts.Last();
+
+                if (TaxIdentificationNumber.StartsWith("NIP:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(4);
+                }
+                else if (TaxIdentificationNumber.StartsWith("PESEL:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(6);
+                }
+
+                TaxIdentificationNumber = TaxIdentificationNumber.Trim();
+			}
+
 			Address = address;
+			CompanyData = companyData;
 		}
 
 		public NewCompanyEvent(string companyName, string taxIdentificationNumber, string address)
 		{
+			CompanyName = companyName;
 			TaxIdentificationNumber = taxIdentificationNumber;
 			Address = address;
 
@@ -17,8 +45,9 @@
 		}
 
 		public string CompanyData { get; set; }
+		public string CompanyName { get; }
 		public string? TaxIdentificationNumber { get; }
-		public string Address { get; set; }
+		public string? Address { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -39,7 +68,7 @@
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CompanyData, TaxIdentificationNumber, Address);
+            return HashCode.Combine(TaxIdentificationNumber, CompanyName, CompanyData, Address);
         }
     }
 }

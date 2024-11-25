@@ -1,0 +1,57 @@
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using TaxAssistant.DDD.Abstraction;
+using TaxAssistant.JPK.ApplicationLogic.Repository;
+using TaxAssistant.JPK.Database;
+using TaxAssistant.JPK.Shared.Model.Database;
+
+namespace TaxAssistant.JPK.Tests.IntegrationTests
+{
+    public class ImportRepositoryTests
+    {
+        private DatabaseContext _databaseContext;
+        private IDomainEventDispatcher _eventDispatcher;
+        private ILogger<ImportRepository> _logger;
+        private ImportRepository _sut;
+
+        [SetUp]
+        public void Setup()
+        {
+            _databaseContext = TestUtils.MakeInMemoryDatabaseContext();
+
+            _eventDispatcher = Substitute.For<IDomainEventDispatcher>();
+            _logger = Substitute.For<ILogger<ImportRepository>>();
+
+            _sut = new ImportRepository(_databaseContext, _eventDispatcher, _logger);
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            _databaseContext.Dispose();
+        }
+
+        [Test]
+        public async Task Add_ShouldSucceed()
+        {
+            // Arrange
+            var itemToAdd = new Import();
+
+            // Act
+            var result = await _sut.AddAsync(itemToAdd);
+
+            // Assert
+            result.Should().NotBeNull();
+
+            result.Id.Should().NotBeEmpty();
+
+            result.Version.Should().Be(1);
+            result.IsDeleted.Should().BeFalse();
+            result.Events.Should().BeEmpty();
+            result.CreationDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromMinutes(1));
+
+            await _eventDispatcher.DidNotReceiveWithAnyArgs().DispatchAsync(Arg.Any<IDomainEvent>());
+        }
+    }
+}

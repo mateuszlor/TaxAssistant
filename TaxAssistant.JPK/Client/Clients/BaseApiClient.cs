@@ -1,16 +1,19 @@
 ﻿using System.Net;
-using Newtonsoft.Json;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
-using TaxAssistant.JPK.Shared.Model.Database;
+using TaxAssistant.JPK.Shared.Model.Abstraction;
 using TaxAssistant.JPK.Shared.Model.View;
 
 namespace TaxAssistant.JPK.Client.Clients
 {
-    public abstract class BaseApiClient<T> : IApiClient<T>
+	public abstract class BaseApiClient<T> : IApiClient<T>
         where T : BaseModel
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
+		private readonly JsonSerializerOptions _options;
 
         protected BaseApiClient(
             HttpClient httpClient,
@@ -18,7 +21,13 @@ namespace TaxAssistant.JPK.Client.Clients
         {
             _httpClient = httpClient;
             _baseUrl = baseUrl;
-        }
+            
+			_options = new JsonSerializerOptions
+			{
+				PropertyNameCaseInsensitive = true
+			};
+            _options.Converters.Add(new JsonStringEnumConverter());	
+		}
 
         public async Task DeleteAsync(Guid id)
         {
@@ -34,9 +43,7 @@ namespace TaxAssistant.JPK.Client.Clients
                 return null;
             }
 
-            var stringContent = await response.Content.ReadAsStringAsync();
-
-            var content = JsonConvert.DeserializeObject<IList<T>>(stringContent);
+            var content = await response.Content.ReadFromJsonAsync<IList<T>?>(_options);
 
             return content;
         }
@@ -50,12 +57,10 @@ namespace TaxAssistant.JPK.Client.Clients
                 return null;
             }
 
-            var stringContent = await response.Content.ReadAsStringAsync();
+			var content = await response.Content.ReadFromJsonAsync<T?>(_options);
 
-            var content = JsonConvert.DeserializeObject<T>(stringContent);
-
-            return content;
-        }
+			return content;
+		}
 
         public async Task<IList<Selectable<T>>?> GetSelectableAsync()
         {

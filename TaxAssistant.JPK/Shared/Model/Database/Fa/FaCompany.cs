@@ -1,8 +1,9 @@
-﻿using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
+﻿using TaxAssistant.JPK.Shared.Model.Abstraction;
+using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
 namespace TaxAssistant.JPK.Shared.Model.Database.Fa
 {
-    public class FaCompany : BaseModel
+	public class FaCompany : BaseModel
 	{
 		public Guid FaId { get; set; }
 

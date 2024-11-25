@@ -1,6 +1,5 @@
 ﻿@page "/kpir-aggregate"
 
-@using Newtonsoft.Json
 @using TaxAssistant.JPK.Shared.Commands
 @using TaxAssistant.JPK.Shared.Model.Database.Kpir
 @using Microsoft.AspNetCore.Components.Forms
@@ -76,9 +75,7 @@ else
             };
 
             var response = await Http.PostAsJsonAsync("Aggregate", body);
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            var result = JsonConvert.DeserializeObject<AggregateKpirCommandResult>(stringResponse);
+            var result = await response.Content.ReadFromJsonAsync<AggregateKpirCommandResult>();
             aggregatedKpir = result.AggregatedKpir;
         }
         finally

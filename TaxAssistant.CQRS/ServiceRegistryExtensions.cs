@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using TaxAssistant.CQRS.Abstraction;
 
 namespace TaxAssistant.CQRS
 {
-    public static class ServiceRegistryExtensions
+	public static class ServiceRegistryExtensions
     {
         public static void AddCqrs(this IServiceCollection services)
         {

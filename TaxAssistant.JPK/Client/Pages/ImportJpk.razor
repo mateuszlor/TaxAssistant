@@ -1,6 +1,5 @@
 ﻿@page "/import-jpk"
 
-@using Newtonsoft.Json
 @using TaxAssistant.JPK.Shared.Model
 @using Microsoft.AspNetCore.Components.Forms
 @using System.Text.Json
@@ -16,13 +15,13 @@
 
 @if (isLoading)
 {
-	<Loading />
+    <Loading />
 }
 else if (importResult != null)
 {
     <div><b>Is import successful:</b> @importResult.IsSuccessful</div>
 
-    if(!importResult.IsSuccessful)
+    if (!importResult.IsSuccessful)
     {
         if (importResult.Error == null)
         {
@@ -33,11 +32,11 @@ else if (importResult != null)
             <div>@importResult.Error.Type: @importResult.Error.Message</div>
         }
     }
-    else if(@importResult.Data.Kpir != null)
+    else if (@importResult.Data.Kpir != null)
     {
         <div>Imported KPIR with @importResult.Data.Kpir.Rows.Count rows <a href="kpir-list/@importResult.Data.KpirId">>> preview</a></div>
     }
-    else if(importResult.Data.Ewp != null)
+    else if (importResult.Data.Ewp != null)
     {
         <div>Imported EWP with @importResult.Data.Ewp.Rows.Count rows and @(importResult.Data.Ewp.FixedAssets?.Count ?? 0) fixed assets<a href="ewp-list/@importResult.Data.EwpId">>> preview</a></div>
     }
@@ -64,13 +63,18 @@ else if (importResult != null)
             var reader = new StreamReader(e.File.OpenReadStream());
             var fileContent = await reader.ReadToEndAsync();
 
-            var response = await Http.PostAsJsonAsync<string>("Import", fileContent);
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            options.Converters.Add(new JsonStringEnumConverter());
+            
+            var response = await Http.PostAsJsonAsync<string>("Import", fileContent, options);
 
             response.EnsureSuccessStatusCode();
 
-            var stringResponse = await response.Content.ReadAsStringAsync();
-
-            importResult = JsonConvert.DeserializeObject<ImportResult>(stringResponse);
+            var stringResponse = await response.Content.ReadFromJsonAsync<ImportResult>(options);
         }
         finally
         {
