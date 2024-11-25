@@ -1,7 +1,4 @@
-using Bunit;
-using NUnit.Framework;
-
-namespace TaxAssistant.JPK.FrontendTests;
+namespace TaxAssistant.JPK.Tests.FrontendTests;
 
 /// <summary>
 /// Test context wrapper for bUnit.

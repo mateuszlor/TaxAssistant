@@ -2,7 +2,7 @@ using FluentAssertions;
 using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
-namespace TaxAssistant.JPK.FrontendTests.Components;
+namespace TaxAssistant.JPK.Tests.FrontendTests.Components;
 
 public class VatRateTests : BunitTestContext
 {

@@ -2,7 +2,7 @@ using FluentAssertions;
 using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Client.Shared.Generic;
 
-namespace TaxAssistant.JPK.FrontendTests.Generic;
+namespace TaxAssistant.JPK.Tests.FrontendTests.Generic;
 
 public class CollapsableSectionTests : BunitTestContext
 {

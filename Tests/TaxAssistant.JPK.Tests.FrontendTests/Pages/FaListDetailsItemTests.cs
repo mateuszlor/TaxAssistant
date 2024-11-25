@@ -10,7 +10,7 @@ using TaxAssistant.JPK.Client.Pages;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
-namespace TaxAssistant.JPK.FrontendTests.Pages;
+namespace TaxAssistant.JPK.Tests.FrontendTests.Pages;
 
 public class FaListDetailsItemTests : BunitTestContext
 {
