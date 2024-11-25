@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -11,6 +12,9 @@ using TaxAssistant.JPK.Shared.Model.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Ewp;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 {
@@ -19,11 +23,11 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
         private ImportController _sut;
 
         private ILogger<ImportController> _logger;
-        private KpirAdapter _kpirAdapter;
+        private IJpkAdapter<JPK_PKPIR, Kpir> _kpirAdapter;
         private IRepository<Kpir> _kpirRepository;
-        private EwpAdapter _ewpAdapter;
+        private IJpkAdapter<JPK_EWP, Ewp> _ewpAdapter;
         private IRepository<Ewp> _ewpRepository;
-        private FaAdapter _faAdapter;
+        private IJpkAdapter<JPK_FA, Fa> _faAdapter;
         private IRepository<Fa> _faRepository;
         private IRepository<Import> _importRepository;
 
@@ -31,13 +35,17 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
         public void Setup()
         {
             _logger = Substitute.For<ILogger<ImportController>>();
-            _kpirAdapter = Substitute.For<KpirAdapter>();
+            _kpirAdapter = Substitute.For<IJpkAdapter<JPK_PKPIR, Kpir>>();
             _kpirRepository = Substitute.For<IRepository<Kpir>>();
-            _ewpAdapter = Substitute.For<EwpAdapter>();
+            _ewpAdapter = Substitute.For<IJpkAdapter<JPK_EWP, Ewp>>();
             _ewpRepository = Substitute.For<IRepository<Ewp>>();
-            _faAdapter = Substitute.For<FaAdapter>();
+            _faAdapter = Substitute.For<IJpkAdapter<JPK_FA, Fa>>();
             _faRepository = Substitute.For<IRepository<Fa>>();
             _importRepository = Substitute.For<IRepository<Import>>();
+
+            _importRepository
+                .AddAsync(Arg.Any<Import>())
+                .Returns(x => x.Arg<Import>());
 
             _sut = new ImportController(_logger, _kpirAdapter, _kpirRepository, _ewpAdapter, _ewpRepository, _faAdapter, _faRepository, _importRepository);
         }
@@ -53,14 +61,14 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("ArgumentException");
+            error.Error!.Type.Should().Be("ArgumentException");
             error.Error.Message.Should().Be("Empty JPK file content");
 
             //_kpirAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_PKPIR>());
@@ -83,14 +91,14 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("ArgumentException");
+            error.Error!.Type.Should().Be("ArgumentException");
             error.Error.Message.Should().Be("Empty JPK file content");
 
             //_kpirAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_PKPIR>());
@@ -113,14 +121,14 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("XmlException");
+            error.Error!.Type.Should().Be("XmlException");
             error.Error.Message.Should().StartWith("Data at the root level is invalid");
 
             //_kpirAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_PKPIR>());
@@ -143,14 +151,14 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NotImplementedException");
+            error.Error!.Type.Should().Be("NotImplementedException");
             error.Error.Message.Should().StartWith("XML has no namespace");
 
             //_kpirAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_PKPIR>());
@@ -173,14 +181,14 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NotImplementedException");
+            error.Error!.Type.Should().Be("NotImplementedException");
             error.Error.Message.Should().StartWith("Namespace \"http://example.org/namespace\" has no handler");
 
             //_kpirAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_PKPIR>());
@@ -204,81 +212,96 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             var badRequestResult = result as BadRequestObjectResult;
             badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            badRequestResult!.Value.Should().BeOfType<ImportResult>();
 
             var error = badRequestResult.Value as ImportResult;
             error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
+            error!.IsSuccessful.Should().BeFalse();
             error.Data.Should().BeNull();
             error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NotImplementedException");
+            error.Error!.Type.Should().Be("NotImplementedException");
             error.Error.Message.Should().Be($"No adapter for {typeName}");
         }
 
         [Test]
-        public async Task Import_WithKpirXmlNamespaceButInvalidContent_ShouldReturn400()
+        public async Task Import_WithKpirXmlNamespace_ShouldReturn200()
         {
+            // Arrange
+            var guid = Guid.NewGuid();
+            _kpirRepository.AddAsync(Arg.Any<Kpir>()).Returns(Task.FromResult(new Kpir { Id = guid }));
+
             // Act
             var result = await _sut.Import(ExampleJpkData.KpirEmpty);
 
             // Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<OkObjectResult>();
 
-            var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            var okResult = result as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeOfType<ImportResult>();
 
-            var error = badRequestResult.Value as ImportResult;
-            error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
-            error.Data.Should().BeNull();
-            error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NullReferenceException");
-            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
+            var resultValue = okResult.Value as ImportResult;
+            resultValue.Should().NotBeNull();
+            resultValue!.IsSuccessful.Should().BeTrue();
+            resultValue.Error.Should().BeNull();
+            resultValue.Data.Should().NotBeNull();
+            resultValue.Data.KpirId.Should().Be(guid);
+            resultValue.Data.FaId.Should().BeNull();
+            resultValue.Data.EwpId.Should().BeNull();
         }
 
         [Test]
-        public async Task Import_WithEwpXmlNamespaceButInvalidContent_ShouldReturn400()
+        public async Task Import_WithEwpXmlNamespace_ShouldReturn200()
         {
+            // Arrange
+            var guid = Guid.NewGuid();
+            _ewpRepository.AddAsync(Arg.Any<Ewp>()).Returns(Task.FromResult(new Ewp { Id = guid }));
+
             // Act
             var result = await _sut.Import(ExampleJpkData.EwpEmpty);
 
             // Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<OkObjectResult>();
 
-            var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            var okResult = result as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeOfType<ImportResult>();
 
-            var error = badRequestResult.Value as ImportResult;
-            error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
-            error.Data.Should().BeNull();
-            error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NullReferenceException");
-            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
+            var resultValue = okResult.Value as ImportResult;
+            resultValue.Should().NotBeNull();
+            resultValue!.IsSuccessful.Should().BeTrue();
+            resultValue.Error.Should().BeNull();
+            resultValue.Data.Should().NotBeNull();
+            resultValue.Data.KpirId.Should().BeNull();
+            resultValue.Data.FaId.Should().BeNull();
+            resultValue.Data.EwpId.Should().Be(guid);
         }
 
         [Test]
-        public async Task Import_WithFaXmlNamespaceButInvalidContent_ShouldReturn400()
+        public async Task Import_WithFaXmlNamespace_ShouldReturn200()
         {
+            // Arrange
+            var guid = Guid.NewGuid();
+            _faRepository.AddAsync(Arg.Any<Fa>()).Returns(Task.FromResult(new Fa { Id = guid }));
+
             // Act
             var result = await _sut.Import(ExampleJpkData.FaEmpty);
 
             // Assert
-            result.Should().BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<OkObjectResult>();
 
-            var badRequestResult = result as BadRequestObjectResult;
-            badRequestResult.Should().NotBeNull();
-            badRequestResult.Value.Should().BeOfType<ImportResult>();
+            var okResult = result as OkObjectResult;
+            okResult.Should().NotBeNull();
+            okResult!.Value.Should().BeOfType<ImportResult>();
 
-            var error = badRequestResult.Value as ImportResult;
-            error.Should().NotBeNull();
-            error.IsSuccessful.Should().BeFalse();
-            error.Data.Should().BeNull();
-            error.Error.Should().NotBeNull();
-            error.Error.Type.Should().Be("NullReferenceException");
-            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
+            var resultValue = okResult.Value as ImportResult;
+            resultValue.Should().NotBeNull();
+            resultValue!.IsSuccessful.Should().BeTrue();
+            resultValue.Error.Should().BeNull();
+            resultValue.Data.Should().NotBeNull();
+            resultValue.Data.KpirId.Should().BeNull();
+            resultValue.Data.FaId.Should().Be(guid);
+            resultValue.Data.EwpId.Should().BeNull();
         }
     }
 }

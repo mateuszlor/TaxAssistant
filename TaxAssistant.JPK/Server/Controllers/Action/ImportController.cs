@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Adapter;
 using TaxAssistant.JPK.Shared.Model;
@@ -18,26 +17,26 @@ using TaxAssistant.JPK.Shared.Model.Xml.JPK_V7M_2;
 
 namespace TaxAssistant.JPK.Server.Controllers
 {
-	[ApiController]
+    [ApiController]
     [Route("[controller]")]
     public class ImportController : ControllerBase
     {
         private readonly ILogger<ImportController> _logger;
-        private readonly KpirAdapter _kpirAdapter;
+        private readonly IJpkAdapter<JPK_PKPIR, Kpir> _kpirAdapter;
         private readonly IRepository<Kpir> _kpirRepository;
-        private readonly EwpAdapter _ewpAdapter;
+        private readonly IJpkAdapter<JPK_EWP, Ewp> _ewpAdapter;
         private readonly IRepository<Ewp> _ewpRepository;
-        private readonly FaAdapter _faAdapter;
+        private readonly IJpkAdapter<JPK_FA, Fa> _faAdapter;
         private readonly IRepository<Fa> _faRepository;
         private readonly IRepository<Import> _importRepository;
 
         public ImportController(
             ILogger<ImportController> logger,
-            KpirAdapter kpirAdapter,
+            IJpkAdapter<JPK_PKPIR, Kpir> kpirAdapter,
             IRepository<Kpir> kpirRepository,
-            EwpAdapter ewpAdapter,
+            IJpkAdapter<JPK_EWP, Ewp> ewpAdapter,
             IRepository<Ewp> ewpRepository,
-            FaAdapter faAdapter,
+            IJpkAdapter<JPK_FA, Fa> faAdapter,
             IRepository<Fa> faRepository,
             IRepository<Import> importRepository)
         {
@@ -90,10 +89,10 @@ namespace TaxAssistant.JPK.Server.Controllers
                     case JPK_FA fa:
                     {
                         var item = _faAdapter.Adapt(fa);
-						var added = await _faRepository.AddAsync(item);
+                        var added = await _faRepository.AddAsync(item);
                         faId = added.Id;
 
-						break;
+                        break;
                     }
                     default:
                     {
@@ -101,21 +100,23 @@ namespace TaxAssistant.JPK.Server.Controllers
                     }
                 }
 
-				var importData = new Import
-				{
+                var importData = new Import
+                {
                     KpirId = kpirId,
                     EwpId = ewpId,
-					FaId = faId
-				};
+                    FaId = faId
+                };
 
-				var addedImportData = await _importRepository.AddAsync(importData);
+                var addedImportData = await _importRepository.AddAsync(importData);
 
-				model.Data = addedImportData;
+                model.Data = addedImportData;
 
-				return Ok(model);
+                return Ok(model);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error adapting JPK file content");
+
                 var error = new Error
                 {
                     Message = ex.Message,
