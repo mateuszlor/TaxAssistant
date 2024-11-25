@@ -12,9 +12,9 @@ using TaxAssistant.JPK.Shared.Model.Database.Ewp;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 
-namespace TaxAssistant.JPK.Tests.Controller
+namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 {
-	public class ImportControllerTests
+    public class ImportControllerTests
     {
         private ImportController _sut;
 
@@ -43,7 +43,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         }
 
         [Test]
-        public async Task Import_WithNullContent_ShouldReturn500()
+        public async Task Import_WithNullContent_ShouldReturn400()
         {
             // Act
             var result = await _sut.Import(null);
@@ -73,7 +73,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         }
 
         [Test]
-        public async Task Import_WithEmptyContent_ShouldReturn500()
+        public async Task Import_WithEmptyContent_ShouldReturn400()
         {
             // Act
             var result = await _sut.Import(string.Empty);
@@ -103,7 +103,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         }
 
         [Test]
-        public async Task Import_WithInvalidXmlContent_ShouldReturn500()
+        public async Task Import_WithInvalidXmlContent_ShouldReturn400()
         {
             // Act
             var result = await _sut.Import("invalid content");
@@ -133,7 +133,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         }
 
         [Test]
-        public async Task Import_WithNoXmlNamespace_ShouldReturn500()
+        public async Task Import_WithNoXmlNamespace_ShouldReturn400()
         {
             // Act
             var result = await _sut.Import("<root />");
@@ -163,7 +163,7 @@ namespace TaxAssistant.JPK.Tests.Controller
         }
 
         [Test]
-        public async Task Import_WithUknownXmlNamespace_ShouldReturn500()
+        public async Task Import_WithUknownXmlNamespace_ShouldReturn400()
         {
             // Act
             var result = await _sut.Import("<root xmlns=\"http://example.org/namespace\" />");
@@ -190,6 +190,95 @@ namespace TaxAssistant.JPK.Tests.Controller
             //_faAdapter.DidNotReceiveWithAnyArgs().Adapt(Arg.Any<JPK_FA>());
             //await _faRepository.DidNotReceiveWithAnyArgs().AddAsync(Arg.Any<Fa>());
             //await _importRepository.DidNotReceiveWithAnyArgs().AddAsync(Arg.Any<Import>());
+        }
+
+        [TestCase(ExampleJpkData.V7MVersion1Empty, "JPK_V7M_1")]
+        [TestCase(ExampleJpkData.V7MVersion2Empty, "JPK_V7M_2")]
+        public async Task Import_WithXmlNamespaceButNoAdapter_ShouldReturn400(string content, string typeName)
+        {
+            // Act
+            var result = await _sut.Import(content);
+
+            // Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+
+            var badRequestResult = result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
+            badRequestResult.Value.Should().BeOfType<ImportResult>();
+
+            var error = badRequestResult.Value as ImportResult;
+            error.Should().NotBeNull();
+            error.IsSuccessful.Should().BeFalse();
+            error.Data.Should().BeNull();
+            error.Error.Should().NotBeNull();
+            error.Error.Type.Should().Be("NotImplementedException");
+            error.Error.Message.Should().Be($"No adapter for {typeName}");
+        }
+
+        [Test]
+        public async Task Import_WithKpirXmlNamespaceButInvalidContent_ShouldReturn400()
+        {
+            // Act
+            var result = await _sut.Import(ExampleJpkData.KpirEmpty);
+
+            // Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+
+            var badRequestResult = result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
+            badRequestResult.Value.Should().BeOfType<ImportResult>();
+
+            var error = badRequestResult.Value as ImportResult;
+            error.Should().NotBeNull();
+            error.IsSuccessful.Should().BeFalse();
+            error.Data.Should().BeNull();
+            error.Error.Should().NotBeNull();
+            error.Error.Type.Should().Be("NullReferenceException");
+            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
+        }
+
+        [Test]
+        public async Task Import_WithEwpXmlNamespaceButInvalidContent_ShouldReturn400()
+        {
+            // Act
+            var result = await _sut.Import(ExampleJpkData.EwpEmpty);
+
+            // Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+
+            var badRequestResult = result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
+            badRequestResult.Value.Should().BeOfType<ImportResult>();
+
+            var error = badRequestResult.Value as ImportResult;
+            error.Should().NotBeNull();
+            error.IsSuccessful.Should().BeFalse();
+            error.Data.Should().BeNull();
+            error.Error.Should().NotBeNull();
+            error.Error.Type.Should().Be("NullReferenceException");
+            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
+        }
+
+        [Test]
+        public async Task Import_WithFaXmlNamespaceButInvalidContent_ShouldReturn400()
+        {
+            // Act
+            var result = await _sut.Import(ExampleJpkData.FaEmpty);
+
+            // Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+
+            var badRequestResult = result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
+            badRequestResult.Value.Should().BeOfType<ImportResult>();
+
+            var error = badRequestResult.Value as ImportResult;
+            error.Should().NotBeNull();
+            error.IsSuccessful.Should().BeFalse();
+            error.Data.Should().BeNull();
+            error.Error.Should().NotBeNull();
+            error.Error.Type.Should().Be("NullReferenceException");
+            error.Error.Message.Should().Be("Object reference not set to an instance of an object.");
         }
     }
 }

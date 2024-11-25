@@ -95,6 +95,10 @@ namespace TaxAssistant.JPK.Server.Controllers
 
 						break;
                     }
+                    default:
+                    {
+                        throw new NotImplementedException($"No adapter for {result.GetType().Name}");
+                    }
                 }
 
 				var importData = new Import
