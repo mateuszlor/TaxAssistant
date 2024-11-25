@@ -130,7 +130,21 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
         }
 
         [Test]
-        public void Constructor_ForTaxIdentificationNumberProvided_ShouldSplit()
+        public void Constructor_ForTaxIdentificationNumberWithoutPrefixProvided_ShouldSplit()
+        {
+            // Act
+            var result = new NewCompanyEvent($"Monsters Inc.{Environment.NewLine}1234567890", "00-000 City Street 1/2");
+
+            // Assert
+            result.Should().NotBeNull();
+            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}1234567890");
+            result.CompanyName.Should().Be("Monsters Inc.");
+            result.TaxIdentificationNumber.Should().Be("1234567890");
+            result.Address.Should().Be("00-000 City Street 1/2");
+        }
+
+        [Test]
+        public void Constructor_ForTaxIdentificationNumberWithNipPrefixProvided_ShouldSplit()
         {
             // Act
             var result = new NewCompanyEvent($"Monsters Inc.{Environment.NewLine}NIP: 1234567890", "00-000 City Street 1/2");
@@ -140,6 +154,20 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
             result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}NIP: 1234567890");
             result.CompanyName.Should().Be("Monsters Inc.");
             result.TaxIdentificationNumber.Should().Be("1234567890");
+            result.Address.Should().Be("00-000 City Street 1/2");
+        }
+
+        [Test]
+        public void Constructor_ForTaxIdentificationNumberWithPeselPrefixProvided_ShouldSplit()
+        {
+            // Act
+            var result = new NewCompanyEvent($"John Doe{Environment.NewLine}PESEL: 12345678910", "00-000 City Street 1/2");
+
+            // Assert
+            result.Should().NotBeNull();
+            result.CompanyData.Should().Be($"John Doe{Environment.NewLine}PESEL: 12345678910");
+            result.CompanyName.Should().Be("John Doe");
+            result.TaxIdentificationNumber.Should().Be("12345678910");
             result.Address.Should().Be("00-000 City Street 1/2");
         }
 
@@ -155,6 +183,30 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
             result.CompanyName.Should().Be("Monsters Inc.");
             result.TaxIdentificationNumber.Should().Be("1234567890");
             result.Address.Should().Be("00-000 City Street 1/2");
+        }
+
+        [Test]
+        public void Constructor_ForNullCompanyData_ShouldThrow()
+        {
+            // Act && Assert
+            var action = () => new NewCompanyEvent(null, "00-000 City Street 1/2");
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Constructor_ForEmptyCompanyData_ShouldThrow()
+        {
+            // Act && Assert
+            var action = () => new NewCompanyEvent(string.Empty, "00-000 City Street 1/2");
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Constructor_ForWhitespaceCompanyData_ShouldThrow()
+        {
+            // Act && Assert
+            var action = () => new NewCompanyEvent("   ", "00-000 City Street 1/2");
+            action.Should().Throw<ArgumentNullException>();
         }
     }
 }
