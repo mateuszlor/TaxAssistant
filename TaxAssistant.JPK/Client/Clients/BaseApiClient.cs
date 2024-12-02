@@ -38,29 +38,16 @@ namespace TaxAssistant.JPK.Client.Clients
         {
             var response = await _httpClient.GetAsync(_baseUrl);
 
-            if (response.StatusCode == HttpStatusCode.NoContent)
-            {
-                return null;
-            }
-
-            var content = await response.Content.ReadFromJsonAsync<IList<T>?>(_options);
-
-            return content;
+            return await handleResult2(response);
         }
+
 
         public async Task<T?> GetAsync(Guid id)
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/{id}");
 
-            if (response.StatusCode == HttpStatusCode.NoContent)
-            {
-                return null;
-            }
-
-			var content = await response.Content.ReadFromJsonAsync<T?>(_options);
-
-			return content;
-		}
+            return await HandleResponse(response);
+        }
 
         public async Task<IList<Selectable<T>>?> GetSelectableAsync()
         {
@@ -71,6 +58,31 @@ namespace TaxAssistant.JPK.Client.Clients
                 .ToList();
 
             return model;
+        }
+
+        private async Task<TResponse?> HandleResponse<TResponse>(HttpResponseMessage response)
+            where TResponse: class
+        {
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return null;
+            }
+
+            var content = await response.Content.ReadFromJsonAsync<TResponse?>(_options);
+
+            return content;
+        }
+
+        private async Task<IList<T>?> handleResult2(HttpResponseMessage response)
+        {
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return null;
+            }
+
+            var content = await response.Content.ReadFromJsonAsync<IList<T>?>(_options);
+
+            return content;
         }
     }
 }

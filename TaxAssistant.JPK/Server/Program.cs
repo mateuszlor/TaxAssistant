@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using TaxAsistant.VatWhiteList.Client.Extension;
 using TaxAssistant.CQRS;
 using TaxAssistant.DDD;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
@@ -34,6 +35,8 @@ builder.Services.AddScoped<FaAdapter>();
 builder.Services.AddScoped<IRepository<Fa>, FaRepository>();
 builder.Services.AddScoped<IRepository<Import>, ImportRepository>();
 builder.Services.AddScoped<IRepository<Company>, CompanyRepository>();
+
+builder.Services.AddVatWhiteListClient(builder.Configuration);
 
 builder.Services.AddCqrs();
 builder.Services.AddCommandHandlers();
