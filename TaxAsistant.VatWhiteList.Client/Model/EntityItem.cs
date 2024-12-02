@@ -2,7 +2,7 @@ namespace TaxAsistant.VatWhiteList.Client.Model
 {
     public class EntityItem
     {
-        public Entity Subject { get; set; }
+        public Entity? Subject { get; set; }
 
         public string RequestDateTime { get; set; }
 
