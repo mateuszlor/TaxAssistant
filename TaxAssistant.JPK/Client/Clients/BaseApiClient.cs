@@ -38,15 +38,14 @@ namespace TaxAssistant.JPK.Client.Clients
         {
             var response = await _httpClient.GetAsync(_baseUrl);
 
-            return await handleResult2(response);
+            return await HandleResponse<IList<T>>(response);
         }
-
 
         public async Task<T?> GetAsync(Guid id)
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/{id}");
 
-            return await HandleResponse(response);
+            return await HandleResponse<T>(response);
         }
 
         public async Task<IList<Selectable<T>>?> GetSelectableAsync()
@@ -69,18 +68,6 @@ namespace TaxAssistant.JPK.Client.Clients
             }
 
             var content = await response.Content.ReadFromJsonAsync<TResponse?>(_options);
-
-            return content;
-        }
-
-        private async Task<IList<T>?> handleResult2(HttpResponseMessage response)
-        {
-            if (response.StatusCode == HttpStatusCode.NoContent)
-            {
-                return null;
-            }
-
-            var content = await response.Content.ReadFromJsonAsync<IList<T>?>(_options);
 
             return content;
         }
