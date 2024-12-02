@@ -17,7 +17,7 @@ namespace TaxAsistant.VatWhiteList.Client.Client
         private readonly IOptionsSnapshot<VatWhiteListConfiguration> _options;
         private readonly JsonSerializerOptions _serializerOptions;
 
-        public ApiClient(
+        protected ApiClient(
             HttpClient httpClient,
             IOptionsSnapshot<VatWhiteListConfiguration> options)
         {
@@ -67,7 +67,7 @@ namespace TaxAsistant.VatWhiteList.Client.Client
 
         public async Task<EntityCheckResponse> GetEntityCheckAsync(string url, DateTime date) => await GetAsync<EntityCheckResponse>(url, date);
 
-        protected string DateToString(DateTime date) => date.ToString("yyyy-MM-dd");
-        protected string ListToString(IEnumerable<string> items) => string.Join(", ", items);
+        protected static string DateToString(DateTime date) => date.ToString("yyyy-MM-dd");
+        protected static string ListToString(IEnumerable<string> items) => string.Join(", ", items);
     }
 }

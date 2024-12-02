@@ -14,8 +14,8 @@ namespace TaxAsistant.VatWhiteList.Client.Model
 
         public string RequestId { get; set; }
 
-        public IList<Entry> FoundEntries => Entries.OfType<Entry>().ToList();
+        public IEnumerable<Entry> FoundEntries => Entries.OfType<Entry>();
 
-        public IList<EntryError> ErrorEntries => Entries.OfType<EntryError>().ToList();
+        public IEnumerable<EntryError> ErrorEntries => Entries.OfType<EntryError>();
     }
 }
