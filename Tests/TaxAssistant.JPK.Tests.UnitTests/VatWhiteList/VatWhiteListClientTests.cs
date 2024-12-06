@@ -32,7 +32,28 @@ namespace TaxAssistant.JPK.Tests.UnitTests.VatWhiteList
                     RequestDateTime = DateTime.Today.ToShortDateString(),
                     Subject = new Entity
                     {
-                        Nip = "1234567890"
+                        Nip = "1234567890",
+                        Partners = [
+                            new EntityPerson
+                            {
+                                FirstName = "John",
+                                LastName = "Doe",
+                                Pesel = "12345678910"
+                            },
+                            new EntityPerson
+                            {
+                                CompanyName = "Shadow Company",
+                                Nip = "666000666"
+                            }
+                        ],
+                        Representatives = [
+                            new EntityPerson
+                            {
+                                FirstName = "John",
+                                LastName = "Doe",
+                                Pesel = "12345678910"
+                            }
+                        ]
                     }
                 }
             };
@@ -49,6 +70,10 @@ namespace TaxAssistant.JPK.Tests.UnitTests.VatWhiteList
             result.Result.RequestDateTime.Should().Be(DateTime.Today.ToShortDateString());
             result.Result.Subject.Should().NotBeNull();
             result.Result.Subject!.Nip.Should().Be("1234567890");
+            result.Result.Subject.Partners.Should().HaveCount(2);
+            result.Result.Subject.Partners[0].Pesel.Should().Be("12345678910");
+            result.Result.Subject.Partners[1].Nip.Should().Be("666000666");
+            result.Result.Subject.Representatives.Should().HaveCount(1);
         }
 
         [Test]
