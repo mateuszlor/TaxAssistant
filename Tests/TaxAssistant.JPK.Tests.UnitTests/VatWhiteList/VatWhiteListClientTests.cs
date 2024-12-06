@@ -276,5 +276,64 @@ namespace TaxAssistant.JPK.Tests.UnitTests.VatWhiteList
                 .Should()
                 .ThrowAsync<ApiException>();
         }
+
+
+        [Test]
+        public async Task SearchByBankAccount_ForValidResponse_ShouldReturn200()
+        {
+            // Arrange
+            var responseObject = new EntityListResponse
+            {
+                Result = new EntityList
+                {
+                    RequestId = "ID-1",
+                    RequestDateTime = DateTime.Today.ToShortDateString(),
+                    Subjects = [
+                        new Entity
+                        {
+                            Nip = "1234567890",
+                            AccountNumbers = [
+                                "69114000000000000000000000",
+                                "42114000000000000000000001"
+                            ]
+                        }
+                    ]
+                }
+            };
+            var httpClient = new HttpClient(new MockedHttpMessageHandler(true, responseObject));
+            var sut = new VatWhiteListClient(httpClient, _options);
+
+            // Act
+            var result = await sut.SearchByBankAccount("69114000000000000000000000", DateTime.Today);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Result.Should().NotBeNull();
+            result.Result.RequestId.Should().Be("ID-1");
+            result.Result.RequestDateTime.Should().Be(DateTime.Today.ToShortDateString());
+            result.Result.Subjects.Should().HaveCount(1);
+            result.Result.Subjects.Single().Nip.Should().Be("1234567890");
+            result.Result.Subjects.Single().AccountNumbers.Should().HaveCount(2);
+            result.Result.Subjects.Single().AccountNumbers[0].Should().Be("69114000000000000000000000");
+            result.Result.Subjects.Single().AccountNumbers[1].Should().Be("42114000000000000000000001");
+        }
+
+        [Test]
+        public async Task SearchByBankAccount_ForInvalidResponse_ShouldReturn400()
+        {
+            // Arrange
+            var responseObject = new Error
+            {
+                Code = "ERR-99",
+                Message = "Some error"
+            };
+            var httpClient = new HttpClient(new MockedHttpMessageHandler(false, responseObject));
+            var sut = new VatWhiteListClient(httpClient, _options);
+
+            // Act && Assert
+            await sut.Awaiting(x => x.SearchByBankAccount("69114000000000000000000000", DateTime.Today))
+                .Should()
+                .ThrowAsync<ApiException>();
+        }
     }
 }
