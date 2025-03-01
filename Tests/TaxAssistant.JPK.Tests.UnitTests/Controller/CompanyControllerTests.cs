@@ -30,7 +30,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             _gate
                 .HandleAsync<SynchronizeWithVatWhiteListCommand, SynchronizeWithVatWhiteListCommandResult>(Arg.Any<SynchronizeWithVatWhiteListCommand>())
-                .Returns(Task.FromResult(new SynchronizeWithVatWhiteListCommandResult { Company = new Company(Origin.VatWhiteList, "", "") }));
+                .Returns(Task.FromResult(new SynchronizeWithVatWhiteListCommandResult { Company = _mockedResult }));
 
             // Act
             var result = await _typedSut!.SynchronizeWithVatWhiteList(guid);

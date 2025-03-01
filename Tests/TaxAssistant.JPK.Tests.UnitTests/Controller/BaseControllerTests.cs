@@ -16,7 +16,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
         protected Func<BaseController<T>> _getSut;
         protected BaseController<T> _sut;
 
-        private readonly T _mockedResult;
+        protected readonly T _mockedResult;
 
         protected BaseControllerTests(T mockedResult)
         {
@@ -193,6 +193,55 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
 
             // Assert
             await _repository.Received(1).DeleteAsync(guid);
+            result.Should().BeOfType<BadRequestObjectResult>();
+
+            var badRequestResult = result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
+            badRequestResult.Value.Should().BeOfType<Error>();
+
+            var error = badRequestResult.Value as Error;
+            error.Should().NotBeNull();
+            error.Type.Should().Be("Exception");
+            error.Message.Should().Be("some error");
+        }
+
+        [Test]
+        public async Task Post_ForNotExisting_ShouldReturn200()
+        {
+            // Arrange
+            var guid = Guid.NewGuid();
+
+            _repository
+                .UpdateAsync(Arg.Any<T>())
+                .Returns(Task.FromResult(_mockedResult));
+
+            // Act
+            var result = await _sut.Post(_mockedResult);
+
+            // Assert
+            await _repository.Received().UpdateAsync(Arg.Any<T>());
+            result.Should().BeOfType<OkObjectResult>();
+
+            var objectResult = result as OkObjectResult;
+            objectResult.Should().NotBeNull();
+            objectResult.Value.Should().BeAssignableTo<T>();
+
+            var objectResultValue = objectResult.Value as T;
+            objectResultValue.Should().NotBeNull();
+        }
+
+        [Test]
+        public async Task Post_ForError_ShouldReturn400()
+        {
+            // Arrange
+            var guid = Guid.NewGuid();
+            _repository.UpdateAsync(Arg.Any<T>()).Throws(new Exception("some error"));
+
+            // Act
+            var result = await _sut.Post(default);
+
+            // Assert
+            await _repository.Received().UpdateAsync(Arg.Any<T>());
             result.Should().BeOfType<BadRequestObjectResult>();
 
             var badRequestResult = result as BadRequestObjectResult;

@@ -49,6 +49,44 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
         }
 
         [Test]
+        public async Task HandleAsync_ForNullNip_ShouldThrow()
+        {
+            // Arrange
+            var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
+
+            var company = new Company(Origin.JPK, null, "Monsters Inc.");
+
+            _repository
+                .GetAsync(command.CompanyId)
+                .Returns(Task.FromResult<Company?>(company));
+
+            // Act && Assert
+            await _sut.Invoking(x => x.HandleAsync(command))
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage("Cannot check company without Tax Identification Number");
+        }
+
+        [Test]
+        public async Task HandleAsync_ForEmptyNip_ShouldThrow()
+        {
+            // Arrange
+            var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
+
+            var company = new Company(Origin.JPK, string.Empty, "Monsters Inc.");
+
+            _repository
+                .GetAsync(command.CompanyId)
+                .Returns(Task.FromResult<Company?>(company));
+
+            // Act && Assert
+            await _sut.Invoking(x => x.HandleAsync(command))
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage("Cannot check company without Tax Identification Number");
+        }
+
+        [Test]
         public async Task HandleAsync_ForInvalidWhiteListResponse_ShouldThrow()
         {
             // Arrange
