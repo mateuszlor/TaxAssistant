@@ -73,15 +73,15 @@ else
                 <input type="text" id="version" class="form-control" disabled value=@company.Version>
             </div>
         </fieldset>
-        <button type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Preview) @onclick=@OnDelete>Delete</button>
-        <button type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Edit) @onclick=@OnEdit>Edit</button>
+        <button data-test-id="delete-button" type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Preview) @onclick=@OnDelete>Delete</button>
+        <button data-test-id="edit-button" type="submit" class="btn btn-primary" disabled=@(formMode == FormMode.Edit) @onclick=@OnEdit>Edit</button>
         @if (formMode == FormMode.Edit)
         {
-            <button type="submit" class="btn btn-primary" @onclick=@OnSave>Save</button>
+            <button data-test-id="save-button" type="submit" class="btn btn-primary" @onclick=@OnSave>Save</button>
         }
         @if (formMode == FormMode.Preview)
         {
-            <button type="submit" class="btn btn-primary" @onclick=@OnSynchronizeWithVatWhiteList>Check on VAT WhiteList</button>
+            <button data-test-id="synchronize-button" type="submit" class="btn btn-primary" @onclick=@OnSynchronizeWithVatWhiteList>Check on VAT WhiteList</button>
         }
     </form>
 }
@@ -169,7 +169,7 @@ else
         }
     }
 
-    private string? GetAddressString(Address? address)
+    private static string? GetAddressString(Address? address)
     {
         if (address == null)
         {
@@ -186,7 +186,7 @@ else
             sb.Append("/");
             sb.Append(address.LocalNumber);
         }
-
+        
         sb.Append(Environment.NewLine);
 
         if (!string.IsNullOrEmpty(address.PostalCode))
@@ -195,6 +195,12 @@ else
             sb.Append(" ");
         }
         sb.Append(address.City);
+
+        if (!string.IsNullOrEmpty(address.Country))
+        {
+            sb.Append(Environment.NewLine);
+            sb.Append(address.Country);
+        }
 
         return sb.ToString();
     }
