@@ -8,10 +8,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     [Route("[controller]")]
     public class EwpController : BaseController<Ewp>
     {
-        public EwpController(
-            ILogger<EwpController> logger,
-            IRepository<Ewp> repository)
-            : base(logger, repository)
+        public EwpController(IRepository<Ewp> repository)
+            : base(repository)
         {
         }
     }

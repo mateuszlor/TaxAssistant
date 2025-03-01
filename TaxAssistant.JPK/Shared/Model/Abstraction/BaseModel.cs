@@ -5,10 +5,10 @@ namespace TaxAssistant.JPK.Shared.Model.Abstraction
 	public abstract class BaseModel : IIdentifiable
 	{
 		public Guid Id { get; init; } = Guid.NewGuid();
-		public DateTime CreationDate { get; private set; } = DateTime.UtcNow;
-		public bool IsDeleted { get; protected set; }
-		public int Version { get; private set; } = 1;
-		public DateTime? ModificationDate { get; private set; }
+		public DateTime CreationDate { get; set; } = DateTime.UtcNow;
+		public bool IsDeleted { get; set; }
+		public int Version { get; set; } = 1;
+		public DateTime? ModificationDate { get; set; }
 
 		public void IncrementVersion(BaseModel existingItem)
 		{

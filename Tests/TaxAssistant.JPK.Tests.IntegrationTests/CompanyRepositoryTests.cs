@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -6,10 +5,10 @@ using NSubstitute.ExceptionExtensions;
 using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
-using TaxAssistant.JPK.Shared.DomainEvents;
 using TaxAssistant.JPK.Shared.Model.Domain;
 using TaxAssistant.JPK.Shared.Model.Domain.Address;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.Tests.IntegrationTests
 {
@@ -266,11 +265,11 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
             var existingItem1 = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
             await _databaseContext.AddAsync(existingItem1);
             await _databaseContext.SaveChangesAsync();
-            
+
             var existingItem2 = new Company(Origin.JPK, "1111222233", "Evil Corp");
             await _databaseContext.AddAsync(existingItem2);
             await _databaseContext.SaveChangesAsync();
-            
+
             await _sut.DeleteAsync(existingItem1.Id);
 
             // Act

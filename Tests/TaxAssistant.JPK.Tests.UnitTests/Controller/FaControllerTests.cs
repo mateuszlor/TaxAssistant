@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using NSubstitute;
-using TaxAssistant.JPK.Server.Controllers.Data;
+﻿using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.Controller
@@ -9,7 +7,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
     {
         public FaControllerTests() : base(new Fa())
         {
-            _getSut = () => new FaController(Substitute.For<ILogger<FaController>>(), _repository);
+            _getSut = () => new FaController(_repository);
         }
     }
 }

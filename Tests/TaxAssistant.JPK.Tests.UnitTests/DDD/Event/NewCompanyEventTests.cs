@@ -1,5 +1,5 @@
 using FluentAssertions;
-using TaxAssistant.JPK.Shared.DomainEvents;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 {

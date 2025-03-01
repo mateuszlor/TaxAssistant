@@ -12,7 +12,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 
 		Task<IList<T>> GetAllAsync();
 
-		Task<T?> GetAsync(Guid id);
+		Task<T?> GetAsync(Guid id, bool noTracking = false);
 
 		Task DeleteAsync(Guid id);
 

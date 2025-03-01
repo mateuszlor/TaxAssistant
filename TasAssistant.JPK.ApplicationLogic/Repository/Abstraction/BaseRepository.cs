@@ -23,7 +23,10 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 
 		public virtual async Task<T> AddAsync(T item)
         {
-            var result = _databaseContext.Add(item);
+			item.CreationDate = DateTime.UtcNow;
+            item.Version = 1;
+			
+			var result = _databaseContext.Add(item);
 
             await HandleEvents(item);
 
@@ -34,20 +37,31 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 
         public virtual async Task<T> UpdateAsync(T item)
 		{
-			var existingItem = await GetAsync(item.Id);
+			var existingItem = await GetAsync(item.Id, true);
 
 			if (existingItem == null)
 			{
 				throw new InvalidOperationException($"{typeof(T).Name} with Id='{item.Id}' not exist");
 			}
 
-			item.IncrementVersion(existingItem);
+			var attachedItem =_databaseContext.Attach(item);
 
-			var newItem = _databaseContext.Update(item);
+            attachedItem.Entity.IncrementVersion(existingItem);
+			attachedItem.State = EntityState.Modified;
+
+            var newItem = _databaseContext.Update(attachedItem.Entity);
 
             await HandleEvents(item);
 
-            await _databaseContext.SaveChangesAsync();
+			try
+			{
+				await _databaseContext.SaveChangesAsync();
+			}
+			catch (Exception ex) 
+			{
+				_logger.LogError(ex, "Error updating entity: {ErrorMessage}", ex.InnerException?.Message ?? ex.Message);
+				throw;
+			}
 
 			return newItem.Entity;
 		}
@@ -60,11 +74,18 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 				.ToListAsync();
 		}
 
-		public virtual async Task<T?> GetAsync(Guid id)
+		public virtual async Task<T?> GetAsync(Guid id, bool noTracking = false)
 		{
-			var result = await _databaseContext
+			var set = _databaseContext
 				.Set<T>()
-				.SingleOrDefaultAsync(x => !x.IsDeleted && x.Id == id);
+				.AsQueryable<T>();
+
+			if (noTracking)
+			{
+				set = set.AsNoTracking();
+			}
+
+			var result = await set.SingleOrDefaultAsync(x => !x.IsDeleted && x.Id == id);
 
 			return result;
 		}

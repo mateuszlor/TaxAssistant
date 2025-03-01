@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using TaxAssistant.CQRS.Abstraction;
-using TaxAssistant.JPK.Server.Controllers;
+using TaxAssistant.JPK.Server.Controllers.Action;
 using TaxAssistant.JPK.Shared.Commands;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.Controller

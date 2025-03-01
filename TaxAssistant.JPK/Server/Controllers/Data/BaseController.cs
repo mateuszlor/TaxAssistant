@@ -9,15 +9,11 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
 	public abstract class BaseController<T> : ControllerBase
         where T : BaseModel
     {
-        private readonly ILogger<BaseController<T>> _logger;
-        private readonly IRepository<T> _repository;
+        protected readonly IRepository<T> _repository;
 
-        protected BaseController(
-            ILogger<BaseController<T>> logger,
-            IRepository<T> repository)
+        protected BaseController(IRepository<T> repository)
         {
-            _logger = logger;
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         [HttpGet("{id}")]
@@ -54,6 +50,23 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
                 await _repository.DeleteAsync(id);
 
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Post(T item)
+        {
+            try
+            {
+                Validate();
+
+                var result = await _repository.UpdateAsync(item);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {

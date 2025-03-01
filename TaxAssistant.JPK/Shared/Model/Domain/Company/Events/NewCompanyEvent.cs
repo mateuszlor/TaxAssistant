@@ -1,6 +1,6 @@
 ﻿using TaxAssistant.DDD.Abstraction;
 
-namespace TaxAssistant.JPK.Shared.DomainEvents
+namespace TaxAssistant.JPK.Shared.Model.Domain.Company.Events
 {
     public class NewCompanyEvent : IDomainEvent
 	{
