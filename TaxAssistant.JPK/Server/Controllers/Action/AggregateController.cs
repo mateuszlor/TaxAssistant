@@ -3,7 +3,7 @@ using TaxAssistant.CQRS.Abstraction;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model;
 
-namespace TaxAssistant.JPK.Server.Controllers
+namespace TaxAssistant.JPK.Server.Controllers.Action
 {
 	[ApiController]
     [Route("[controller]")]

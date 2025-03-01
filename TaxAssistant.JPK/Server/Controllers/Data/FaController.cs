@@ -8,10 +8,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     [Route("[controller]")]
     public class FaController : BaseController<Fa>
     {
-        public FaController(
-            ILogger<FaController> logger,
-            IRepository<Fa>repository)
-            : base(logger, repository)
+        public FaController(IRepository<Fa>repository)
+            : base(repository)
         {
         }
     }

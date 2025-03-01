@@ -1,4 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Net.NetworkInformation;
+using System.Text.Json.Serialization;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
+using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAssistant.JPK.Shared.Model.Domain.Company
 {
@@ -31,11 +34,50 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company
 
 		public string Name { get; set; }
 
-		public string? NationalStatisticNumber { get; set; }
+        public string? NationalStatisticNumber { get; set; }
 
-		public Guid? AddressId { get; internal set; }
+        public string? RegistryNumber { get; set; }
+
+        public DateTime? VatWhiteListSynchronizationDate { get; set; }
+
+        public Guid? AddressId { get; internal set; }
 
 		[JsonIgnore]
-		public virtual Address.Address? Address { get; internal set; }
-	}
+		public virtual Address.Address? Address { get; set; }
+
+		public void SynchronizeVatWhiteListData(Entity entity)
+		{
+			if (TaxIdentificationNumber != entity.Nip)
+			{
+				throw new InvalidOperationException("Tax identification number does not match");
+			}
+
+            ChangeProperty<Company>(x => x.Name, entity.Name);
+            ChangeProperty<Company>(x => x.NationalStatisticNumber, entity.Regon);
+            ChangeProperty<Company>(x => x.RegistryNumber, entity.Krs);
+
+            VatWhiteListSynchronizationDate = DateTime.UtcNow;
+
+			if (Address == null)
+			{
+				Address = SplitdAddress(entity.ResidenceAddress);
+            }
+
+			Events.Add(new CompanySynchronizedOnWhiteListEvent(Id, entity));
+		}
+
+        private static Address.Address? SplitdAddress(string address)
+        {
+			if (string.IsNullOrEmpty(address))
+			{
+				return null;
+			}
+
+			var addressMainParts = address.Split(',');
+            var addresStreetParts = addressMainParts[0].Split(" ");
+            var addresCityParts = addressMainParts[1].Split(" ");
+
+			return new Address.Address(Origin.VatWhiteList, string.Empty, addresCityParts[0], addresCityParts[1], string.Join(" ", addresStreetParts.Take(addresStreetParts.Length - 1)), addresStreetParts.Last());
+        }
+    }
 }

@@ -3,5 +3,6 @@
 	public enum Origin
 	{
 		JPK,
-	}
+        VatWhiteList,
+    }
 }

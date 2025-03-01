@@ -8,10 +8,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
 	[Route("[controller]")]
 	public class InvoiceController : BaseController<Invoice>
 	{
-		public InvoiceController(
-			ILogger<InvoiceController> logger,
-			IRepository<Invoice> repository)
-			: base(logger, repository)
+		public InvoiceController(IRepository<Invoice> repository)
+			: base(repository)
 		{
 		}
 	}

@@ -13,5 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj" />
+    <ProjectReference Include="..\TaxAssistant.VatWhiteList.Client\TaxAssistant.VatWhiteList.Client.csproj" />
   </ItemGroup>
 </Project>

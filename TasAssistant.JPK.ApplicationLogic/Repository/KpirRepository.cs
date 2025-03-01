@@ -2,8 +2,8 @@
 using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Database;
-using TaxAssistant.JPK.Shared.DomainEvents;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.ApplicationLogic.Repository
 {

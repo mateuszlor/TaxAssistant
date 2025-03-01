@@ -8,10 +8,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     [Route("[controller]")]
     public class ImportHistoryController : BaseController<Import>
     {
-        public ImportHistoryController(
-            ILogger<ImportHistoryController> logger,
-            IRepository<Import> repository)
-            : base(logger, repository)
+        public ImportHistoryController(IRepository<Import> repository)
+            : base(repository)
         {
         }
     }

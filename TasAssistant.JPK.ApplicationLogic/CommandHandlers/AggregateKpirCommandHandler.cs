@@ -24,7 +24,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.CommandHandlers
 				? []
 				: command.Ids
 					.AsParallel()
-					.Select(_repository.GetAsync)
+					.Select(x => _repository.GetAsync(x))
 					.Select(x => x.Result)
 					.Where(x => x != null)
 					.Select(x => x!)

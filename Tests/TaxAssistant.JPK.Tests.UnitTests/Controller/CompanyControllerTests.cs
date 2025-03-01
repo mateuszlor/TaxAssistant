@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using NSubstitute;
-using TaxAssistant.JPK.Server.Controllers.Data;
+﻿using TaxAssistant.JPK.Server.Controllers.Data;
 using TaxAssistant.JPK.Shared.Model.Domain;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
 
@@ -10,7 +8,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
     {
         public CompanyControllerTests() : base(new Company(Origin.JPK, "1234567890", "Monsters Inc."))
         {
-            _getSut = () => new CompanyController(Substitute.For<ILogger<CompanyController>>(), _repository);
+            _getSut = () => new CompanyController(_repository);
         }
     }
 }

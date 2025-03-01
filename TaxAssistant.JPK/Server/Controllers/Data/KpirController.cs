@@ -8,10 +8,8 @@ namespace TaxAssistant.JPK.Server.Controllers.Data
     [Route("[controller]")]
     public class KpirController : BaseController<Kpir>
     {
-        public KpirController(
-            ILogger<KpirController> logger,
-            IRepository<Kpir> repository)
-            : base(logger, repository)
+        public KpirController(IRepository<Kpir> repository)
+            : base(repository)
         {
         }
     }

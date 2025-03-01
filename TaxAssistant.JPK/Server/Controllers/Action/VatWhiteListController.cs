@@ -4,7 +4,7 @@ using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAssistant.JPK.Server.Controllers.Action
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class VatWhiteListController : ControllerBase
     {
         private readonly IVatWhiteListClient _client;
@@ -14,7 +14,7 @@ namespace TaxAssistant.JPK.Server.Controllers.Action
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        [HttpGet]
+        [HttpGet("SearchByNip/{nip}")]
         public async Task<IActionResult> SearchByNip(string nip)
         {
             try

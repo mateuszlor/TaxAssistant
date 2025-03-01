@@ -1,7 +1,8 @@
-﻿
-namespace TaxAssistant.JPK.Shared.DomainEvents
+﻿using TaxAssistant.DDD.Abstraction;
+
+namespace TaxAssistant.JPK.Shared.Model.Domain.Events
 {
-    public class NewFixedAssetEvent
+    public class NewFixedAssetEvent : IDomainEvent
     {
         public NewFixedAssetEvent(string categoryCode, string description, string documentNumber, DateTime transferDate, DateTime acceptanceDate, decimal? initialValue, decimal? updatedInitialValue)
         {

@@ -41,9 +41,16 @@ namespace TaxAssistant.JPK.Client.Clients
             return await HandleResponse<IList<T>>(response);
         }
 
-        public async Task<T?> GetAsync(Guid id)
+        public async Task<T?> GetAsync(Guid id, string? action = null)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/{id}");
+            var uri = $"{_baseUrl}/{id}";
+
+            if (!string.IsNullOrEmpty(action))
+            {
+                uri += $"/{action}";
+            }
+
+            var response = await _httpClient.GetAsync(uri);
 
             return await HandleResponse<T>(response);
         }
@@ -59,6 +66,13 @@ namespace TaxAssistant.JPK.Client.Clients
             return model;
         }
 
+        public async Task<T?> UpdateAsync(T entity)
+        {
+            var response = await _httpClient.PostAsJsonAsync<T>($"{_baseUrl}/{entity.Id}", entity, _options);
+
+            return await HandleResponse<T>(response);
+        }
+
         private async Task<TResponse?> HandleResponse<TResponse>(HttpResponseMessage response)
             where TResponse: class
         {
@@ -66,6 +80,8 @@ namespace TaxAssistant.JPK.Client.Clients
             {
                 return null;
             }
+
+            response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadFromJsonAsync<TResponse?>(_options);
 

@@ -7,10 +7,12 @@ namespace TaxAssistant.JPK.Client.Clients.Abstraction
     {
         Task<IList<T>?> GetAsync();
 
+        Task<T?> GetAsync(Guid id, string? action = null);
+
         Task<IList<Selectable<T>>?> GetSelectableAsync();
 
-        Task<T?> GetAsync(Guid id);
-
         Task DeleteAsync(Guid id);
+        
+        Task<T?> UpdateAsync(T entity);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaxAssistant.JPK.Database;
 
@@ -11,13 +12,15 @@ using TaxAssistant.JPK.Database;
 namespace TaxAssistant.JPK.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20241210222335_CompanyVatWhiteListSynchronizationDate")]
+    partial class CompanyVatWhiteListSynchronizationDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -1444,9 +1447,6 @@ namespace TaxAssistant.JPK.Database.Migrations
 
                     b.Property<int>("Origin")
                         .HasColumnType("int");
-
-                    b.Property<string>("RegistryNumber")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TaxIdentificationNumber")
                         .HasColumnType("nvarchar(max)");
