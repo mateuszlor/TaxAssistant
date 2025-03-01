@@ -242,6 +242,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
 
             updatedCompany.Should().NotBeNull();
             updatedCompany.Name.Should().Be("New better company");
+            updatedCompany.Address.Should().BeNull();
 
             updatedCompany.Events.Should().HaveCount(2);
             updatedCompany.Events.OfType<CompanySynchronizedWithVatWhiteListEvent>().Should().HaveCount(1);
@@ -282,7 +283,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
                         Subject = new()
                         {
                             Nip = "1234567890",
-                            Name = "New better company",
+                            Name = "Monsters Inc.",
                             ResidenceAddress = "ul. Prosta 49, 00-838 Warszawa"
                         }
                     }
@@ -292,15 +293,21 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
             _ = await _sut.HandleAsync(command);
 
             updatedCompany.Should().NotBeNull();
-            updatedCompany.Name.Should().Be("New better company");
+            updatedCompany.Name.Should().Be("Monsters Inc.");
+            updatedCompany.Address.Should().NotBeNull();
+            updatedCompany.Address.PostalCode.Should().Be("00-838");
+            updatedCompany.Address.City.Should().Be("Warszawa");
+            updatedCompany.Address.Street.Should().Be("ul. Prosta");
+            updatedCompany.Address.BuildingNumber.Should().Be("49");
+            updatedCompany.Address.Origin.Should().Be(Origin.VatWhiteList);
 
-            updatedCompany.Events.Should().HaveCount(3);
+            updatedCompany.Events.Should().HaveCount(2);
             updatedCompany.Events.OfType<CompanySynchronizedWithVatWhiteListEvent>().Should().HaveCount(1);
 
             var updatedParameterEvents = updatedCompany.Events.OfType<PropertyValueChangedEvent>().ToList();
-            updatedParameterEvents.Should().HaveCount(2);
+            updatedParameterEvents.Should().HaveCount(1);
 
-            var updatedAddressEvent = updatedParameterEvents.SingleOrDefault(x => x.PropertyName == "Address");
+            var updatedAddressEvent = updatedParameterEvents.Single();
             updatedAddressEvent.Should().NotBeNull();
             updatedAddressEvent.ItemId.Should().Be(company.Id);
             updatedAddressEvent.ItemType.Should().Be("TaxAssistant.JPK.Shared.Model.Domain.Company.Company");
@@ -314,13 +321,6 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
             newAddress.Street.Should().Be("ul. Prosta");
             newAddress.BuildingNumber.Should().Be("49");
             newAddress.Origin.Should().Be(Origin.VatWhiteList);
-
-            var updatedNameEvent = updatedParameterEvents.SingleOrDefault(x => x.PropertyName == "Name");
-            updatedNameEvent.Should().NotBeNull();
-            updatedNameEvent.ItemId.Should().Be(company.Id);
-            updatedNameEvent.ItemType.Should().Be("TaxAssistant.JPK.Shared.Model.Domain.Company.Company");
-            updatedNameEvent.OldValue.Should().Be("Monsters Inc.");
-            updatedNameEvent.NewValue.Should().Be("New better company");
         }
     }
 }
