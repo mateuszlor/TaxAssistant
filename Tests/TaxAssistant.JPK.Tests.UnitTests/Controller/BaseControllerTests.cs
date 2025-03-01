@@ -14,9 +14,9 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
     {
         protected IRepository<T> _repository;
         protected Func<BaseController<T>> _getSut;
+        protected BaseController<T> _sut;
 
         private readonly T _mockedResult;
-        private BaseController<T> _sut;
 
         protected BaseControllerTests(T mockedResult)
         {
@@ -143,7 +143,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
         }
 
         [Test]
-        public async Task Get_ForError_ShouldReturn4000()
+        public async Task Get_ForError_ShouldReturn400()
         {
             // Arrange
             var guid = Guid.NewGuid();
