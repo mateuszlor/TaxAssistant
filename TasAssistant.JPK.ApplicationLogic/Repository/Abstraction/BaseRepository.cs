@@ -55,11 +55,11 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 
 			try
 			{
-				_databaseContext.SaveChanges();
+				await _databaseContext.SaveChangesAsync();
 			}
 			catch (Exception ex) 
 			{
-				_logger.LogError(ex, "Error updating entity: {errorMessage}", ex.InnerException?.Message ?? ex.Message);
+				_logger.LogError(ex, "Error updating entity: {ErrorMessage}", ex.InnerException?.Message ?? ex.Message);
 				throw;
 			}
 

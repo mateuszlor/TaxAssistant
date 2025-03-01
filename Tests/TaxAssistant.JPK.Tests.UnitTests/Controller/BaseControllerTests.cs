@@ -124,7 +124,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
         public async Task Get_ForFoundResult_ShouldReturn200()
         {
             // Arrange
-            _repository.GetAsync(_mockedResult.Id).Returns(Task.FromResult(_mockedResult));
+            _repository.GetAsync(_mockedResult.Id).Returns(Task.FromResult<T?>(_mockedResult));
 
             // Act
             var result = await _sut.Get(_mockedResult.Id);
@@ -238,7 +238,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.Controller
             _repository.UpdateAsync(Arg.Any<T>()).Throws(new Exception("some error"));
 
             // Act
-            var result = await _sut.Post(default);
+            var result = await _sut.Post(_mockedResult);
 
             // Assert
             await _repository.Received().UpdateAsync(Arg.Any<T>());

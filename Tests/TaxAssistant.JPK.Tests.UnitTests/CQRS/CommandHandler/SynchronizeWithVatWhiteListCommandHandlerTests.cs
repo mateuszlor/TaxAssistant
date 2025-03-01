@@ -214,7 +214,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
             var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
 
             var company = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            Company updatedCompany = null;
+            Company? updatedCompany = null;
 
             _repository
                 .GetAsync(command.CompanyId)
@@ -264,7 +264,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
             var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
 
             var company = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            Company updatedCompany = null;
+            Company? updatedCompany = null;
 
             _repository
                 .GetAsync(command.CompanyId)
