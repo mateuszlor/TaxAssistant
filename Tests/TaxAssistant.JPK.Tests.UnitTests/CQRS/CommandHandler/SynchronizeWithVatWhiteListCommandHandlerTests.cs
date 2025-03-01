@@ -1,11 +1,15 @@
+using System.Diagnostics.Metrics;
+using System.IO;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Testing.Platform.Requests;
 using NSubstitute;
 using TaxAsistant.VatWhiteList.Client.Client;
 using TaxAssistant.JPK.ApplicationLogic.CommandHandlers;
 using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Commands;
 using TaxAssistant.JPK.Shared.Model.Domain;
+using TaxAssistant.JPK.Shared.Model.Domain.Address;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
 using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 using TaxAssistant.JPK.Shared.Model.Domain.Events;
@@ -171,7 +175,40 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
         }
 
         [Test]
-        public async Task HandleAsync_ForValidData_ShouldSynchronize()
+        public async Task HandleAsync_ForInvalidAddress_ShouldThrow()
+        {
+            // Arrange
+            var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
+
+            var company = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
+
+            _repository
+                .GetAsync(command.CompanyId)
+                .Returns(Task.FromResult<Company?>(company));
+
+            _client
+                .SearchByNip(company.TaxIdentificationNumber!, DateTime.Today)
+                .Returns(Task.FromResult(new EntityResponse
+                {
+                    Result = new()
+                    {
+                        Subject = new()
+                        {
+                            Nip = "1234567890",
+                            ResidenceAddress = "Under the rock"
+                        }
+                    }
+                }));
+
+            // Act && Assert
+            await _sut.Invoking(x => x.HandleAsync(command))
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage("Invalid address: 'Under the rock'");
+        }
+
+        [Test]
+        public async Task HandleAsync_ForNoAddress_ShouldSynchronize()
         {
             // Arrange
             var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
@@ -218,6 +255,72 @@ namespace TaxAssistant.JPK.Tests.UnitTests.CQRS.CommandHandler
             updatedParameterEvent.PropertyName.Should().Be("Name");
             updatedParameterEvent.OldValue.Should().Be("Monsters Inc.");
             updatedParameterEvent.NewValue.Should().Be("New better company");
+        }
+
+        [Test]
+        public async Task HandleAsync_ForValidData_ShouldSynchronize()
+        {
+            // Arrange
+            var command = new SynchronizeWithVatWhiteListCommand(Guid.NewGuid());
+
+            var company = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
+            Company updatedCompany = null;
+
+            _repository
+                .GetAsync(command.CompanyId)
+                .Returns(Task.FromResult<Company?>(company));
+
+            await _repository
+                .UpdateAsync(Arg.Do<Company>(x => updatedCompany = x));
+
+            _client
+                .SearchByNip(company.TaxIdentificationNumber!, DateTime.Today)
+                .Returns(Task.FromResult(new EntityResponse
+                {
+                    Result = new()
+                    {
+                        Subject = new()
+                        {
+                            Nip = "1234567890",
+                            Name = "New better company",
+                            ResidenceAddress = "ul. Prosta 49, 00-838 Warszawa"
+                        }
+                    }
+                }));
+
+            // Act
+            _ = await _sut.HandleAsync(command);
+
+            updatedCompany.Should().NotBeNull();
+            updatedCompany.Name.Should().Be("New better company");
+
+            updatedCompany.Events.Should().HaveCount(3);
+            updatedCompany.Events.OfType<CompanySynchronizedWithVatWhiteListEvent>().Should().HaveCount(1);
+
+            var updatedParameterEvents = updatedCompany.Events.OfType<PropertyValueChangedEvent>().ToList();
+            updatedParameterEvents.Should().HaveCount(2);
+
+            var updatedAddressEvent = updatedParameterEvents.SingleOrDefault(x => x.PropertyName == "Address");
+            updatedAddressEvent.Should().NotBeNull();
+            updatedAddressEvent.ItemId.Should().Be(company.Id);
+            updatedAddressEvent.ItemType.Should().Be("TaxAssistant.JPK.Shared.Model.Domain.Company.Company");
+            updatedAddressEvent.OldValue.Should().BeNull();
+            updatedAddressEvent.NewValue.Should().BeOfType<Address>();
+
+            var newAddress = updatedAddressEvent.NewValue as Address;
+            newAddress.Should().NotBeNull();
+            newAddress.PostalCode.Should().Be("00-838");
+            newAddress.City.Should().Be("Warszawa");
+            newAddress.Street.Should().Be("ul. Prosta");
+            newAddress.BuildingNumber.Should().Be("49");
+            newAddress.Origin.Should().Be(Origin.VatWhiteList);
+
+            var updatedNameEvent = updatedParameterEvents.SingleOrDefault(x => x.PropertyName == "Name");
+            updatedNameEvent.Should().NotBeNull();
+            updatedNameEvent.ItemId.Should().Be(company.Id);
+            updatedNameEvent.ItemType.Should().Be("TaxAssistant.JPK.Shared.Model.Domain.Company.Company");
+            updatedNameEvent.OldValue.Should().Be("Monsters Inc.");
+            updatedNameEvent.NewValue.Should().Be("New better company");
         }
     }
 }

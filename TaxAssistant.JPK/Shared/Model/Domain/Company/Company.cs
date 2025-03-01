@@ -70,8 +70,14 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company
 			}
 
 			var addressMainParts = address.Split(',');
-            var addresStreetParts = addressMainParts[0].Split(" ");
-            var addresCityParts = addressMainParts[1].Split(" ");
+
+			if(addressMainParts.Length != 2)
+			{
+				throw new InvalidOperationException($"Invalid address: '{address}'");
+			}
+
+            var addresStreetParts = addressMainParts[0].Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            var addresCityParts = addressMainParts[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
 			return new Address.Address(Origin.VatWhiteList, string.Empty, addresCityParts[0], addresCityParts[1], string.Join(" ", addresStreetParts.Take(addresStreetParts.Length - 1)), addresStreetParts.Last());
         }
