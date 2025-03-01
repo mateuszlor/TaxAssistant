@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TaxAsistant.VatWhiteList.Client.Model.Base
+namespace TaxAssistant.VatWhiteList.Model.Base
 {
     [JsonDerivedType(typeof(Entry), typeDiscriminator: nameof(Entry))]
     [JsonDerivedType(typeof(EntryError), typeDiscriminator: nameof(EntryError))]

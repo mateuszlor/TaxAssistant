@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 using TaxAsistant.VatWhiteList.Client.Client;
 using TaxAsistant.VatWhiteList.Client.Configuration;
-using TaxAsistant.VatWhiteList.Client.Model;
+using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.VatWhiteList
 {

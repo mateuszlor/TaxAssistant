@@ -1,4 +1,4 @@
-﻿using TaxAsistant.VatWhiteList.Client.Model;
+﻿using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAsistant.VatWhiteList.Client.Client
 {

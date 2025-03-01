@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -6,9 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\TasAssistant.JPK.ApplicationLogic\TaxAssistant.JPK.ApplicationLogic.csproj" />
-    <ProjectReference Include="..\..\TaxAsistant.VatWhiteList.Client\TaxAsistant.VatWhiteList.Client.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.JPK.Database\TaxAssistant.JPK.Database.csproj" />
+    <ProjectReference Include="..\..\TaxAssistant.VatWhiteList.Client\TaxAssistant.VatWhiteList.Client.csproj" />
     <ProjectReference Include="..\Client\TaxAssistant.JPK.Client.csproj" />
     <ProjectReference Include="..\Shared\TaxAssistant.JPK.Shared.csproj" />
   </ItemGroup>

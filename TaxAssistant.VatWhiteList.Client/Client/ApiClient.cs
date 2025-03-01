@@ -1,10 +1,11 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
 using Microsoft.Extensions.Options;
 using TaxAsistant.VatWhiteList.Client.Configuration;
-using TaxAsistant.VatWhiteList.Client.Model;
+using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAsistant.VatWhiteList.Client.Client
 {
@@ -43,7 +44,16 @@ namespace TaxAsistant.VatWhiteList.Client.Client
 
             builder.Query = query.ToString();
 
-            var response = await _httpClient.GetAsync(builder.ToString());
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await _httpClient.GetAsync(builder.ToString());
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new ApiException(ex.StatusCode.GetValueOrDefault(), ex.HttpRequestError.ToString(), ex.Message);
+            }
 
             if (response.IsSuccessStatusCode)
             {

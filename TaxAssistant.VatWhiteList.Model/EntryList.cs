@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
-using TaxAsistant.VatWhiteList.Client.Model.Base;
+using TaxAssistant.VatWhiteList.Model.Base;
 
-namespace TaxAsistant.VatWhiteList.Client.Model
+namespace TaxAssistant.VatWhiteList.Model
 {
     public class EntryList
     {

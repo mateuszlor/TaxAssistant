@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using TaxAsistant.VatWhiteList.Client.Configuration;
-using TaxAsistant.VatWhiteList.Client.Model;
+using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAsistant.VatWhiteList.Client.Client
 {

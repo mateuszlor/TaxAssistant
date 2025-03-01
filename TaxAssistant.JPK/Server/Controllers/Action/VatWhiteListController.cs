@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaxAsistant.VatWhiteList.Client.Client;
-using TaxAsistant.VatWhiteList.Client.Model;
+using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAssistant.JPK.Server.Controllers.Action
 {
