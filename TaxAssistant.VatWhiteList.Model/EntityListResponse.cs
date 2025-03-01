@@ -1,4 +1,4 @@
-namespace TaxAsistant.VatWhiteList.Client.Model
+namespace TaxAssistant.VatWhiteList.Model
 {
     public class EntityListResponse
     {

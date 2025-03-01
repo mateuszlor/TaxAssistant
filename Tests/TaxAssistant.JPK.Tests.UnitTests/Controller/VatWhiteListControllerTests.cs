@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using TaxAsistant.VatWhiteList.Client.Client;
-using TaxAsistant.VatWhiteList.Client.Model;
+using TaxAssistant.VatWhiteList.Model;
 using TaxAssistant.JPK.Server.Controllers.Action;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.Controller

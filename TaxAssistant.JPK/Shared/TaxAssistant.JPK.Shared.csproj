@@ -13,12 +13,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\TaxAssistant.CQRS\TaxAssistant.CQRS.csproj" />
     <ProjectReference Include="..\..\TaxAssistant.DDD\TaxAssistant.DDD.csproj" />
+    <ProjectReference Include="..\..\TaxAssistant.VatWhiteList.Model\TaxAssistant.VatWhiteList.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\Domain\Address\Events\" />
-    <Folder Include="Model\Domain\Company\Events\" />
   </ItemGroup>
 </Project>

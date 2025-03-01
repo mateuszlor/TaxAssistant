@@ -1,6 +1,6 @@
-using TaxAsistant.VatWhiteList.Client.Model.Base;
+using TaxAssistant.VatWhiteList.Model.Base;
 
-namespace TaxAsistant.VatWhiteList.Client.Model
+namespace TaxAssistant.VatWhiteList.Model
 {
     public class EntryError : BaseEntry
     {

@@ -1,4 +1,7 @@
-namespace TaxAsistant.VatWhiteList.Client.Model
+using System;
+using System.Collections.Generic;
+
+namespace TaxAssistant.VatWhiteList.Model
 {
     public class Entity
     {

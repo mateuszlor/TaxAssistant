@@ -1,6 +1,7 @@
-using TaxAsistant.VatWhiteList.Client.Model.Base;
+using System.Collections.Generic;
+using TaxAssistant.VatWhiteList.Model.Base;
 
-namespace TaxAsistant.VatWhiteList.Client.Model
+namespace TaxAssistant.VatWhiteList.Model
 {
     public class Entry : BaseEntry
     {
