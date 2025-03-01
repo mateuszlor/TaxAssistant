@@ -3,9 +3,9 @@ using TaxAssistant.VatWhiteList.Model;
 
 namespace TaxAssistant.JPK.Shared.Model.Domain.Company.Events
 {
-    internal class CompanySynchronizedOnWhiteListEvent : IDomainEvent
+    public class CompanySynchronizedWithVatWhiteListEvent : IDomainEvent
     {
-        public CompanySynchronizedOnWhiteListEvent(Guid companyId, Entity vatWhiteListData)
+        public CompanySynchronizedWithVatWhiteListEvent(Guid companyId, Entity vatWhiteListData)
         {
             CompanyId = companyId;
             VatWhiteListData = vatWhiteListData;

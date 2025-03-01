@@ -2,7 +2,7 @@
 
 namespace TaxAssistant.JPK.Shared.Model.Domain.Events
 {
-    class PropertyValueChangedEvent : IDomainEvent
+    public class PropertyValueChangedEvent : IDomainEvent
     {
         public Guid ItemId { get; init; }
         public string? ItemType { get; init; }

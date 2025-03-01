@@ -55,18 +55,14 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company
             ChangeProperty<Company>(x => x.Name, entity.Name);
             ChangeProperty<Company>(x => x.NationalStatisticNumber, entity.Regon);
             ChangeProperty<Company>(x => x.RegistryNumber, entity.Krs);
+            ChangeProperty<Company>(x => x.Address, SplitAddress(entity.ResidenceAddress));
 
             VatWhiteListSynchronizationDate = DateTime.UtcNow;
 
-			if (Address == null)
-			{
-				Address = SplitdAddress(entity.ResidenceAddress);
-            }
-
-			Events.Add(new CompanySynchronizedOnWhiteListEvent(Id, entity));
+			Events.Add(new CompanySynchronizedWithVatWhiteListEvent(Id, entity));
 		}
 
-        private static Address.Address? SplitdAddress(string address)
+        private static Address.Address? SplitAddress(string address)
         {
 			if (string.IsNullOrEmpty(address))
 			{
