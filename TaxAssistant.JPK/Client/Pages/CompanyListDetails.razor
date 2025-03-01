@@ -49,16 +49,16 @@ else
                 <InputText id="registryNumber" class="form-control" @bind-Value=@company.RegistryNumber />
             </div>
             <div class="mb-3">
-                <label for="origin" class="form-label">Address</label>
-                <input type="text" id="origin" class="form-control" disabled value=@GetAddressString(company.Address)>
+                <label for="address" class="form-label">Address</label>
+                <input type="text" id="address" class="form-control" disabled value=@GetAddressString(company.Address)>
             </div>
             <div class="mb-3">
                 <label for="origin" class="form-label">Origin</label>
                 <input type="text" id="origin" class="form-control" disabled value=@company.Origin>
             </div>
             <div class="mb-3">
-                <label for="origin" class="form-label">Vat white list synchronization date</label>
-                <input type="text" id="origin" class="form-control" disabled value=@company.VatWhiteListSynchronizationDate>
+                <label for="vatWhiteListSynchronizationDate" class="form-label">Vat white list synchronization date</label>
+                <input type="text" id="vatWhiteListSynchronizationDate" class="form-control" disabled value=@company.VatWhiteListSynchronizationDate>
             </div>
             <div class="mb-3">
                 <label for="creationDate" class="form-label">Creation date</label>
