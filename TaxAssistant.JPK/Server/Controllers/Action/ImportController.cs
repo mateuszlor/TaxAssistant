@@ -162,22 +162,27 @@ namespace TaxAssistant.JPK.Server.Controllers
             using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
             {
                 xmlDocument.Load(xmlReader);
-                xmlReader.Close(); // Ensure the reader is closed after use
-
-                if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
-                {
-                    throw new NotImplementedException($"XML has no namespace");
-                }
-
-                if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
-                {
-                    throw new NotImplementedException($"Namespace \"{xmlDocument.DocumentElement.NamespaceURI}\" has no handler");
-                }
-
-                var serializer = new XmlSerializer(type);
-                var model = serializer.Deserialize(xmlReader);
-                return model;
+                xmlReader.Close();
             }
+            if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
+            {
+                throw new NotImplementedException($"XML has no namespace");
+            }
+
+            if (!_namespaces.TryGetValue(xmlDocument.DocumentElement.NamespaceURI, out var type))
+            {
+                throw new NotImplementedException($"Namespace \"{xmlDocument.DocumentElement.NamespaceURI}\" has no handler");
+            }
+
+            var serializer = new XmlSerializer(type);
+            object? model = null;
+            using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
+            {
+                model = serializer.Deserialize(xmlReader);
+                xmlReader.Close();
+            }
+
+            return model;
         }
     }
 }
