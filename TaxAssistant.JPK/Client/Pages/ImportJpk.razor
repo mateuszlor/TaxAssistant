@@ -74,7 +74,7 @@ else if (importResult != null)
 
             response.EnsureSuccessStatusCode();
 
-            var stringResponse = await response.Content.ReadFromJsonAsync<ImportResult>(options);
+            importResult = await response.Content.ReadFromJsonAsync<ImportResult>(options);
         }
         finally
         {

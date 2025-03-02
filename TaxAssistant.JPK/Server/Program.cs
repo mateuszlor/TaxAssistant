@@ -14,6 +14,9 @@ using TaxAssistant.JPK.Shared.Model.Database.Ewp;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
+using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +30,16 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 });
 
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<KpirAdapter>();
+
+builder.Services.AddScoped<IJpkAdapter<JPK_PKPIR, Kpir>, KpirAdapter>();
 builder.Services.AddScoped<IRepository<Kpir>, KpirRepository>();
-builder.Services.AddScoped<EwpAdapter>();
+
+builder.Services.AddScoped<IJpkAdapter<JPK_EWP, Ewp>, EwpAdapter>();
 builder.Services.AddScoped<IRepository<Ewp>, EwpRepository>();
-builder.Services.AddScoped<FaAdapter>();
+
+builder.Services.AddScoped<IJpkAdapter<JPK_FA, Fa>, FaAdapter>();
 builder.Services.AddScoped<IRepository<Fa>, FaRepository>();
+
 builder.Services.AddScoped<IRepository<Import>, ImportRepository>();
 builder.Services.AddScoped<IRepository<Company>, CompanyRepository>();
 
