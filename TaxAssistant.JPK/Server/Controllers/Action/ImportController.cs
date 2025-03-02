@@ -175,10 +175,11 @@ namespace TaxAssistant.JPK.Server.Controllers
             }
 
             var serializer = new XmlSerializer(type);
-            var stringReader = new StringReader(xmlString);
-            var model = serializer.Deserialize(stringReader);
-
-            return model;
+            using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
+            {
+                var model = serializer.Deserialize(xmlReader);
+                return model;
+            }
         }
     }
 }
