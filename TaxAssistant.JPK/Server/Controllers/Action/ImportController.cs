@@ -152,11 +152,14 @@ namespace TaxAssistant.JPK.Server.Controllers
             var xmlString = HttpUtility.HtmlDecode(content);
 
             var xmlDocument = new XmlDocument();
-            var settings = new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit };
-            using (var reader = XmlReader.Create(new StringReader(xmlString), settings))
+
+            var settings = new XmlReaderSettings
             {
-                xmlDocument.Load(reader);
-            }
+                DtdProcessing = DtdProcessing.Prohibit
+            };
+
+            using var xmlReader = XmlReader.Create(new StringReader(xmlString), settings);
+            xmlDocument.Load(xmlReader);
 
             if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
@@ -169,8 +172,8 @@ namespace TaxAssistant.JPK.Server.Controllers
             }
 
             var serializer = new XmlSerializer(type);
-            var reader = new StringReader(xmlString);
-            var model = serializer.Deserialize(reader);
+            var stringReader = new StringReader(xmlString);
+            var model = serializer.Deserialize(stringReader);
 
             return model;
         }
