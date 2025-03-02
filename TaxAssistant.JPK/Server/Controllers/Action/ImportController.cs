@@ -162,7 +162,9 @@ namespace TaxAssistant.JPK.Server.Controllers
             using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
             {
                 xmlDocument.Load(xmlReader);
+                xmlReader.Close();
             }
+
             if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
                 throw new NotImplementedException($"XML has no namespace");
