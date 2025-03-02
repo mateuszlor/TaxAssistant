@@ -151,18 +151,17 @@ namespace TaxAssistant.JPK.Server.Controllers
 
             var xmlString = HttpUtility.HtmlDecode(content);
 
-            var xmlDocument = new XmlDocument();
-
             var settings = new XmlReaderSettings
             {
                 DtdProcessing = DtdProcessing.Prohibit,
                 XmlResolver = null
             };
 
+            var xmlDocument = new XmlDocument();
+
             using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
             {
                 xmlDocument.Load(xmlReader);
-                xmlReader.Close();
             }
             if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
