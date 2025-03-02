@@ -162,6 +162,7 @@ namespace TaxAssistant.JPK.Server.Controllers
             using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
             {
                 xmlDocument.Load(xmlReader);
+                xmlReader.Close(); // Ensure the reader is closed after use
 
                 if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
                 {
