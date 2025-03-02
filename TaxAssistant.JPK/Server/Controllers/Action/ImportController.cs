@@ -30,6 +30,15 @@ namespace TaxAssistant.JPK.Server.Controllers
         private readonly IRepository<Fa> _faRepository;
         private readonly IRepository<Import> _importRepository;
 
+        private readonly IDictionary<string, Type> _namespaces = new Dictionary<string, Type>
+        {
+            { "http://jpk.mf.gov.pl/wzor/2016/10/26/10262/", typeof(JPK_PKPIR) },
+            { "http://crd.gov.pl/wzor/2020/05/08/9393/", typeof(JPK_V7M_1) },
+            { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) },
+            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) },
+            { "http://jpk.mf.gov.pl/wzor/2022/02/17/02171/", typeof(JPK_FA) }
+        };
+
         public ImportController(
             ILogger<ImportController> logger,
             IJpkAdapter<JPK_PKPIR, Kpir> kpirAdapter,
@@ -96,7 +105,7 @@ namespace TaxAssistant.JPK.Server.Controllers
                     }
                     default:
                     {
-                        throw new NotImplementedException($"No adapter for {result.GetType().Name}");
+                        throw new NotImplementedException($"No adapter for {result?.GetType().Name}");
                     }
                 }
 
@@ -133,16 +142,7 @@ namespace TaxAssistant.JPK.Server.Controllers
             }
         }
 
-        private IDictionary<string, Type> _namespaces = new Dictionary<string, Type>
-        {
-            { "http://jpk.mf.gov.pl/wzor/2016/10/26/10262/", typeof(JPK_PKPIR) },
-            { "http://crd.gov.pl/wzor/2020/05/08/9393/", typeof(JPK_V7M_1) },
-            { "http://crd.gov.pl/wzor/2021/12/27/11148/", typeof(JPK_V7M_2) },
-            { "http://jpk.mf.gov.pl/wzor/2022/02/01/02011/", typeof(JPK_EWP) },
-            { "http://jpk.mf.gov.pl/wzor/2022/02/17/02171/", typeof(JPK_FA) }
-        };
-
-        private object Deserialize(string content)
+        private object? Deserialize(string content)
         {
             if (string.IsNullOrEmpty(content))
             {
@@ -159,8 +159,10 @@ namespace TaxAssistant.JPK.Server.Controllers
                 XmlResolver = null
             };
 
-            using var xmlReader = XmlReader.Create(new StringReader(xmlString), settings);
-            xmlDocument.Load(xmlReader);
+            using (var xmlReader = XmlReader.Create(new StringReader(xmlString), settings))
+            {
+                xmlDocument.Load(xmlReader);
+            }
 
             if (string.IsNullOrEmpty(xmlDocument.DocumentElement?.NamespaceURI))
             {
