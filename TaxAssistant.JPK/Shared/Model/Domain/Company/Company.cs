@@ -17,7 +17,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company
 			NationalStatisticNumber = nationalStatisticNumber;
 		}
 
-		public Company(Origin origin, string? taxIdentificationNumber, string name, Address.Address address, string? nationalStatisticNumber = null)
+		public Company(Origin origin, string? taxIdentificationNumber, string name, Address.Address? address, string? nationalStatisticNumber = null)
 			: this(origin, taxIdentificationNumber, name, nationalStatisticNumber)
 		{
 			Address = address;

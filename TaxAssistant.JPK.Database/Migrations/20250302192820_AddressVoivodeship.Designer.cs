@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaxAssistant.JPK.Database;
 
@@ -11,9 +12,11 @@ using TaxAssistant.JPK.Database;
 namespace TaxAssistant.JPK.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250302192820_AddressVoivodeship")]
+    partial class AddressVoivodeship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1467,58 +1470,6 @@ namespace TaxAssistant.JPK.Database.Migrations
                     b.ToTable("Company");
                 });
 
-            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.Invoice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DocumentNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("SellerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TotalGrossValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalNetValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalVat")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("VatDataSpecified")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("SellerId");
-
-                    b.ToTable("Invoice");
-                });
-
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Database.Ewp.Ewp", b =>
                 {
                     b.HasOne("TaxAssistant.JPK.Shared.Model.Database.Ewp.EwpControlData", "FixedAssetsControlData")
@@ -1800,21 +1751,6 @@ namespace TaxAssistant.JPK.Database.Migrations
                         .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.Invoice", b =>
-                {
-                    b.HasOne("TaxAssistant.JPK.Shared.Model.Domain.Company.Company", "Buyer")
-                        .WithMany()
-                        .HasForeignKey("BuyerId");
-
-                    b.HasOne("TaxAssistant.JPK.Shared.Model.Domain.Company.Company", "Seller")
-                        .WithMany()
-                        .HasForeignKey("SellerId");
-
-                    b.Navigation("Buyer");
-
-                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Database.Ewp.Ewp", b =>

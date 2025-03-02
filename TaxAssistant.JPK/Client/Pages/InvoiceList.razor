@@ -1,0 +1,50 @@
+﻿@page "/invoice-list"
+
+@using TaxAssistant.JPK.Shared.Model.Domain.Invoice
+@using TaxAssistant.JPK.Shared.Model.Domain.Company
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+
+@inject IApiClient<Invoice> Client
+
+<PageTitle>Invoice List</PageTitle>
+
+<h1>Invoice List</h1>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (invoices == null)
+{
+    <div class="alert alert-danger">No invoices found</div>
+}
+else
+{
+    <Table DataSource=@invoices>
+        <Column TRow="Invoice" Title="Document Number">@context.DocumentNumber</Column>
+        <Column TRow="Invoice" Title="Seller">@context.Seller?.Name</Column>
+        <Column TRow="Invoice" Title="Buyer">@context.Buyer?.Name</Column>
+        <Column TRow="Invoice" Title="Total Net Value">@context.TotalNetValue</Column>
+        <Column TRow="Invoice" Title="Total Gross Value">@context.TotalGrossValue</Column>
+        <Column TRow="Invoice" Title="Total VAT">@context.TotalVat</Column>
+    </Table>
+}
+
+@code {
+    private IList<Invoice>? invoices;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            invoices = await Client.GetAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

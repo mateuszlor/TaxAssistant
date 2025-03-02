@@ -137,10 +137,10 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 
             // Assert
             result.Should().NotBeNull();
-            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}1234567890");
             result.CompanyName.Should().Be("Monsters Inc.");
             result.TaxIdentificationNumber.Should().Be("1234567890");
             result.Address.Should().Be("00-000 City Street 1/2");
+            result.DetailedAddress.Should().BeFalse();
         }
 
         [Test]
@@ -151,10 +151,10 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 
             // Assert
             result.Should().NotBeNull();
-            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}NIP: 1234567890");
             result.CompanyName.Should().Be("Monsters Inc.");
             result.TaxIdentificationNumber.Should().Be("1234567890");
             result.Address.Should().Be("00-000 City Street 1/2");
+            result.DetailedAddress.Should().BeFalse();
         }
 
         [Test]
@@ -165,10 +165,10 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 
             // Assert
             result.Should().NotBeNull();
-            result.CompanyData.Should().Be($"John Doe{Environment.NewLine}PESEL: 12345678910");
             result.CompanyName.Should().Be("John Doe");
             result.TaxIdentificationNumber.Should().Be("12345678910");
             result.Address.Should().Be("00-000 City Street 1/2");
+            result.DetailedAddress.Should().BeFalse();
         }
 
         [Test]
@@ -179,10 +179,10 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.Event
 
             // Assert
             result.Should().NotBeNull();
-            result.CompanyData.Should().Be($"Monsters Inc.{Environment.NewLine}NIP: 1234567890");
             result.CompanyName.Should().Be("Monsters Inc.");
             result.TaxIdentificationNumber.Should().Be("1234567890");
             result.Address.Should().Be("00-000 City Street 1/2");
+            result.DetailedAddress.Should().BeFalse();
         }
 
         [Test]

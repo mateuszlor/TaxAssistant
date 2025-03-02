@@ -12,13 +12,16 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 		}
 
 		public string DocumentNumber { get; set; }
-		public Company.Company? Seller { get; set; }
-		public Company.Company? Buyer { get; set; }
-		public decimal TotalNetValue { get; set; }
+        public Guid? SellerId { get; set; }
+        public virtual Company.Company? Seller { get; set; }
+        public Guid? BuyerId { get; set; }
+        public virtual Company.Company? Buyer { get; set; }
+        public decimal TotalNetValue { get; set; }
 		public decimal TotalGrossValue { get; set; }
 		public decimal TotalVat { get; set; }
+        public bool VatDataSpecified { get; set; }
 
-		public void SetSeller(Company.Company company)
+        public void SetSeller(Company.Company company)
         {
             if (company == null)
             {
@@ -54,9 +57,9 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 			{
 				throw new InvalidOperationException();
 			}
-		}
+        }
 
-		public void SetAmountValues(decimal totalNetValue, decimal totalGrossValue, decimal totalVat)
+        public void SetAmountValues(decimal totalNetValue, decimal totalGrossValue, decimal totalVat)
         {
             if (totalNetValue == decimal.Zero)
             {
@@ -69,15 +72,31 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
             }
 
             if (totalVat != totalGrossValue - totalNetValue)
-			{
-				throw new ArgumentException("Net/gross/VAT amounts does not match");
-			}
+            {
+                throw new ArgumentException("Net/gross/VAT amounts does not match");
+            }
 
-			TotalNetValue = totalNetValue;
-			TotalGrossValue = totalGrossValue;
-			TotalVat = totalVat;
+            TotalNetValue = totalNetValue;
+            TotalGrossValue = totalGrossValue;
+            TotalVat = totalVat;
 
-			Events.Add(new AmountValuesSetEvent(Id));
-		}
-	}
+            VatDataSpecified = true;
+
+            Events.Add(new AmountValuesSetEvent(Id, VatDataSpecified));
+        }
+
+        public void SetAmountValue(decimal totalNetValue)
+        {
+            if (totalNetValue == decimal.Zero)
+            {
+                throw new ArgumentException("TotalNetValue cannot be 0");
+            }
+
+            TotalNetValue = totalNetValue;
+
+            VatDataSpecified = false;
+
+            Events.Add(new AmountValuesSetEvent(Id, VatDataSpecified));
+        }
+    }
 }
