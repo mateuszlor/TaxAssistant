@@ -155,7 +155,8 @@ namespace TaxAssistant.JPK.Server.Controllers
 
             var settings = new XmlReaderSettings
             {
-                DtdProcessing = DtdProcessing.Prohibit
+                DtdProcessing = DtdProcessing.Prohibit,
+                XmlResolver = null
             };
 
             using var xmlReader = XmlReader.Create(new StringReader(xmlString), settings);
