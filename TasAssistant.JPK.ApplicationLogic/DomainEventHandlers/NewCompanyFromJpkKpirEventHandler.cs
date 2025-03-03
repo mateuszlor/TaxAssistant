@@ -1,9 +1,10 @@
 ﻿using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
 {
-    public class NewCompanyFromJpkKpirEventHandler(IRepository<Company> repository) : BaseNewCompanyWithAddressEventHandler(repository)
+    public class NewCompanyFromJpkKpirEventHandler(IRepository<Company> repository) : BaseNewCompanyWithAddressEventHandler<NewCompanyFromJpkKpirEvent>(repository)
     {
     }
 }

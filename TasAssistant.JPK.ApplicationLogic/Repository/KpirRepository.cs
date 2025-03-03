@@ -23,7 +23,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
                 .ToList()
                 ?? [];
 
-            companies.ForEach(x => item.Events.Add(x));
+            companies.ForEach(item.Events.Add);
 
             var result = await base.AddAsync(item);
 

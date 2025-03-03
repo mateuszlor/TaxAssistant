@@ -6,7 +6,8 @@ using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
 {
-    public abstract class BaseNewCompanyWithAddressEventHandler : IDomainEventHandler<BaseNewCompanyWithAddressEvent>
+    public abstract class BaseNewCompanyWithAddressEventHandler<T> : IDomainEventHandler<T>
+        where T: BaseNewCompanyWithAddressEvent
     {
         private readonly IRepository<Company> _repository;
 
@@ -15,7 +16,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task HandleAsync(BaseNewCompanyWithAddressEvent? domainEvent)
+        public async Task HandleAsync(T? domainEvent)
         {
             if (domainEvent!.TaxIdentificationNumber != null && await _repository.AnyAsync(x => x.TaxIdentificationNumber == domainEvent!.TaxIdentificationNumber))
             {

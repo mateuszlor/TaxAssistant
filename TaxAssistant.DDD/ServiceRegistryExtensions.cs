@@ -22,9 +22,14 @@ namespace TaxAssistant.DDD
 				.GetAssemblies()
 				.SelectMany(x => x
 					.GetTypes()
-					.Where(t => t
-						.GetInterfaces()
-						.Any(i => i.IsGenericType && handlerInarfaces.Contains(i.GetGenericTypeDefinition()))));
+					.Where(t => !t.IsAbstract
+						&& (
+							t.GetInterfaces().Any(i => i.IsGenericType && handlerInarfaces.Contains(i.GetGenericTypeDefinition()))
+							|| t.BaseType != null && t.BaseType.GetInterfaces().Any(i => i.IsGenericType && handlerInarfaces.Contains(i.GetGenericTypeDefinition()))
+						)
+					)
+				)
+				.ToList();
 
 			foreach (var handler in handlers)
 			{

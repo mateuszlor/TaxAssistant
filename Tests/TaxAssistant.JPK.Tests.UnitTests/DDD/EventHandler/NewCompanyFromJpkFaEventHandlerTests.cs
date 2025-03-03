@@ -7,16 +7,16 @@ using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.DDD.EventHandler
 {
-    public class NewCompanyFromEwpEventHandlerTests
+    public class NewCompanyFromFaEventHandlerTests
     {
         private IRepository<Company> _repository;
-        private NewCompanyFromJpkEwpEventHandler _sut;
+        private NewCompanyFromJpkFaEventHandler _sut;
 
         [SetUp]
         public void Setup()
         {
             _repository = Substitute.For<IRepository<Company>>();
-            _sut = new NewCompanyFromJpkEwpEventHandler(_repository);
+            _sut = new NewCompanyFromJpkFaEventHandler(_repository);
         }
 
         [Test]
