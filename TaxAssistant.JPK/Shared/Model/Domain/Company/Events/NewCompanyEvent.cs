@@ -4,36 +4,35 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company.Events
 {
     public class NewCompanyEvent : IDomainEvent
 	{
-        public NewCompanyEvent(string? companyData, string? address)
-        {
-            if (string.IsNullOrWhiteSpace(companyData))
-            {
-                throw new ArgumentNullException(nameof(companyData));
-            }
+		public NewCompanyEvent(string? companyData, string? address)
+		{
+			if (string.IsNullOrWhiteSpace(companyData))
+			{
+				throw new ArgumentNullException(nameof(companyData));
+			}
 
-            var companyDataParts = companyData!.Split("\n");
+			var companyDataParts = companyData!.Split("\n");
 
-            CompanyName = companyDataParts[0].Trim();
+			CompanyName = companyDataParts[0].Trim();
 
-            if (companyDataParts.Length != 2)
-            {
-                throw new ArgumentException("Company data should contain company name and tax identification number");
-            }
+			if (companyDataParts.Length > 1)
+			{
+				TaxIdentificationNumber = companyDataParts.Last();
 
-            TaxIdentificationNumber = companyDataParts.Last();
+                if (TaxIdentificationNumber.StartsWith("NIP:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(4);
+                }
+                else if (TaxIdentificationNumber.StartsWith("PESEL:"))
+                {
+                    TaxIdentificationNumber = TaxIdentificationNumber.Substring(6);
+                }
 
-            if (TaxIdentificationNumber.StartsWith("NIP:"))
-            {
-                TaxIdentificationNumber = TaxIdentificationNumber.Substring(4);
-            }
-            else if (TaxIdentificationNumber.StartsWith("PESEL:"))
-            {
-                TaxIdentificationNumber = TaxIdentificationNumber.Substring(6);
-            }
+                TaxIdentificationNumber = TaxIdentificationNumber.Trim();
+			}
 
-            TaxIdentificationNumber = TaxIdentificationNumber.Trim();
-            Address = address;
-        }
+			Address = address;
+		}
 
 		public NewCompanyEvent(string companyName, string taxIdentificationNumber, string address)
 		{
@@ -59,7 +58,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company.Events
 
         public Origin Origin { get; } = Origin.JPK;
         public string CompanyName { get; }
-		public string TaxIdentificationNumber { get; }
+		public string? TaxIdentificationNumber { get; }
 		public string? Address { get; }
         public string? PostalCode { get; }
         public string? City { get; }
@@ -71,10 +70,17 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Company.Events
 
         public override bool Equals(object? obj)
         {
-            if (obj is NewCompanyEvent e)
-            {
-                return TaxIdentificationNumber == e.TaxIdentificationNumber;
-            }
+			if (obj is NewCompanyEvent e)
+			{
+				if (!string.IsNullOrEmpty(TaxIdentificationNumber) && !string.IsNullOrEmpty(e.TaxIdentificationNumber))
+				{
+					return TaxIdentificationNumber == e.TaxIdentificationNumber;
+				}
+				else if (string.IsNullOrEmpty(TaxIdentificationNumber) && string.IsNullOrEmpty(e.TaxIdentificationNumber))
+				{
+					return e.CompanyName == CompanyName && e.Address == Address;
+				}
+			}
 
             return false;
         }
