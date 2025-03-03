@@ -18,17 +18,36 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
         {
             var events = item
                 .Invoices
-                ?.Select(x => new NewCompanyEvent(x.Seller.Name, x.Seller.TaxIdentificationNumber, x.Seller.Address))
+                ?.Select(x => new NewCompanyFromJpkFaEvent(x.Seller.Name, x.Seller.TaxIdentificationNumber, x.Seller.Address))
                 .Distinct()
                 .ToList()
                 ?? [];
 
-            events.AddRange(item
+            events.ForEach(x => item.Events.Add(x));
+
+            events = item
                 .Invoices
-                ?.Select(x => new NewCompanyEvent(x.Buyer.Name, x.Buyer.TaxIdentificationNumber, x.Buyer.Address))
-                .Distinct() ?? []);
+                ?.Select(x => new NewCompanyFromJpkFaEvent(x.Buyer.Name, x.Buyer.TaxIdentificationNumber, x.Buyer.Address))
+                .Distinct()
+                .ToList()
+                ?? [];
 
             events.ForEach(x => item.Events.Add(x));
+
+            //var newInvoiceEvents = item
+            //    .Invoices
+            //    .Select(x => new NewInvoiceEvent(
+            //        Origin.JPK, 
+            //        item.Subject.TaxIdentificationNumber, x.DocumentNumber, x.IssueDate, x.DeliveryDate, x.ReversedCharge, x.SplitPayment,
+            //        new InvoiceAmounts(
+            //            x.TotalPriceNetVatExempted, x.TotalPriceNetRate0, x.TotalPriceNetRate5, x.TotalPriceNetRate8, x.TotalPriceNetBaseRate, x.TotalPriceNetForeignTransaction, x.TotalPriceNetReverseCharge, 
+            //            x.TotalVatRate5, x.TotalVatRate5OtherCurrency, x.TotalVatRate8, x.TotalVatRate8OtherCurrency, x.TotalVatBaseRate, x.TotalVatBaseRateOtherCurrency, x.TotalVatReverseCharge, x.TotalVatReverseChargeOtherCurrency),
+            //        x.Row))
+            //    .Distinct()
+            //    .ToList()
+            //    .ForEach(item.Events.Add);
+
+            //newInvoiceEvents.ForEach(x => item.Events.Add(x));
 
             var result = await base.AddAsync(item);
 

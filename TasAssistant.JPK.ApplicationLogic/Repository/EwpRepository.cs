@@ -32,7 +32,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
                 .ToList()
                 .ForEach(item.Events.Add);
 
-            var companyEvent = new NewCompanyEvent(item.Subject.Name, item.Subject.TaxIdentificationNumber, item.Subject.Address.PostalCode, item.Subject.Address.City, item.Subject.Address.Street, item.Subject.Address.BuildingNumber, item.Subject.Address.LocalNumber, item.Subject.Address.Voivodeship);
+            var companyEvent = new NewCompanyFromJpkEwpEvent(item.Subject.Name, item.Subject.TaxIdentificationNumber, item.Subject.Address.PostalCode, item.Subject.Address.City, item.Subject.Address.Street, item.Subject.Address.BuildingNumber, item.Subject.Address.LocalNumber, item.Subject.Address.Voivodeship);
             item.Events.Add(companyEvent);
 
             var result = await base.AddAsync(item);

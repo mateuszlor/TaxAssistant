@@ -6,16 +6,16 @@ using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
 {
-    public class NewCompanyEventHandler : IDomainEventHandler<NewCompanyEvent>
+    public class NewCompanyFromJpkFaEventHandler : IDomainEventHandler<NewCompanyFromJpkEwpEvent>
     {
         private readonly IRepository<Company> _repository;
 
-        public NewCompanyEventHandler(IRepository<Company> repository)
+        public NewCompanyFromJpkFaEventHandler(IRepository<Company> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task HandleAsync(NewCompanyEvent? domainEvent)
+        public async Task HandleAsync(NewCompanyFromJpkEwpEvent? domainEvent)
         {
             if (domainEvent!.TaxIdentificationNumber != null && await _repository.AnyAsync(x => x.TaxIdentificationNumber == domainEvent!.TaxIdentificationNumber))
             {
@@ -27,19 +27,11 @@ namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
                 return;
             }
 
-            var address = domainEvent.DetailedAddress
-                ? new Address(domainEvent.Origin, null, domainEvent.PostalCode!, domainEvent.City!, domainEvent.Street, domainEvent.BuildingNumber!, domainEvent.LocalNumber, domainEvent.Voivodeship)
-                : SplitAddress(domainEvent.Address!);
+            var address = new Address(domainEvent.Origin, string.Empty, domainEvent.PostalCode, domainEvent.City, domainEvent.Street, domainEvent.BuildingNumber, domainEvent.LocalNumber, domainEvent.Voivodeship);
 
             var company = new Company(domainEvent.Origin, domainEvent!.TaxIdentificationNumber, domainEvent.CompanyName, address);
 
             await _repository.AddAsync(company);
-        }
-
-        private static Address? SplitAddress(string address)
-        {
-            // TODO: Implement address splitting
-            return null;
         }
     }
 }
