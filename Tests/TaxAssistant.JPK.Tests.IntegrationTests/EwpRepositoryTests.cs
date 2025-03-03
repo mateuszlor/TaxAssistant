@@ -5,6 +5,7 @@ using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Ewp;
+using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 using TaxAssistant.JPK.Shared.Model.Domain.Events;
 
 namespace TaxAssistant.JPK.Tests.IntegrationTests
@@ -39,6 +40,18 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
             // Arrange
             var itemToAdd = new Ewp
             {
+                Subject = new()
+                {
+                    Name = "some company",
+                    TaxIdentificationNumber = "1234567890",
+                    Address = new() 
+                    {
+                        PostalCode = "00-000",
+                        City = "City",
+                        BuildingNumber = "1",
+                        Voivodeship = "voivodeship"
+                    }
+                },
                 FixedAssets = [
                     new EwpFixedAsset
                     {
@@ -71,10 +84,12 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
 
             result.Events.Should().BeEmpty();
 
-            addedEvents.Should().HaveCount(1);
+            addedEvents.Should().HaveCount(2);
             addedEvents.OfType<NewFixedAssetEvent>().Should().HaveCount(1);
-            
-            var fixedAssetEvent = addedEvents.OfType<NewFixedAssetEvent>().Single();
+            addedEvents.OfType<NewCompanyFromJpkEwpEvent>().Should().HaveCount(1);
+
+            var fixedAssetEvent = addedEvents.OfType<NewFixedAssetEvent>().SingleOrDefault();
+            fixedAssetEvent.Should().NotBeNull();
             fixedAssetEvent.DocumentNumber.Should().Be("ST/1");
             fixedAssetEvent.InitialValue.Should().Be(100_000);
             fixedAssetEvent.UpdatedInitialValue.Should().Be(100_000);
@@ -83,7 +98,16 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
             fixedAssetEvent.AcceptanceDate.Should().Be(DateTime.Today.AddYears(-1));
             fixedAssetEvent.TransferDate.Should().Be(DateTime.Today.AddYears(-1));
 
-            await _eventDispatcher.Received(1).DispatchAsync(Arg.Any<IDomainEvent>());
+            var newCompanyEvent = addedEvents.OfType<NewCompanyFromJpkEwpEvent>().SingleOrDefault();
+            newCompanyEvent.Should().NotBeNull();
+            newCompanyEvent.CompanyName.Should().Be("some company");
+            newCompanyEvent.TaxIdentificationNumber.Should().Be("1234567890");
+            newCompanyEvent.City.Should().Be("City");
+            newCompanyEvent.PostalCode.Should().Be("00-000");
+            newCompanyEvent.BuildingNumber.Should().Be("1");
+            newCompanyEvent.Voivodeship.Should().Be("voivodeship");
+
+            await _eventDispatcher.Received(2).DispatchAsync(Arg.Any<IDomainEvent>());
         }
     }
 }
