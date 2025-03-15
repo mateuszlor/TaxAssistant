@@ -2,9 +2,9 @@
 
 namespace TaxAssistant.JPK.Shared.Model.Domain.Events
 {
-    public class NewInvoiceEvent : IDomainEvent
+    public class NewInvoiceFromJpkEwpEvent : IDomainEvent
     {
-        public NewInvoiceEvent(
+        public NewInvoiceFromJpkEwpEvent(
             Origin origin, 
             string sellerTaxIdentificationNumber,
             string documentNumber, 

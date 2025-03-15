@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaxAssistant.JPK.Database;
 
@@ -11,9 +12,11 @@ using TaxAssistant.JPK.Database;
 namespace TaxAssistant.JPK.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250303210008_InvoiceIssueDateAndDeliveryDate")]
+    partial class InvoiceIssueDateAndDeliveryDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1525,47 +1528,6 @@ namespace TaxAssistant.JPK.Database.Migrations
                     b.ToTable("Invoice");
                 });
 
-            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.InvoiceAdditionalRow", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("InvoiceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModificationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Origin")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("InvoiceAdditionalRow");
-                });
-
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.InvoiceRow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1923,17 +1885,6 @@ namespace TaxAssistant.JPK.Database.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.InvoiceAdditionalRow", b =>
-                {
-                    b.HasOne("TaxAssistant.JPK.Shared.Model.Domain.Invoice.Invoice", "Invoice")
-                        .WithMany("AdditionalRows")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-                });
-
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.InvoiceRow", b =>
                 {
                     b.HasOne("TaxAssistant.JPK.Shared.Model.Domain.Invoice.Invoice", "Invoice")
@@ -2023,8 +1974,6 @@ namespace TaxAssistant.JPK.Database.Migrations
 
             modelBuilder.Entity("TaxAssistant.JPK.Shared.Model.Domain.Invoice.Invoice", b =>
                 {
-                    b.Navigation("AdditionalRows");
-
                     b.Navigation("Rows");
                 });
 #pragma warning restore 612, 618

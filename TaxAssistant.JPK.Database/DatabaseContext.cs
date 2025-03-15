@@ -63,6 +63,8 @@ namespace TaxAssistant.JPK.Database
 
 		public DbSet<Company> Company { get; set; }
         public DbSet<Address> Address { get; set; }
+
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<InvoiceRow> InvoiceRow { get; set; }
     }
 }

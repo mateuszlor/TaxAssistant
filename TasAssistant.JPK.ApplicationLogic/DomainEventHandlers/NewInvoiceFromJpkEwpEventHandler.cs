@@ -7,12 +7,12 @@ using TaxAssistant.JPK.Shared.Model.Domain.Invoice;
 
 namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
 {
-    public class NewInvoiceEventHandler : IDomainEventHandler<NewInvoiceEvent>
+    public class NewInvoiceFromJpkEwpEventHandler : IDomainEventHandler<NewInvoiceFromJpkEwpEvent>
     {
         private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Company> _companyRepository;
 
-        public NewInvoiceEventHandler(
+        public NewInvoiceFromJpkEwpEventHandler(
             IRepository<Invoice> invoiceRepository,
             IRepository<Company> companyRepository)
         {
@@ -20,14 +20,14 @@ namespace TaxAssistant.JPK.ApplicationLogic.DomainEventHandlers
             _companyRepository = companyRepository ?? throw new ArgumentNullException(nameof(companyRepository));
         }
 
-        public async Task HandleAsync(NewInvoiceEvent? domainEvent)
+        public async Task HandleAsync(NewInvoiceFromJpkEwpEvent? domainEvent)
         {
             if (domainEvent == null)
             {
                 return;
             }
 
-            if (await _invoiceRepository.AnyAsync(x => x != null && x.Seller.TaxIdentificationNumber == domainEvent.SellerTaxIdentificationNumber && x.DocumentNumber == domainEvent.DocumentNumber))
+            if (await _invoiceRepository.AnyAsync(x => x != null && x.Seller != null && x.Seller.TaxIdentificationNumber == domainEvent.SellerTaxIdentificationNumber && x.DocumentNumber == domainEvent.DocumentNumber))
             {
                 return;
             }

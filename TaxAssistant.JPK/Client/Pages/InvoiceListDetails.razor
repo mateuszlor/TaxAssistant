@@ -1,0 +1,139 @@
+﻿@page "/invoice-list/{IdParameter}/{FormModeParameter}"
+
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using TaxAssistant.JPK.Shared.Model.Domain.Invoice
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Client.Shared.Components;
+
+@inject IApiClient<Invoice> InvoiceClient
+
+<PageTitle>Invoice Details</PageTitle>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (invoice == null)
+{
+    <p><em>Invoice not found</em></p>
+}
+else
+{
+    <div>
+        <h3 class="text-center" data-test-id="header">@invoice.DocumentNumber</h3>
+
+        <div class="row pt-4">
+            <div class="col-6">
+                <div class="mb-1">
+                    <b>Seller:</b>
+                </div>
+                <CompanyDetails Company=@invoice.Seller />
+                <div class="mt-2 mb-1">
+                    <b>Buyer:</b>
+                </div>
+                <CompanyDetails Company=@invoice.Buyer />
+            </div>
+            <div class="col-2"></div>
+            <div class="col-4">
+                <table class="table">
+                    <tbody>
+                        <tr data-test-id="issueDate">
+                            <th scope="row">Issue date</th>
+                            <td>@invoice.IssueDate?.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr data-test-id="deliveryDate">
+                            <th scope="row">Delivery date</th>
+                            <td>@invoice.DeliveryDate?.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <Table class="table mt-2 align-middle" TRow="InvoiceRow" DataSource=@invoice.Rows.OrderBy(x => x.Number) data-test-id="rowsTable">
+            <Column TRow="InvoiceRow" Title="Lp.">@context.Number</Column>
+            <Column TRow="InvoiceRow" Title="Item">@context.Name</Column>
+            <Column TRow="InvoiceRow" Title="Metric unit">@context.MetricUnit</Column>
+            <Column TRow="InvoiceRow" Title="Count">@context.Count</Column>
+            <Column TRow="InvoiceRow" Title="Unit price net"><Amount Value=@context.UnitPriceNet /></Column>
+            <Column TRow="InvoiceRow" Title="Total price net"><Amount Value=@context.TotalPriceNet /></Column>
+            <Column TRow="InvoiceRow" Title="VAT rate"><VatRate Rate=@context.VatRate /></Column>
+            <Column TRow="InvoiceRow" Title="VAT"><Amount Value=@(context.TotalPriceGross - context.TotalPriceNet) /></Column>
+            <Column TRow="InvoiceRow" Title="Total price gross"><Amount Value=@context.TotalPriceGross /></Column>
+        </Table>
+
+        <div class="row mt-2">
+            <div class="col-6"></div>
+            <div class="col-6">
+                <table class="table" data-test-id="summaryTable">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Total net</th>
+                            <td><Amount Value=@invoice.TotalNetValue /></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Total VAT</th>
+                            <td><Amount Value=@invoice.TotalVat /></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Total gross</th>
+                            <td><Amount Value=@invoice.TotalGrossValue /></td>
+                        </tr>
+                        @if (invoice.AdditionalRows.Any())
+                        {
+                            @foreach(var row in invoice.AdditionalRows)
+                            {
+                                <tr>
+                                    <th scope="row">@row.Name</th>
+                                    <td><Amount Value=@row.Amount /></td>
+                                </tr>
+                            }
+                            <tr>
+                                <th scope="row">Total to pay</th>
+                                <td><Amount Value=@totalToPay /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public required string IdParameter { get; set; }
+
+    [Parameter]
+    public required string FormModeParameter { get; set; }
+
+    private FormMode formMode;
+    private Guid? invoiceId;
+
+    private bool isLoading;
+    private Invoice? invoice;
+
+    private decimal totalToPay => invoice!.TotalGrossValue + invoice.AdditionalRows.Sum(x => x.Amount);
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        try
+        {
+            invoiceId = Guid.Parse(IdParameter);
+            formMode = Enum.Parse<FormMode>(FormModeParameter);
+
+            if (invoiceId.HasValue)
+            {
+                invoice = await InvoiceClient.GetAsync(invoiceId.Value);
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
