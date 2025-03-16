@@ -66,11 +66,19 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction
 			return newItem.Entity;
 		}
 
-		public virtual async Task<IList<T>> GetAllAsync()
+		public virtual async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
 		{
-			return await _databaseContext
+			var query = _databaseContext
 				.Set<T>()
-				.Where(x => !x.IsDeleted)
+				.Where(x => !x.IsDeleted);
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+
+			return await query
+				.OrderBy(x => x.CreationDate)
 				.ToListAsync();
 		}
 

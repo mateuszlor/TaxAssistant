@@ -14,6 +14,7 @@ using TaxAssistant.JPK.Shared.Model.Database.Ewp;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
+using TaxAssistant.JPK.Shared.Model.Domain.Invoice;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_EWP;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_FA;
 using TaxAssistant.JPK.Shared.Model.Xml.JPK_PKPIR;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IRepository<Fa>, FaRepository>();
 
 builder.Services.AddScoped<IRepository<Import>, ImportRepository>();
 builder.Services.AddScoped<IRepository<Company>, CompanyRepository>();
+builder.Services.AddScoped<IRepository<Invoice>, InvoiceRepository>();
 
 builder.Services.AddVatWhiteListClient(builder.Configuration);
 

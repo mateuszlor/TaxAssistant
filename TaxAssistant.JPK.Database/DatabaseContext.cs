@@ -5,6 +5,7 @@ using TaxAssistant.JPK.Shared.Model.Database.Fa;
 using TaxAssistant.JPK.Shared.Model.Database.Kpir;
 using TaxAssistant.JPK.Shared.Model.Domain.Address;
 using TaxAssistant.JPK.Shared.Model.Domain.Company;
+using TaxAssistant.JPK.Shared.Model.Domain.Invoice;
 
 namespace TaxAssistant.JPK.Database
 {
@@ -61,6 +62,9 @@ namespace TaxAssistant.JPK.Database
 		public DbSet<FaOrderRow> FaOrderRow { get; set; }
 
 		public DbSet<Company> Company { get; set; }
-		public DbSet<Address> Address { get; set; }
-	}
+        public DbSet<Address> Address { get; set; }
+
+        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<InvoiceRow> InvoiceRow { get; set; }
+    }
 }

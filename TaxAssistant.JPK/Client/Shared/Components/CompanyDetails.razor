@@ -1,0 +1,87 @@
+﻿@using System.Text
+@using TaxAssistant.JPK.Shared.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using TaxAssistant.JPK.Shared.Model.Database.Fa
+@using TaxAssistant.JPK.Client.Clients.Abstraction
+@using System.Linq
+@using TaxAssistant.JPK.Shared.Model.Domain.Company
+
+@if (Company != null)
+{
+    <div data-test-id="name">
+        @Company.Name
+    </div>
+    @if (hasAddress)
+    {
+        <div data-test-id="address-street">
+            @streetPart
+        </div>
+        <div data-test-id="address-city">
+            @($"{Company.Address!.PostalCode} {Company.Address!.City}")
+        </div>
+        <div data-test-id="address-country">
+            @IncludeDefaultCountry
+                ? @("POLAND")
+                : @Company.Address!.Country
+        </div>
+    }
+    @if (Company.TaxIdentificationNumber?.Length == 10)
+    {
+        <div data-test-id="nip">
+            <span>NIP:</span>
+            @Company.TaxIdentificationNumber
+        </div>
+    }
+    @if (Company.TaxIdentificationNumber?.Length == 11)
+    {
+        <div data-test-id="pesel">
+            <span>PESEL:</span>
+            @Company.TaxIdentificationNumber
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public required Company? Company { get; set; }
+
+    [Parameter]
+    public bool IncludeDefaultCountry { get; set; } = false;
+
+    private bool hasAddress => Company?.Address != null;
+
+    private string streetPart
+    {
+        get
+        {
+            if (!hasAddress)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(Company!.Address!.Street))
+            {
+                sb.Append(Company!.Address!.Street);
+            }
+            else
+            {
+                sb.Append(Company!.Address!.City);
+            }
+
+            sb.Append(" ");
+            sb.Append(Company!.Address!.BuildingNumber);
+
+            if (!string.IsNullOrWhiteSpace(Company!.Address!.LocalNumber))
+            {
+                sb.Append("/");
+                sb.Append(Company!.Address!.LocalNumber);
+            }
+
+            return sb.ToString();
+        }
+    }
+}

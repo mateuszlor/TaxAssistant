@@ -7,23 +7,23 @@ using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 
 namespace TaxAssistant.JPK.Tests.UnitTests.DDD.EventHandler
 {
-    public class NewCompanyEventHandlerTests
+    public class NewCompanyFromFaEventHandlerTests
     {
         private IRepository<Company> _repository;
-        private NewCompanyEventHandler _sut;
+        private NewCompanyFromJpkFaEventHandler _sut;
 
         [SetUp]
         public void Setup()
         {
             _repository = Substitute.For<IRepository<Company>>();
-            _sut = new NewCompanyEventHandler(_repository);
+            _sut = new NewCompanyFromJpkFaEventHandler(_repository);
         }
 
         [Test]
         public async Task HandleAsync_ForNewCompany_ShouldAdd()
         {
             // Arrange
-            var companyEvent = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+            var companyEvent = new NewCompanyFromJpkFaEvent("some company", "1234567890", "00-000 City Street 1/2");
 
             // Act
             await _sut.HandleAsync(companyEvent);
@@ -37,7 +37,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.EventHandler
         {
             // Arrange
             _repository.AnyAsync(Arg.Any<Expression<Func<Company, bool>>>()).Returns(true);
-            var companyEvent = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+            var companyEvent = new NewCompanyFromJpkFaEvent("some company", "1234567890", "00-000 City Street 1/2");
 
             // Act
             await _sut.HandleAsync(companyEvent);
@@ -51,7 +51,7 @@ namespace TaxAssistant.JPK.Tests.UnitTests.DDD.EventHandler
         {
             // Arrange
             _repository.AnyAsync(Arg.Any<Expression<Func<Company, bool>>>()).Returns(false, true);
-            var companyEvent = new NewCompanyEvent("some company", "1234567890", "00-000 City Street 1/2");
+            var companyEvent = new NewCompanyFromJpkFaEvent("some company", "1234567890", "00-000 City Street 1/2");
 
             // Act
             await _sut.HandleAsync(companyEvent);

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
@@ -127,9 +128,9 @@ public class FaListDetailsItemTests : BunitTestContext
             rows[i].ChildNodes[0].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.Name);
             rows[i].ChildNodes[1].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.MetricUnit);
             rows[i].ChildNodes[2].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.Count.ToString());
-            rows[i].ChildNodes[3].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.UnitPriceNet.ToString("N"));
-            rows[i].ChildNodes[4].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.TotalPriceNet.ToString("N"));
-            rows[i].ChildNodes[5].FirstChild?.TextContent.Trim().Should().Be(invoiceRow.TotalPriceGross!.Value.ToString("N"));
+            rows[i].ChildNodes[3].FirstChild?.TextContent.Trim().Should().Be($"{invoiceRow.UnitPriceNet:##0.00}");
+            rows[i].ChildNodes[4].FirstChild?.TextContent.Trim().Should().Be($"{invoiceRow.TotalPriceNet:##0.00}");
+            rows[i].ChildNodes[5].FirstChild?.TextContent.Trim().Should().Be($"{invoiceRow.TotalPriceGross:##0.00}");
         }
     }
 }

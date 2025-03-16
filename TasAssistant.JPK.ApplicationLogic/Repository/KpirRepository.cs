@@ -18,12 +18,12 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
         {
             var companies = item
                 .Rows
-                ?.Select(x => new NewCompanyEvent(x.CompanyData, x.CompanyAddress))
+                ?.Select(x => new NewCompanyFromJpkKpirEvent(x.CompanyData, x.CompanyAddress))
                 .Distinct()
                 .ToList()
                 ?? [];
 
-            companies.ForEach(x => item.Events.Add(x));
+            companies.ForEach(item.Events.Add);
 
             var result = await base.AddAsync(item);
 

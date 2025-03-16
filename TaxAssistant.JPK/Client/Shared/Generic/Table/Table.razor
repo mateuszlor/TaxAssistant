@@ -29,7 +29,7 @@
     public Dictionary<string, object> Attributes { get; set; }
 
     [Parameter] 
-    public ICollection<TRow> DataSource { get; set; }
+    public IEnumerable<TRow> DataSource { get; set; }
 
     [Parameter] 
     public RenderFragment ChildContent { get; set; }

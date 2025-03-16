@@ -110,7 +110,7 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var itemToAdd = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            itemToAdd.Events.Add(new NewCompanyEvent("Monsters Inc.", "1234567890", string.Empty));
+            itemToAdd.Events.Add(new CompanySynchronizedWithVatWhiteListEvent(itemToAdd.Id, null));
 
             // Act
             var result = await _sut.AddAsync(itemToAdd);
@@ -127,7 +127,7 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
         {
             // Arrange
             var itemToAdd = new Company(Origin.JPK, "1234567890", "Monsters Inc.");
-            itemToAdd.Events.Add(new NewCompanyEvent("Monsters Inc.", "1234567890", string.Empty));
+            itemToAdd.Events.Add(new CompanySynchronizedWithVatWhiteListEvent(itemToAdd.Id, null));
 
             _eventDispatcher.DispatchAsync(Arg.Any<IDomainEvent>()).ThrowsAsync(new Exception("SOME ERROR"));
 
@@ -153,7 +153,7 @@ namespace TaxAssistant.JPK.Tests.IntegrationTests
             await _databaseContext.SaveChangesAsync();
 
             // Act
-            existingItem.Events.Add(new NewCompanyEvent("Monsters Inc.", "1234567890", string.Empty));
+            existingItem.Events.Add(new CompanySynchronizedWithVatWhiteListEvent(existingItem.Id, null));
             var result = await _sut.UpdateAsync(existingItem);
 
             // Assert

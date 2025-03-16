@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using Bunit;
 using FluentAssertions;
 using FluentAssertions.BUnit;
 using NSubstitute;

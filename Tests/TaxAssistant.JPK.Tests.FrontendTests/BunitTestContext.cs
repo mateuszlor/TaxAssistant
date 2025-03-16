@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace TaxAssistant.JPK.Tests.FrontendTests;
 
 /// <summary>
@@ -7,7 +9,14 @@ namespace TaxAssistant.JPK.Tests.FrontendTests;
 public abstract class BunitTestContext : TestContextWrapper
 {
     [SetUp]
-    public virtual void Setup() => TestContext = new Bunit.TestContext();
+    [SetCulture("pl-PL")]
+    public virtual void Setup()
+    {
+        TestContext = new Bunit.TestContext();
+        CultureInfo.CurrentUICulture =
+            CultureInfo.CurrentCulture = 
+            new CultureInfo("pl-PL");
+    }
 
     [TearDown]
     public void TearDown() => TestContext?.Dispose();

@@ -2,7 +2,7 @@
 {
 	public class Address : BaseDomainModel
 	{
-		public Address(Origin origin, string country, string postalCode, string city, string? street, string buildingNumber, string? localNumber = null)
+		public Address(Origin origin, string country, string postalCode, string city, string? street, string buildingNumber, string? localNumber = null, string? voivodeship = null)
 			: base(origin)
 		{
 			Country = country;
@@ -11,7 +11,8 @@
 			Street = street;
 			BuildingNumber = buildingNumber;
 			LocalNumber = localNumber;
-		}
+            Voivodeship = voivodeship;
+        }
 
 		public string Country { get; set; }
 
@@ -23,6 +24,8 @@
 
 		public string? LocalNumber { get; set; }
 
-		public string PostalCode { get; set; }
-	}
+        public string PostalCode { get; set; }
+
+        public string? Voivodeship { get; set; }
+    }
 }
