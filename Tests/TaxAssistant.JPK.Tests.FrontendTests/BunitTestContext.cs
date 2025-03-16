@@ -13,7 +13,9 @@ public abstract class BunitTestContext : TestContextWrapper
     public virtual void Setup()
     {
         TestContext = new Bunit.TestContext();
-        CultureInfo.CurrentCulture = new CultureInfo("pl-PL");
+        CultureInfo.CurrentUICulture =
+            CultureInfo.CurrentCulture = 
+            new CultureInfo("pl-PL");
     }
 
     [TearDown]
