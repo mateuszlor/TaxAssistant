@@ -10,18 +10,18 @@
 
 @if (Company != null)
 {
-    <div>
+    <div data-test-id="name">
         @Company.Name
     </div>
     @if (hasAddress)
     {
-        <div>
-            @streetPart;
+        <div data-test-id="address-street">
+            @streetPart
         </div>
-        <div>
-            @($"{Company.Address!.PostalCode} {Company.Address!.City}");
+        <div data-test-id="address-city">
+            @($"{Company.Address!.PostalCode} {Company.Address!.City}")
         </div>
-        <div>
+        <div data-test-id="address-country">
             @IncludeDefaultCountry
                 ? @("POLAND")
                 : @Company.Address!.Country
@@ -29,14 +29,14 @@
     }
     @if (Company.TaxIdentificationNumber?.Length == 10)
     {
-        <div>
+        <div data-test-id="nip">
             <span>NIP:</span>
             @Company.TaxIdentificationNumber
         </div>
     }
-    @if (Company.TaxIdentificationNumber?.Length == 9)
+    @if (Company.TaxIdentificationNumber?.Length == 11)
     {
-        <div>
+        <div data-test-id="pesel">
             <span>PESEL:</span>
             @Company.TaxIdentificationNumber
         </div>
