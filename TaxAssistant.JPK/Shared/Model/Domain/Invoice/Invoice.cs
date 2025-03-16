@@ -123,11 +123,8 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 
         public void AddRow(InvoiceRow row)
         {
-            if (row.InvoiceId != Id)
-            {
-                throw new InvalidOperationException("Cannot assign row from other invoice");
-            }
-
+            row.Invoice = null; // for EF
+            row.InvoiceId = Id;
             row.Number = Rows.Count + 1;
 
             Rows.Add(row);
@@ -136,11 +133,8 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
 
         public void AddAdditionalRow(InvoiceAdditionalRow row)
         {
-            if (row.InvoiceId != Id)
-            {
-                throw new InvalidOperationException("Cannot assign additional row from other invoice");
-            }
-
+            row.Invoice = null; // for EF
+            row.InvoiceId = Id;
             row.Number = Rows.Count + 1;
 
             AdditionalRows.Add(row);

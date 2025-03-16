@@ -206,5 +206,58 @@ namespace TaxAssistant.JPK.Tests.Domain
             _sut.Events.OfType<SellerSetEvent>().Should().BeEmpty();
             _sut.Events.OfType<AmountValuesSetEvent>().Should().HaveCount(1);
         }
+
+        [Test]
+        public void SetAmountValue_ForZeroTotalNetValue_ShouldThrow()
+        {
+            // Act && Assert
+            _sut
+                .Invoking(x => x.SetAmountValue(0))
+                .Should()
+                .Throw<ArgumentException>()
+                .WithMessage("TotalNetValue cannot be 0");
+
+            // Assert
+            _sut.TotalNetValue.Should().Be(0);
+            _sut.TotalGrossValue.Should().Be(0);
+            _sut.TotalVat.Should().Be(0);
+            _sut.Events.OfType<BuyerSetEvent>().Should().BeEmpty();
+            _sut.Events.OfType<SellerSetEvent>().Should().BeEmpty();
+            _sut.Events.OfType<AmountValuesSetEvent>().Should().BeEmpty();
+        }
+
+        [Test]
+        public void SetDeliveryDate_ForAlreadyExistingDate_ShouldThrow()
+        {
+            // Act && Assert
+            _sut.SetDeliveryDate(DateTime.Today);
+
+            _sut
+                .Invoking(x => x.SetDeliveryDate(DateTime.Today.AddDays(10)))
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("Delivery date already set");
+
+            // Assert
+            _sut.DeliveryDate.Should().Be(DateTime.Today);
+            _sut.Events.OfType<DeliveryDateSetEvent>().Should().HaveCount(1); // once only (initial set)
+        }
+
+        [Test]
+        public void SetIssueDate_ForAlreadyExistingDate_ShouldThrow()
+        {
+            // Act && Assert
+            _sut.SetIssueDate(DateTime.Today);
+
+            _sut
+                .Invoking(x => x.SetIssueDate(DateTime.Today.AddDays(10)))
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage("Issue date already set");
+
+            // Assert
+            _sut.IssueDate.Should().Be(DateTime.Today);
+            _sut.Events.OfType<IssueDateSetEvent>().Should().HaveCount(1); // once only (initial set)
+        }
     }
 }
