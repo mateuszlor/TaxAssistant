@@ -3,7 +3,6 @@ using TaxAssistant.DDD.Abstraction;
 using TaxAssistant.JPK.ApplicationLogic.Repository.Abstraction;
 using TaxAssistant.JPK.Database;
 using TaxAssistant.JPK.Shared.Model.Database.Fa;
-using TaxAssistant.JPK.Shared.Model.Domain;
 using TaxAssistant.JPK.Shared.Model.Domain.Company.Events;
 using TaxAssistant.JPK.Shared.Model.Domain.Events;
 
@@ -40,7 +39,7 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
                 .Invoices
                 ?.Select(x => new NewInvoiceFromJpkFaEvent(
                     new InvoiceCompany(x.Seller!.TaxIdentificationNumber, x.Seller.Name, x.Seller.Address),
-                    new InvoiceCompany(x.Buyer!.TaxIdentificationNumber, x.Buyer.Name, x.Buyer.Address!), 
+                    new InvoiceCompany(x.Buyer!.TaxIdentificationNumber, x.Buyer.Name, x.Buyer.Address!),
                     x.DocumentNumber!,
                     x.IssueDate,
                     x.DeliveryDate,
