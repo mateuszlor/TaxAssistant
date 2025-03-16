@@ -26,16 +26,22 @@ else
 
         <div class="row pt-4">
             <div class="col-6">
-                <div class="mb-1">
-                    <b>Seller:</b>
+                <div class="mb-1" data-test-id="seller">
+                    <div>
+                        <b>Seller:</b>
+                    </div>
+                    <CompanyDetails Company=@invoice.Seller />
                 </div>
-                <CompanyDetails Company=@invoice.Seller />
-                <div class="mt-2 mb-1">
-                    <b>Buyer:</b>
+                <div class="mb-1" data-test-id="buyer">
+                    <div>
+                        <b>Buyer:</b>
+                    </div>
+                    <CompanyDetails Company=@invoice.Buyer />
                 </div>
-                <CompanyDetails Company=@invoice.Buyer />
             </div>
-            <div class="col-2"></div>
+            <div class="col-2">
+                @* empty *@
+            </div>
             <div class="col-4">
                 <table class="table">
                     <tbody>
@@ -67,17 +73,17 @@ else
         <div class="row mt-2">
             <div class="col-6"></div>
             <div class="col-6">
-                <table class="table" data-test-id="summaryTable">
+                <table class="table" data-test-id="summary-table">
                     <tbody>
-                        <tr>
+                        <tr data-test-id="summary-net">
                             <th scope="row">Total net</th>
                             <td><Amount Value=@invoice.TotalNetValue /></td>
                         </tr>
-                        <tr>
+                        <tr data-test-id="summary-vat">
                             <th scope="row">Total VAT</th>
                             <td><Amount Value=@invoice.TotalVat /></td>
                         </tr>
-                        <tr>
+                        <tr data-test-id="summary-gross">
                             <th scope="row">Total gross</th>
                             <td><Amount Value=@invoice.TotalGrossValue /></td>
                         </tr>
@@ -90,7 +96,7 @@ else
                                     <td><Amount Value=@row.Amount /></td>
                                 </tr>
                             }
-                            <tr>
+                            <tr data-test-id="summary-totalToPay">
                                 <th scope="row">Total to pay</th>
                                 <td><Amount Value=@totalToPay /></td>
                             </tr>
