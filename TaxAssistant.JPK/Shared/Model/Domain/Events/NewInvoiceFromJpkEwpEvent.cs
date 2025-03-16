@@ -5,7 +5,6 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Events
     public class NewInvoiceFromJpkEwpEvent : IDomainEvent
     {
         public NewInvoiceFromJpkEwpEvent(
-            Origin origin, 
             string sellerTaxIdentificationNumber,
             string documentNumber, 
             string? additionalDescription,
@@ -22,7 +21,6 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Events
             decimal? revenueTaxed15Percent, 
             decimal? revenueTaxed17Percent)
         {
-            Origin = origin;
             SellerTaxIdentificationNumber = sellerTaxIdentificationNumber;
             DocumentNumber = documentNumber;
             AdditionalDescription = additionalDescription;
@@ -40,7 +38,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Events
             RevenueTaxed17Percent = revenueTaxed17Percent;
         }
 
-        public Origin Origin { get; set; }
+        public Origin Origin { get; } = Origin.JPK;
         public string SellerTaxIdentificationNumber { get; }
         public string DocumentNumber { get; }
         public string? AdditionalDescription { get; }

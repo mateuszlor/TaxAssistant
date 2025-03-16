@@ -39,10 +39,8 @@ namespace TaxAssistant.JPK.ApplicationLogic.Repository
             var newInvoiceEvents = item
                 .Invoices
                 ?.Select(x => new NewInvoiceFromJpkFaEvent(
-                    Origin.JPK,
                     new InvoiceCompany(x.Seller!.TaxIdentificationNumber, x.Seller.Name, x.Seller.Address),
                     new InvoiceCompany(x.Buyer!.TaxIdentificationNumber, x.Buyer.Name, x.Buyer.Address!), 
-                    x.Buyer.Name,
                     x.DocumentNumber!,
                     x.IssueDate,
                     x.DeliveryDate,

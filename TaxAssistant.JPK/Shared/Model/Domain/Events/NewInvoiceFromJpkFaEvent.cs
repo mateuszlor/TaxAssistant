@@ -4,12 +4,10 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Events
 {
     public class NewInvoiceFromJpkFaEvent : IDomainEvent
     {
-        public NewInvoiceFromJpkFaEvent(Origin origin, InvoiceCompany seller, InvoiceCompany buyer, string sellerName, string documentNumber, DateTime issueDate, DateTime deliveryDate, bool reversedCharge, bool splitPayment, InvoiceAmounts invoiceAmounts, IList<InvoiceRow> rows)
+        public NewInvoiceFromJpkFaEvent(InvoiceCompany seller, InvoiceCompany buyer, string documentNumber, DateTime issueDate, DateTime deliveryDate, bool reversedCharge, bool splitPayment, InvoiceAmounts invoiceAmounts, IList<InvoiceRow> rows)
         {
-            Origin = origin;
             Seller = seller;
             Buyer = buyer;
-            SellerName = sellerName;
             DocumentNumber = documentNumber;
             IssueDate = issueDate;
             DeliveryDate = deliveryDate;
@@ -19,10 +17,9 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Events
             Rows = rows;
         }
 
-        public Origin Origin { get; }
+        public Origin Origin { get; } = Origin.JPK;
         public InvoiceCompany Seller { get; }
         public InvoiceCompany Buyer { get; }
-        public string SellerName { get; }
         public string DocumentNumber { get; }
         public DateTime IssueDate { get; }
         public DateTime DeliveryDate { get; }

@@ -47,7 +47,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
         {
             if (company == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot set null seller");
             }
 
             if (Seller == null)
@@ -58,7 +58,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
             }
             else
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot change seller");
             }
         }
 
@@ -66,7 +66,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
         {
             if (company == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot set null byuer");
             }
 
             if (Buyer == null)
@@ -77,7 +77,7 @@ namespace TaxAssistant.JPK.Shared.Model.Domain.Invoice
             }
             else
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Cannot change buyer");
             }
         }
 
