@@ -7,6 +7,7 @@ namespace TaxAssistant.JPK.Tests.FrontendTests;
 public abstract class BunitTestContext : TestContextWrapper
 {
     [SetUp]
+    [SetCulture("pl-PL")]
     public virtual void Setup() => TestContext = new Bunit.TestContext();
 
     [TearDown]
