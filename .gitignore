@@ -5,3 +5,5 @@ obj/
 coverage.opencover.xml
 output.cobertura.xml
 coverage.json
+*/Logs/*.json
+*/publish/*
