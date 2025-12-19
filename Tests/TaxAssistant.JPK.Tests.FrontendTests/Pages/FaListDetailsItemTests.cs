@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using NSubstitute;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Client.Pages;
@@ -33,7 +32,7 @@ public class FaListDetailsItemTests : BunitTestContext
         var invoiceNumberEscaped = "FV_2024-01-01";
 
         // Act
-        var cut = RenderComponent<FaListDetailsItem>(parameters => parameters
+        var cut = Render<FaListDetailsItem>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.InvoiceNumberParameter, invoiceNumberEscaped));
 
@@ -64,7 +63,7 @@ public class FaListDetailsItemTests : BunitTestContext
         _faClient!.GetAsync(guid).Returns(Task.FromResult<Fa?>(fa));
 
         // Act
-        var cut = RenderComponent<FaListDetailsItem>(parameters => parameters
+        var cut = Render<FaListDetailsItem>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.InvoiceNumberParameter, invoiceNumberEscaped));
 
@@ -106,7 +105,7 @@ public class FaListDetailsItemTests : BunitTestContext
         _faClient!.GetAsync(guid).Returns(Task.FromResult<Fa?>(fa));
 
         // Act
-        var cut = RenderComponent<FaListDetailsItem>(parameters => parameters
+        var cut = Render<FaListDetailsItem>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.InvoiceNumberParameter, invoiceNumberEscaped));
 

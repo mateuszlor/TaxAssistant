@@ -1,5 +1,4 @@
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Client.Shared.Generic;
 
 namespace TaxAssistant.JPK.Tests.FrontendTests.Generic;
@@ -10,11 +9,10 @@ public class LoadingTests : BunitTestContext
     public void Loading_ShouldDisplay()
     {
         // Act
-        var cut = RenderComponent<Loading>();
+        var cut = Render<Loading>();
 
         // Assert
         cut.Find("div").Should().HaveClass("lds-ring");
-        cut.Find("div").Should().HaveChildMarkup(@"<div />");
         cut.Find("div").TextContent.Should().BeNullOrWhiteSpace();
     }
 }
