@@ -1,5 +1,4 @@
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Shared.Model.Database.Fa.Enum;
 
 namespace TaxAssistant.JPK.Tests.FrontendTests.Components;
@@ -20,7 +19,7 @@ public class VatRateTests : BunitTestContext
     public void VatRate_ShouldDisplay(VatRate enumValue, string displayedValue)
     {
         // Act
-        var cut = base.RenderComponent((ComponentParameterCollectionBuilder<Client.Shared.Components.VatRate> parameters) => parameters.Add(x => x.Rate, enumValue));
+        var cut = base.Render<Client.Shared.Components.VatRate>(parameters => parameters.Add(x => x.Rate, enumValue));
 
         // Assert
         cut.Markup.Should().Be(displayedValue);

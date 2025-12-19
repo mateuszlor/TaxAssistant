@@ -1,5 +1,4 @@
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Client.Shared.Generic;
 
 namespace TaxAssistant.JPK.Tests.FrontendTests.Generic;
@@ -10,7 +9,7 @@ public class CollapsableSectionTests : BunitTestContext
     public void CollapsableSection_ShouldDisplay()
     {
         // Act
-        var cut = RenderComponent<CollapsableSection>(p => p
+        var cut = Render<CollapsableSection>(p => p
             .Add(x => x.Title, "click")
             .Add(x => x.Collapsed, true)
             .AddChildContent("inner text"));
@@ -28,7 +27,7 @@ public class CollapsableSectionTests : BunitTestContext
     public void CollapsableSection_OnClick_ShouldUnfold()
     {
         // Act
-        var cut = RenderComponent<CollapsableSection>(p => p
+        var cut = Render<CollapsableSection>(p => p
             .Add(x => x.Title, "click")
             .Add(x => x.Collapsed, true)
             .AddChildContent("inner text"));

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using NSubstitute;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Client.Pages;
@@ -33,7 +32,7 @@ public class InvoiceListDetailsTests : BunitTestContext
         var guid = Guid.NewGuid();
 
         // Act
-        var cut = RenderComponent<InvoiceListDetails>(parameters => parameters
+        var cut = Render<InvoiceListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -52,7 +51,7 @@ public class InvoiceListDetailsTests : BunitTestContext
         _InvoiceClient!.GetAsync(guid).Returns(Task.FromResult<Invoice?>(invoice));
 
         // Act
-        var cut = RenderComponent<InvoiceListDetails>(parameters => parameters
+        var cut = Render<InvoiceListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -83,7 +82,7 @@ public class InvoiceListDetailsTests : BunitTestContext
         _InvoiceClient!.GetAsync(guid).Returns(Task.FromResult<Invoice?>(invoice));
 
         // Act
-        var cut = RenderComponent<InvoiceListDetails>(parameters => parameters
+        var cut = Render<InvoiceListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -126,7 +125,7 @@ public class InvoiceListDetailsTests : BunitTestContext
         _InvoiceClient!.GetAsync(guid).Returns(Task.FromResult<Invoice?>(invoice));
 
         // Act
-        var cut = RenderComponent<InvoiceListDetails>(parameters => parameters
+        var cut = Render<InvoiceListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 

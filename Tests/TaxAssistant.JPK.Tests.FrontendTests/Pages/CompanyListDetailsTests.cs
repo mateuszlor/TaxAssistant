@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using NSubstitute;
 using TaxAssistant.JPK.Client.Clients.Abstraction;
 using TaxAssistant.JPK.Client.Pages;
@@ -32,7 +31,7 @@ public class CompanyListDetailsTests : BunitTestContext
         var guid = Guid.NewGuid();
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -51,7 +50,7 @@ public class CompanyListDetailsTests : BunitTestContext
         _companyClient!.GetAsync(guid).Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -77,13 +76,13 @@ public class CompanyListDetailsTests : BunitTestContext
         // Arrange
         var guid = Guid.NewGuid();
 
-        var address = new Shared.Model.Domain.Address.Address(Origin.VatWhiteList, "Poland", "12-345", "Szczebrzeszyn", "Przek¹tna", "12", "34");
+        var address = new Shared.Model.Domain.Address.Address(Origin.VatWhiteList, "Poland", "12-345", "Szczebrzeszyn", "PrzekÄ…tna", "12", "34");
         var company = new Company(Origin.JPK, "1234567890", "Monsters Inc.", address, "111122220");
 
         _companyClient!.GetAsync(guid).Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -94,7 +93,7 @@ public class CompanyListDetailsTests : BunitTestContext
         cut.FindById("taxIdentificationNumber").GetInputValue().Should().Be("1234567890");
         cut.FindById("nationalStatisticNumber").GetInputValue().Should().Be("111122220");
         cut.FindById("origin").GetInputValue().Should().Be("JPK");
-        cut.FindById("address").GetInputValue().Should().Be("Przek¹tna 12/34\n12-345 Szczebrzeszyn\nPoland");
+        cut.FindById("address").GetInputValue().Should().Be("PrzekÄ…tna 12/34\n12-345 Szczebrzeszyn\nPoland");
     }
 
     [Test]
@@ -108,7 +107,7 @@ public class CompanyListDetailsTests : BunitTestContext
         _companyClient!.GetAsync(guid).Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Edit.ToString()));
 
@@ -131,7 +130,7 @@ public class CompanyListDetailsTests : BunitTestContext
         _companyClient!.GetAsync(guid).Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 
@@ -157,7 +156,7 @@ public class CompanyListDetailsTests : BunitTestContext
         _companyClient!.UpdateAsync(Arg.Any<Company>()).Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Edit.ToString()));
 
@@ -185,7 +184,7 @@ public class CompanyListDetailsTests : BunitTestContext
         _companyClient!.GetAsync(company.Id, "synchronizeWithVatWhiteList").Returns(Task.FromResult<Company?>(company));
 
         // Act
-        var cut = RenderComponent<CompanyListDetails>(parameters => parameters
+        var cut = Render<CompanyListDetails>(parameters => parameters
             .Add(x => x.IdParameter, guid.ToString())
             .Add(x => x.FormModeParameter, FormMode.Preview.ToString()));
 

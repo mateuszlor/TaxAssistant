@@ -1,6 +1,5 @@
 using AngleSharp.Dom;
 using FluentAssertions;
-using FluentAssertions.BUnit;
 using TaxAssistant.JPK.Client.Shared.Components;
 using TaxAssistant.JPK.Shared.Model.Domain;
 using TaxAssistant.JPK.Shared.Model.Domain.Address;
@@ -14,7 +13,7 @@ public class CompanyDetailsTests : BunitTestContext
     public void CompanyDetails_ForNull_ShouldDisplayNothing()
     {
         // Act
-        var cut = base.RenderComponent<CompanyDetails>();
+        var cut = base.Render<CompanyDetails>();
 
         // Assert
         cut.Markup.Should().BeEmpty();
@@ -27,7 +26,7 @@ public class CompanyDetailsTests : BunitTestContext
         var comapny = new Company(Origin.JPK, null, string.Empty);
 
         // Act
-        var cut = base.RenderComponent<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
+        var cut = base.Render<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
 
         // Assert
         cut.Markup.Should().NotBeEmpty();
@@ -41,7 +40,7 @@ public class CompanyDetailsTests : BunitTestContext
         var comapny = new Company(Origin.JPK, null, "Some company");
 
         // Act
-        var cut = base.RenderComponent<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
+        var cut = base.Render<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
 
         // Assert
         cut.Markup.Should().NotBeEmpty();
@@ -55,7 +54,7 @@ public class CompanyDetailsTests : BunitTestContext
         var comapny = new Company(Origin.JPK, "1234567890", "Some company");
 
         // Act
-        var cut = base.RenderComponent<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
+        var cut = base.Render<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
 
         // Assert
         cut.Markup.Should().NotBeEmpty();
@@ -70,7 +69,7 @@ public class CompanyDetailsTests : BunitTestContext
         var comapny = new Company(Origin.JPK, "12345678910", "Some company");
 
         // Act
-        var cut = base.RenderComponent<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
+        var cut = base.Render<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
 
         // Assert
         cut.Markup.Should().NotBeEmpty();
@@ -86,7 +85,7 @@ public class CompanyDetailsTests : BunitTestContext
         var comapny = new Company(Origin.JPK, "1234567890", "Some company", address);
 
         // Act
-        var cut = base.RenderComponent<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
+        var cut = base.Render<CompanyDetails>(parameters => parameters.Add(x => x.Company, comapny));
 
         // Assert
         cut.Markup.Should().NotBeEmpty();
