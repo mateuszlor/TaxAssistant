@@ -5,8 +5,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Net.Http.Json" Version="10.0.1" />
-  </ItemGroup>
-
 </Project>
